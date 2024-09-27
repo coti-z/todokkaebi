@@ -12,3 +12,32 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String          @id @default(uuid())
+  email         String?         @unique
+  nickname      String
+  birthday      DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  OAuthProvider OAuthProvider[]
+}
+
+model OAuthProvider {
+  id         String       @id @default(uuid())
+  provider   ProviderType
+  providerId String
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@unique([provider, providerId])
+}
+
+enum ProviderType {
+  KAKAO
+  GOOGLE
+  APPLE
+}
