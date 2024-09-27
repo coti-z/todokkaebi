@@ -1,0 +1,58 @@
+name: Deploy To AWS
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get github repo file
+        uses: actions/checkout@v4
+
+      - name: install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: install dependency
+        run: npm ci
+
+      - name: build nest project
+        run: npm run build
+
+      - name: make .env file
+        run: |
+          echo '${{secrets.ENV}}' > .env
+
+      - name: compress nestjs project to gz
+        run: tar -czvf project.tar.gz dist .env package.json package-lock.json prisma docker-compose.yml Dockerfile
+
+      - name: builded file send to ec2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{secrets.EC2_PRIVATE_KEY}}
+          source: project.tar.gz
+          target: /home/ubuntu/test-server/tobe
+
+      - name: access ec2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{secrets.EC2_PRIVATE_KEY}}
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/test-server/current
+            mkdir -p /home/ubuntu/test-server/current
+            mv /home/ubuntu/test-server/tobe/project.tar.gz /home/ubuntu/test-server/current/project.tar.gz
+            cd /home/ubuntu/test-server/current
+            tar -xvf project.tar.gz
+            docker-compose down
+            docker-compose up -d --build
+            docker image prune -f
+

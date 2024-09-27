@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: backend-server
+    restart: always
+    environment:
+      - NODE_ENV=test
+      - DATABASE_URL=mysql://root:root@mysql:3306/db
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+
+  mysql:
+    image: mysql:8.0
+    container_name: app_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+volumes:
+  mysql_data:
