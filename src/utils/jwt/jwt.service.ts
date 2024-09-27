@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtPayload, JwtVerifyResult } from '@/utils/jwt/jwt-token.interface';
+import { TokenEnum, TokenTimeEnum } from '@/utils/jwt/token.enum';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtPayload, JwtVerifyResult } from '@/common/jwt/jwt-token.interface';
-import { TokenEnum, TokenTimeEnum } from '@/common/jwt/token.enum';
 
 @Injectable()
 export class JwtTokenService {
