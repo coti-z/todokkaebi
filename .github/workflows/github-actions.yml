@@ -20,6 +20,10 @@ jobs:
       - name: install dependency
         run: npm ci
 
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
       - name: build nest project
         run: npm run build
 

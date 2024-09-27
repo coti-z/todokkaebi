@@ -1,3 +1,4 @@
+import { JwtTokenService } from '@/utils/jwt/jwt.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -10,9 +11,11 @@ import { JwtModule } from '@nestjs/jwt';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
       }),
+
+      inject: [ConfigService],
     }),
   ],
-  providers: [],
-  exports: [],
+  providers: [JwtTokenService],
+  exports: [JwtTokenService],
 })
 export class JwtTokenModule {}

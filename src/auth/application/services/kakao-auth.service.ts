@@ -20,7 +20,7 @@ export class KakaoAuthService {
 
     return await this.userRepository.createUser({
       email: kakaoUser.email,
-      nickname: kakaoUser.nickname,
+      nickname: kakaoUser.properties.nickname,
       OAuthProvider: {
         create: {
           provider: 'KAKAO',

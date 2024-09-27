@@ -1,9 +1,11 @@
 import { TokenEnum } from '@/utils/jwt/token.enum';
 
 export interface JwtPayload {
-  email: string;
   userId: string;
   type: TokenEnum;
+}
+export interface JwtPairPayload {
+  userId: string;
 }
 
 export interface JwtVerifyResult {

@@ -6,7 +6,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtTokenService) {}
+  constructor(private readonly jwtTokenService: JwtTokenService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlContext = GqlExecutionContext.create(context);
@@ -16,7 +16,7 @@ export class JwtAuthGuard implements CanActivate {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
     try {
-      const payload = this.jwtService.verifyToken(token);
+      const payload = this.jwtTokenService.verifyToken(token);
       req['user'] = payload;
       return true;
     } catch {

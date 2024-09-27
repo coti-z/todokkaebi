@@ -1,8 +1,13 @@
-import { JwtPayload, JwtVerifyResult } from '@/utils/jwt/jwt-token.interface';
+import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
+import {
+  JwtPairPayload,
+  JwtPayload,
+  JwtVerifyResult,
+} from '@/utils/jwt/jwt-token.interface';
 import { TokenEnum, TokenTimeEnum } from '@/utils/jwt/token.enum';
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtTokenService {
@@ -11,8 +16,22 @@ export class JwtTokenService {
     private readonly configService: ConfigService,
   ) {}
 
-  generateToken(payload: JwtPayload) {
+  generateTokenPair(payload: JwtPairPayload): TokenPair {
+    console.log(this.configService.get<string>('JWT_SECRET'));
+    const accessToken = this.generateToken({
+      ...payload,
+      type: TokenEnum.ACCESS,
+    });
+    const refreshToken = this.generateToken({
+      ...payload,
+      type: TokenEnum.REFRESH,
+    });
+
+    return { accessToken, refreshToken };
+  }
+  generateToken(payload: JwtPayload): string {
     const expiresIn = this.getExpirationTime(payload.type);
+
     return this.jwtService.sign(payload, { expiresIn });
   }
 

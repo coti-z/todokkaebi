@@ -7,4 +7,4 @@ RUN npm ci --only=production
 
 COPY . .
 
-CMD sh -c "npx prisma migrate deploy && node dist/main.js"
+CMD sh -c "npx --yes prisma migrate deploy && node dist/main.js"
