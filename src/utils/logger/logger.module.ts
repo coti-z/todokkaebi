@@ -14,7 +14,7 @@ import * as winston from 'winston';
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.timestamp(),
-            nestWinstonModuleUtilities.format.nestLike('MyApp', {
+            nestWinstonModuleUtilities.format.nestLike('TODOGEBI', {
               colors: true,
               prettyPrint: true,
               processId: true,

@@ -18,15 +18,22 @@ export class KakaoAuthService {
     const kakaoToken = await this.kakaoAuth.getToken(code);
     const kakaoUser = await this.kakaoAuth.getUser(kakaoToken.access_token);
 
-    return await this.userRepository.createUser({
-      email: kakaoUser.email,
-      nickname: kakaoUser.properties.nickname,
-      OAuthProvider: {
-        create: {
-          provider: 'KAKAO',
-          providerId: kakaoUser.id.toString(),
+    const user = await this.userRepository.getKakaoUser(
+      kakaoUser.id.toString(),
+    );
+
+    if (!user) {
+      return await this.userRepository.createUser({
+        email: kakaoUser.email,
+        nickname: kakaoUser.properties.nickname,
+        OAuthProvider: {
+          create: {
+            provider: 'KAKAO',
+            providerId: kakaoUser.id.toString(),
+          },
         },
-      },
-    });
+      });
+    }
+    return user;
   }
 }

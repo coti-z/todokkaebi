@@ -8,7 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GqlExceptionFilter } from '@nestjs/graphql';
+import { GqlExceptionFilter, GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 
 @Catch()
@@ -23,8 +23,7 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
     let status: any;
     let message: string;
     let code: any;
-
-    const request = ctx.getRequest();
+    const req = ctx.getRequest();
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
@@ -32,18 +31,20 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
       code = (exception as any).code || ErrorCode.INTERNAL_SERVER_ERROR;
       this.logger.warn(`HttpException: ${exception.message}`, {
         statusCode: exception.getStatus(),
-        path: request.url,
-        method: request.method,
+        path: req.url,
+        method: req.method,
       });
     } else if (exception instanceof GraphQLError) {
+      console.log(exception, req.url);
+      this.logger.warn('test', { test: 'test' });
       status = exception.extensions?.status;
       message = exception.message;
       code = exception.extensions?.code || ErrorCode.INTERNAL_SERVER_ERROR;
       this.logger.warn(`HttpException: ${exception.message}`, {
         statusCode:
           exception.extensions?.code || ErrorCode.INTERNAL_SERVER_ERROR,
-        path: request.url,
-        method: request.method,
+        path: req.url,
+        method: req.method,
       });
     } else {
       const unhandled = errorFactory(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -57,8 +58,8 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
           : 'No stack trace available',
         {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          path: request.url,
-          method: request.method,
+          path: req.url,
+          method: req.method,
         },
       );
     }

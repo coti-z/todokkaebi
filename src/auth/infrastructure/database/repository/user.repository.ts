@@ -7,6 +7,7 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
+
   async createUser(data: Prisma.UserCreateInput): Promise<UserModel> {
     const user = await this.prismaService.user.create({
       data,
@@ -37,6 +38,27 @@ export class UserRepository {
     const user = await this.prismaService.user.findUnique({
       where: { id },
     });
+    if (!user) {
+      return null;
+    }
+    return UserMapper.toDomain(user);
+  }
+
+  async getKakaoUser(kakaoId: string): Promise<UserModel | null> {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        OAuthProvider: {
+          some: {
+            provider: 'KAKAO',
+            providerId: kakaoId,
+          },
+        },
+      },
+      include: {
+        OAuthProvider: true,
+      },
+    });
+
     if (!user) {
       return null;
     }

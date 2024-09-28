@@ -24,6 +24,7 @@ export class KakaoAuthResolver {
     @Args('input') input: KakaoAuthCodeInput,
   ): Promise<TokenPair> {
     const command = new KakaoAuthCommand(input.code);
-    return await this.commandBus.execute(command);
+    const result = await this.commandBus.execute(command);
+    return result;
   }
 }

@@ -20,6 +20,7 @@ export class KakaoAuthHandler implements ICommandHandler<KakaoAuthCommand> {
         userId: user.id,
       });
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
