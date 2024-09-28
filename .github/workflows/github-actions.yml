@@ -17,46 +17,42 @@ jobs:
         with:
           node-version: "18"
 
-      - name: install dependency
+      - name: install dependency library
         run: npm ci
 
-
-      - name: Generate Prisma client
-        run: npx prisma generate
-
-      - name: build nest project
-        run: npm run build
-
-      - name: make .env file
+      - name: create .env file
         run: |
-          echo '${{secrets.ENV}}' > .env
+          echo '${{secrets.ENV}}'  > .env
 
-      - name: compress nestjs project to gz
-        run: tar -czvf project.tar.gz dist .env package.json package-lock.json prisma docker-compose.yml Dockerfile
-
-      - name: builded file send to ec2
-        uses: appleboy/scp-action@v0.1.7
+      - name: aws credentials setting  for access to AWS Resource
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{secrets.EC2_HOST}}
-          username: ${{secrets.EC2_USERNAME}}
-          key: ${{secrets.EC2_PRIVATE_KEY}}
-          source: project.tar.gz
-          target: /home/ubuntu/test-server/tobe
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
-      - name: access ec2
+      - name: login ecr
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: create docker image
+        run: docker build -t todogebi-server .
+
+      - name: create tag of docker image
+        run: docker tag todogebi-server ${{steps.login-ecr.outputs.registry}}/todogebi-server:latest
+
+      - name: push docker image to ecr
+        run: docker push ${{steps.login-ecr.outputs.registry}}/todogebi-server:latest
+
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{secrets.EC2_HOST}}
           username: ${{secrets.EC2_USERNAME}}
           key: ${{secrets.EC2_PRIVATE_KEY}}
-          script_stop: true
           script: |
-            rm -rf /home/ubuntu/test-server/current
-            mkdir -p /home/ubuntu/test-server/current
-            mv /home/ubuntu/test-server/tobe/project.tar.gz /home/ubuntu/test-server/current/project.tar.gz
-            cd /home/ubuntu/test-server/current
-            tar -xvf project.tar.gz
-            docker-compose down
-            docker-compose up -d --build
-            docker image prune -f
+            docker stop todogebi-server || true
+            docker rm todogebi-server || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
+            docker run -d --name todogebi-server --restart always -p 5000:5000 --network app-network ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
 
