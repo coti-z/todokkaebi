@@ -22,8 +22,6 @@ export class KakaoAuth {
   }
 
   getAuthorizationUrl(): string {
-    console.log(this.CLIENT_ID);
-
     //const params = new URLSearchParams({
     //  client_id: this.CLIENT_ID,
     //  redirect_uri: this.REDIRECT_URI,

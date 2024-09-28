@@ -14,7 +14,6 @@ export class KakaoAuthResolver {
   ) {}
   @Query(() => KakaoLoginUrl)
   async getKakaoLoginUrl(): Promise<KakaoLoginUrl> {
-    console.log('run');
     const query = new KakaoLoginUrlQuery();
     return await this.queryBus.execute(query);
   }
@@ -24,7 +23,6 @@ export class KakaoAuthResolver {
     @Args('input') input: KakaoAuthCodeInput,
   ): Promise<TokenPair> {
     const command = new KakaoAuthCommand(input.code);
-    const result = await this.commandBus.execute(command);
-    return result;
+    return await this.commandBus.execute(command);
   }
 }

@@ -17,7 +17,6 @@ export class JwtTokenService {
   ) {}
 
   generateTokenPair(payload: JwtPairPayload): TokenPair {
-    console.log(this.configService.get<string>('JWT_SECRET'));
     const accessToken = this.generateToken({
       ...payload,
       type: TokenEnum.ACCESS,

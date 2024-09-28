@@ -4,71 +4,66 @@ import { LoggerService } from '@/utils/logger/logger.service';
 import {
   ArgumentsHost,
   Catch,
+  ExecutionContext,
   HttpException,
-  HttpStatus,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { GqlExceptionFilter, GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
-
+import { error } from 'winston';
+interface ErrorInfo {
+  status?: number;
+  message: string;
+  code: ErrorCode | string;
+}
 @Catch()
 export class GraphQLExceptionFilter implements GqlExceptionFilter {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly logger: LoggerService,
-  ) {}
+  constructor(private readonly logger: LoggerService) {}
 
   catch(exception: any, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    let status: any;
-    let message: string;
-    let code: any;
-    const req = ctx.getRequest();
+    const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
+    const { req } = gqlContext.getContext();
 
+    const errorInfo = this.getErrorInfo(req);
+    this.logError(errorInfo, exception, req);
+
+    return new GraphQLError(errorInfo.message, {
+      extensions: {
+        code: errorInfo.code,
+        status: errorInfo.status,
+      },
+    });
+  }
+  private getErrorInfo(exception: any): ErrorInfo {
     if (exception instanceof HttpException) {
-      status = exception.getStatus();
-      message = exception.message;
-      code = (exception as any).code || ErrorCode.INTERNAL_SERVER_ERROR;
-      this.logger.warn(`HttpException: ${exception.message}`, {
-        statusCode: exception.getStatus(),
-        path: req.url,
-        method: req.method,
-      });
-    } else if (exception instanceof GraphQLError) {
-      console.log(exception, req.url);
-      this.logger.warn('test', { test: 'test' });
-      status = exception.extensions?.status;
-      message = exception.message;
-      code = exception.extensions?.code || ErrorCode.INTERNAL_SERVER_ERROR;
-      this.logger.warn(`HttpException: ${exception.message}`, {
-        statusCode:
-          exception.extensions?.code || ErrorCode.INTERNAL_SERVER_ERROR,
-        path: req.url,
-        method: req.method,
-      });
-    } else {
-      const unhandled = errorFactory(ErrorCode.INTERNAL_SERVER_ERROR);
-      message = unhandled.message;
-      code = ErrorCode.INTERNAL_SERVER_ERROR;
-
-      this.logger.error(
-        `UnhandledException: ${unhandled.message}`,
-        exception instanceof Error
-          ? exception.stack
-          : 'No stack trace available',
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          path: req.url,
-          method: req.method,
-        },
-      );
+      return {
+        status: exception.getStatus(),
+        message: exception.message,
+        code: (exception as any).code,
+      };
+    }
+    if (exception instanceof GraphQLError) {
+      return {
+        status: exception.extensions.status as number,
+        message: exception.message,
+        code:
+          (exception.extensions.code as string) ||
+          ErrorCode.INTERNAL_SERVER_ERROR,
+      };
     }
 
-    return new GraphQLError(message, {
-      extensions: {
-        code,
-        status,
-      },
+    const unhandle = errorFactory(ErrorCode.INTERNAL_SERVER_ERROR);
+    return {
+      message: unhandle.message,
+      code: ErrorCode.INTERNAL_SERVER_ERROR,
+    };
+  }
+
+  private logError(errorInfo: ErrorInfo, exception: any, req: any) {
+    this.logger.warn(errorInfo.message, {
+      status: errorInfo.status,
+      code: errorInfo.code,
+      body: req.body,
+      stack: exception.stack,
     });
   }
 }
