@@ -1,16 +1,24 @@
+import { UserModel } from '@/auth/domain/model/user.model';
+import { JwtAuthGuard } from '@/utils/guard/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { Mutation, Resolver } from '@nestjs/graphql';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Mutation, Query, Resolver } from '@nestjs/graphql';
 
-@Resolver()
+@Resolver(() => UserModel)
 export class UserAuthResolver {
-  @UseGuards()
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+  @Query(() => UserModel)
+  @UseGuards(JwtAuthGuard)
   async getUserInfo() {}
 
   @Mutation()
-  @UseGuards()
-  async updataUserInfo() {}
+  @UseGuards(JwtAuthGuard)
+  async updateUserInfo() {}
 
   @Mutation()
-  @UseGuards()
+  @UseGuards(JwtAuthGuard)
   async deleteUser() {}
 }

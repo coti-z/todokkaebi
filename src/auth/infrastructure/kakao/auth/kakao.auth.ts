@@ -1,3 +1,5 @@
+import { ErrorCode } from '@/utils/exception/error-code.enum';
+import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -39,12 +41,16 @@ export class KakaoAuth {
       client_secret: this.CLIENT_SECRET,
       code: code,
     });
-    const response = await axios.post(this.TOKEN_URL, params.toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-      },
-    });
-    return response.data;
+    try {
+      const response = await axios.post(this.TOKEN_URL, params.toString(), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+      });
+      return response.data;
+    } catch {
+      throw errorFactory(ErrorCode.BAD_REQUEST);
+    }
   }
 
   async getUser(accessToken: string) {
