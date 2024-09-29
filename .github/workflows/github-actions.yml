@@ -1,0 +1,59 @@
+name: Deploy To AWS
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get github repo file
+        uses: actions/checkout@v4
+
+      - name: install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: install dependency library
+        run: npm ci
+
+      - name: create .env file
+        run: |
+          echo '${{secrets.ENV}}'  > .env
+
+      - name: aws credentials setting  for access to AWS Resource
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+
+      - name: login ecr
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: create docker image
+        run: docker build -t todogebi-server .
+
+      - name: create tag of docker image
+        run: docker tag todogebi-server ${{steps.login-ecr.outputs.registry}}/todogebi-server:latest
+
+      - name: push docker image to ecr
+        run: docker push ${{steps.login-ecr.outputs.registry}}/todogebi-server:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{secrets.EC2_PRIVATE_KEY}}
+          script: |
+            docker stop todogebi-server || true
+            docker rm todogebi-server || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
+            docker run -d --name todogebi-server --restart always -p 5000:5000 --network app-network ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
+            docker image prune -af
+
