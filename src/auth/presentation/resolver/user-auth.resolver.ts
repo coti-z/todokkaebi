@@ -1,10 +1,13 @@
 import { CreateUserCommand } from '@/auth/application/commands/create-user.command';
 import { DeleteUserCommand } from '@/auth/application/commands/delete-user-info.command';
+import { ReissueAccessTokenCommand } from '@/auth/application/commands/reissue-access-token.command';
 import { UpdateUserInfoCommand } from '@/auth/application/commands/update-user-info.command';
 import { GetUserInfoQuery } from '@/auth/application/queries/get-user-info.query';
 import { UserModel } from '@/auth/domain/model/user.model';
 import { CreateUserInput } from '@/auth/presentation/resolver/dto/input/create-user.input';
+import { ReissueAccessTokenInput } from '@/auth/presentation/resolver/dto/input/reissue-access-token.input';
 import { UpdateUserInfoInput } from '@/auth/presentation/resolver/dto/input/update-user-info.input';
+import { AccessToken } from '@/auth/presentation/resolver/dto/object/access-token.object';
 import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
 import { TokenInfo } from '@/utils/decorators/token-info.decorator';
 import { JwtAuthGuard } from '@/utils/guard/jwt-auth.guard';
@@ -45,6 +48,13 @@ export class UserAuthResolver {
     return await this.commandBus.execute(command);
   }
 
+  @Mutation(() => AccessToken)
+  async reissueAccessToken(
+    @Args('input') input: ReissueAccessTokenInput,
+  ): Promise<AccessToken> {
+    const command = new ReissueAccessTokenCommand(input.refreshToken);
+    return await this.commandBus.execute(command);
+  }
   @Mutation(() => Boolean)
   @UseGuards(JwtAuthGuard)
   async deleteUser(@TokenInfo() payload: JwtPayload): Promise<boolean> {

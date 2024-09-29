@@ -1,6 +1,7 @@
 import { CreateUserHandler } from '@/auth/application/commands/handlers/create-user.handler';
 import { DeleteUserHandler } from '@/auth/application/commands/handlers/delete-user.handler';
 import { KakaoAuthHandler } from '@/auth/application/commands/handlers/kakao-auth.handler';
+import { ReissueAccessTokenHandler } from '@/auth/application/commands/handlers/reissue-access-token.handler';
 import { UpdateUserInfoHandler } from '@/auth/application/commands/handlers/update-user-info.handler';
 import { GetUserInfoHandler } from '@/auth/application/queries/handlers/get-user-info.handler';
 import { KakaoLoginUrlHandler } from '@/auth/application/queries/handlers/kakao-login-url.handler';
@@ -27,6 +28,7 @@ import { CqrsModule } from '@nestjs/cqrs';
     UpdateUserInfoHandler,
     GetUserInfoHandler,
     DeleteUserHandler,
+    ReissueAccessTokenHandler,
 
     KakaoAuthService,
     UserAuthService,
