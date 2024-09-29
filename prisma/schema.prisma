@@ -18,6 +18,7 @@ model User {
   email         String?         @unique
   nickname      String
   birthday      DateTime?
+  password      String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   OAuthProvider OAuthProvider[]

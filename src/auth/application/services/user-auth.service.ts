@@ -1,3 +1,4 @@
+import { CreateUserCommand } from '@/auth/application/commands/create-user.command';
 import { UpdateUserInfoCommand } from '@/auth/application/commands/update-user-info.command';
 import { UserModel } from '@/auth/domain/model/user.model';
 import { UserRepository } from '@/auth/infrastructure/database/repository/user.repository';
@@ -9,6 +10,12 @@ import { Injectable } from '@nestjs/common';
 export class UserAuthService {
   constructor(private readonly userRepository: UserRepository) {}
 
+  async createUser(command: CreateUserCommand): Promise<UserModel> {
+    const user = await this.userRepository.createUser({
+      ...command,
+    });
+    return user;
+  }
   async deleteUser(id: string): Promise<UserModel> {
     const user = await this.userRepository.getUser(id);
     if (!user) {
@@ -26,10 +33,10 @@ export class UserAuthService {
     return user;
   }
   async updateUser(cmd: UpdateUserInfoCommand): Promise<UserModel> {
-    const user = await this.userRepository.getUser(cmd.userId);
+    const user = await this.userRepository.getUser(cmd.id);
     if (!user) {
       throw errorFactory(ErrorCode.USER_NOT_FOUND);
     }
-    return await this.userRepository.updateUser(cmd.userId, { ...cmd });
+    return await this.userRepository.updateUser(cmd.id, { ...cmd });
   }
 }

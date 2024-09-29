@@ -5,6 +5,7 @@ export class UserMapper {
   static toDomain(user: User): UserModel {
     return UserModel.create({
       ...user,
+      password: user.password ?? undefined,
       birthday: user.birthday ?? undefined,
       email: user.email ?? undefined,
     });

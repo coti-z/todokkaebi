@@ -1,6 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-@InputType()
+@InputType({
+  description: '카카오 토큰 발급 위한 Code',
+})
 export class KakaoAuthCodeInput {
   @Field(() => String, {
     description:

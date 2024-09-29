@@ -6,20 +6,21 @@ export class UserModel implements User {
   @Field()
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   email: string;
 
-  @Field()
+  @Field({ nullable: true })
   nickname: string;
 
-  @Field()
+  @HideField()
+  password: string | null;
+
+  @Field({ nullable: true })
   birthday: Date;
 
-  @Field()
   @HideField()
   createdAt: Date;
 
-  @Field()
   @HideField()
   updatedAt: Date;
 
