@@ -6,6 +6,7 @@ export enum GraphQLResolverEnum {
   GET_USER = 'GET_USER',
   DELETE_ACCOUNT = 'DELETE_ACCOUNT',
   UPDATE_USER = 'UPDATE_USER',
+  REISSUE_ACCESS_TOKEN = 'REISSUE_ACCESS_TOKEN',
 }
 
 export type CreateUserInput = {
@@ -18,6 +19,10 @@ export type UpdateUserInfoInput = {
   nickname: string;
   birthday: Date;
   email: string;
+};
+
+export type ReissueAccessTokenInput = {
+  refreshToken: string;
 };
 
 export const GraphQLAPI = {
@@ -51,6 +56,13 @@ export const GraphQLAPI = {
         email
         nickname
         birthday
+      }
+    }
+  `,
+  [GraphQLResolverEnum.REISSUE_ACCESS_TOKEN]: `
+    mutation ReissueAccessToken($input: ReissueAccessTokenInput!) {
+      reissueAccessToken(input: $input) {
+        accessToken
       }
     }
   `,

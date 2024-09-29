@@ -6,8 +6,11 @@ import {
   CreateUserInput,
   executeGraphql,
   GraphQLResolverEnum,
+  ReissueAccessTokenInput,
   UpdateUserInfoInput,
 } from '../utils/graphql.helper';
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;
@@ -172,6 +175,42 @@ describe('User Resolver (e2e)', () => {
 
       expect(data2.updateUserInfo.email).toEqual('email4@email.com');
       expect(data2.updateUserInfo.nickname).toEqual('changed_name');
+    });
+  });
+
+  describe('refresh token', () => {
+    it('should reissue accessToken using refresh token ', async () => {
+      const createUser: { input: CreateUserInput } = {
+        input: {
+          email: 'email5@email.com',
+          password: 'password',
+          nickname: 'nickname',
+        },
+      };
+      const res1 = await executeGraphql(
+        app,
+        GraphQLResolverEnum.CREATE_USER,
+        createUser,
+      );
+      const data1 = res1.body.data;
+      const accessToken = data1.createUser.accessToken;
+      const refreshToken = data1.createUser.refreshToken;
+
+      expect(data1).toHaveProperty('createUser');
+      expect(data1.createUser).toHaveProperty('accessToken');
+      expect(data1.createUser).toHaveProperty('refreshToken');
+
+      const reissueAccessToken: { input: ReissueAccessTokenInput } = {
+        input: {
+          refreshToken: refreshToken,
+        },
+      };
+      const res2 = await executeGraphql(
+        app,
+        GraphQLResolverEnum.REISSUE_ACCESS_TOKEN,
+        reissueAccessToken,
+      );
+      expect(res2.body.data.reissueAccessToken).toHaveProperty('accessToken');
     });
   });
 });
