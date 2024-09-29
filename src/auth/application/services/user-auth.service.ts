@@ -11,11 +11,15 @@ export class UserAuthService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async createUser(command: CreateUserCommand): Promise<UserModel> {
-    const user = await this.userRepository.createUser({
+    const user = await this.userRepository.getUserWithEmail(command.email);
+    if (user) {
+      throw errorFactory(ErrorCode.USER_ALREADY_EXISTS);
+    }
+    return await this.userRepository.createUser({
       ...command,
     });
-    return user;
   }
+
   async deleteUser(id: string): Promise<UserModel> {
     const user = await this.userRepository.getUser(id);
     if (!user) {

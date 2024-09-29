@@ -43,6 +43,15 @@ export class UserRepository {
     }
     return UserMapper.toDomain(user);
   }
+  async getUserWithEmail(email: string): Promise<UserModel | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      return null;
+    }
+    return UserMapper.toDomain(user);
+  }
 
   async getKakaoUser(kakaoId: string): Promise<UserModel | null> {
     const user = await this.prismaService.user.findFirst({

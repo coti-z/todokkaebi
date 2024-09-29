@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { GqlExceptionFilter, GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
-import { error } from 'winston';
+
 interface ErrorInfo {
   status?: number;
   message: string;
@@ -23,7 +23,7 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
     const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
     const { req } = gqlContext.getContext();
 
-    const errorInfo = this.getErrorInfo(req);
+    const errorInfo = this.getErrorInfo(exception);
     this.logError(errorInfo, exception, req);
 
     return new GraphQLError(errorInfo.message, {
