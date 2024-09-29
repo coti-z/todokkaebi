@@ -193,7 +193,6 @@ describe('User Resolver (e2e)', () => {
         createUser,
       );
       const data1 = res1.body.data;
-      const accessToken = data1.createUser.accessToken;
       const refreshToken = data1.createUser.refreshToken;
 
       expect(data1).toHaveProperty('createUser');
