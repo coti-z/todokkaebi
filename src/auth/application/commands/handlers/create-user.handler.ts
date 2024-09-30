@@ -16,7 +16,6 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   async execute(command: CreateUserCommand): Promise<TokenPair> {
     try {
       const user = await this.userAuthService.createUser(command);
-
       return this.jwtTokenService.generateTokenPair({
         userId: user.id,
       });

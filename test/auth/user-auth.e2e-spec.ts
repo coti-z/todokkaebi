@@ -10,8 +10,6 @@ import {
   UpdateUserInfoInput,
 } from '../utils/graphql.helper';
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;
 
@@ -175,6 +173,9 @@ describe('User Resolver (e2e)', () => {
 
       expect(data2.updateUserInfo.email).toEqual('email4@email.com');
       expect(data2.updateUserInfo.nickname).toEqual('changed_name');
+      expect(DateUtils.fromISOString(data2.updateUserInfo.birthday)).toEqual(
+        birthDay,
+      );
     });
   });
 

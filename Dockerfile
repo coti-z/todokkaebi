@@ -9,7 +9,7 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-ENV NODE_ENV=test
+ENV NODE_ENV=production
 ENV DATABASE_URL=mysql://root:root@mysql:3306/test
 
 EXPOSE 5000
