@@ -1,3 +1,4 @@
+import { HealthController } from '@/app/presentation/app.controller';
 import { AuthModule } from '@/auth/auth.module';
 import { GraphQLExceptionFilter } from '@/utils/filters/exception.filter';
 import { LoggingInterceptor } from '@/utils/interceptor/api.interceptor';
@@ -20,7 +21,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     }),
     AuthModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [
     {
       provide: 'APP_FILTER',
