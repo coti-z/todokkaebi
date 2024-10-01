@@ -1,6 +1,7 @@
-import { Field, ID } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Category } from '@prisma/client';
 
+@ObjectType()
 export class CategoryModel implements Category {
   @Field(() => ID)
   id: string;
@@ -11,9 +12,9 @@ export class CategoryModel implements Category {
   @Field()
   projectId: string;
 
-  @Field()
+  @HideField()
   createdAt: Date;
 
-  @Field()
+  @HideField()
   updatedAt: Date;
 }

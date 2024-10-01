@@ -8,7 +8,7 @@ import { DeleteProjectInput } from '@/todo/presentation/resolvers/dto/inputs/del
 import { GetProjectInput } from '@/todo/presentation/resolvers/dto/inputs/get-project.input';
 import { UpdateProjectInput } from '@/todo/presentation/resolvers/dto/inputs/update-project.input';
 import { GetAllProjectsResponse } from '@/todo/presentation/resolvers/dto/objects/get-all-projects.object';
-import { ProjectResponse } from '@/todo/presentation/resolvers/dto/objects/project.response';
+import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { TokenInfo } from '@/utils/decorators/token-info.decorator';
 import { JwtAuthGuard } from '@/utils/guard/jwt-auth.guard';
 import { JwtPayload } from '@/utils/jwt/jwt-token.interface';
@@ -16,28 +16,28 @@ import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-@Resolver(() => ProjectResponse)
+@Resolver(() => ProjectResponseObject)
 export class ProjectResolver {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => ProjectResponse)
+  @Mutation(() => ProjectResponseObject)
   async createProject(
     @Args('input') input: CreateProjectInput,
     @TokenInfo() payload: JwtPayload,
-  ): Promise<ProjectResponse> {
+  ): Promise<ProjectResponseObject> {
     const command = new CreateProjectCommand(payload.userId, input.name);
     return await this.commandBus.execute(command);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => ProjectResponse)
+  @Query(() => ProjectResponseObject)
   async getProject(
     @Args('input') input: GetProjectInput,
     @TokenInfo() payload: JwtPayload,
-  ): Promise<ProjectResponse> {
+  ): Promise<ProjectResponseObject> {
     const query = new GetProjectQuery(payload.userId, input.id);
     return await this.queryBus.execute(query);
   }
@@ -51,22 +51,22 @@ export class ProjectResolver {
     return await this.queryBus.execute(query);
   }
 
-  @Mutation(() => ProjectResponse)
+  @Mutation(() => ProjectResponseObject)
   @UseGuards(JwtAuthGuard)
   async deleteProject(
     @Args('input') input: DeleteProjectInput,
     @TokenInfo() payload: JwtPayload,
-  ): Promise<ProjectResponse> {
+  ): Promise<ProjectResponseObject> {
     const command = new DeleteProjectCommand(payload.userId, input.projectId);
     return await this.commandBus.execute(command);
   }
 
-  @Mutation(() => ProjectResponse)
+  @Mutation(() => ProjectResponseObject)
   @UseGuards(JwtAuthGuard)
   async updateProject(
     @Args('input') input: UpdateProjectInput,
     @TokenInfo() payload: JwtPayload,
-  ): Promise<ProjectResponse> {
+  ): Promise<ProjectResponseObject> {
     const command = new UpdateProjectCommand(
       payload.userId,
       input.projectId,

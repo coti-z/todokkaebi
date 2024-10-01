@@ -1,6 +1,6 @@
 import { GetProjectQuery } from '@/todo/application/queries/get-project.query';
 import { ProjectService } from '@/todo/application/services/project.serivce';
-import { ProjectResponse } from '@/todo/presentation/resolvers/dto/objects/project.response';
+import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
@@ -8,7 +8,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 @QueryHandler(GetProjectQuery)
 export class GetProjectHandler implements IQueryHandler<GetProjectQuery> {
   constructor(private readonly projectService: ProjectService) {}
-  async execute(query: GetProjectQuery): Promise<ProjectResponse> {
+  async execute(query: GetProjectQuery): Promise<ProjectResponseObject> {
     try {
       const project = await this.projectService.getProjectWithId(query.id);
       return {

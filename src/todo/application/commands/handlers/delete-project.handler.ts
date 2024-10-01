@@ -1,6 +1,6 @@
 import { DeleteProjectCommand } from '@/todo/application/commands/delete-project.command';
 import { ProjectService } from '@/todo/application/services/project.serivce';
-import { ProjectResponse } from '@/todo/presentation/resolvers/dto/objects/project.response';
+import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
@@ -10,7 +10,7 @@ export class DeleteProjectHandler
   implements ICommandHandler<DeleteProjectCommand>
 {
   constructor(private readonly projectService: ProjectService) {}
-  async execute(command: DeleteProjectCommand): Promise<ProjectResponse> {
+  async execute(command: DeleteProjectCommand): Promise<ProjectResponseObject> {
     try {
       const project = await this.projectService.deleteProject(command);
       return {

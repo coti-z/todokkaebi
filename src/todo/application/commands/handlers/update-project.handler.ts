@@ -1,6 +1,6 @@
 import { UpdateProjectCommand } from '@/todo/application/commands/update-project.command';
 import { ProjectService } from '@/todo/application/services/project.serivce';
-import { ProjectResponse } from '@/todo/presentation/resolvers/dto/objects/project.response';
+import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
@@ -10,7 +10,7 @@ export class UpdateProjectHandler
   implements ICommandHandler<UpdateProjectCommand>
 {
   constructor(private readonly projectService: ProjectService) {}
-  async execute(command: UpdateProjectCommand): Promise<ProjectResponse> {
+  async execute(command: UpdateProjectCommand): Promise<ProjectResponseObject> {
     try {
       const project = await this.projectService.updateProject(command);
       return {
