@@ -128,7 +128,7 @@ describe('User Resolver (e2e)', () => {
       );
       const data2 = res2.body.data;
       const result = data2.deleteUser;
-      expect(result).toBe(true);
+      expect(result.success).toBe(true);
     });
   });
 

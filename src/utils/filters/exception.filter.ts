@@ -34,6 +34,7 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
       extensions: {
         code: errorInfo.code,
         status: errorInfo.status,
+        success: false,
       },
     });
   }

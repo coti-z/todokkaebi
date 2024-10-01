@@ -42,6 +42,7 @@
     "prisma": "^5.20.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "uuid": "^10.0.0",
     "winston": "^3.14.2"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "@types/luxon": "^3.4.2",
     "@types/node": "^20.3.1",
     "@types/supertest": "^6.0.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^8.42.0",
@@ -74,14 +76,21 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "rootDir": ".",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
+    "testRegex": ".*\\.(spec|e2e-spec)\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

@@ -7,6 +7,11 @@ export enum GraphQLResolverEnum {
   DELETE_ACCOUNT = 'DELETE_ACCOUNT',
   UPDATE_USER = 'UPDATE_USER',
   REISSUE_ACCESS_TOKEN = 'REISSUE_ACCESS_TOKEN',
+  CREATE_PROJECT = 'CREATE_PROJECT',
+  DELETE_PROJECT = 'DELETE_PROJECT',
+  UPDATE_PROJECT = 'UPDATE_PROJECT',
+  GET_USER_PROJECT = 'GET_USER_PROJECT',
+  GET_USER_ALL_PROJECT = 'GET_USER_ALL_PROJECT',
 }
 
 export type CreateUserInput = {
@@ -25,7 +30,26 @@ export type ReissueAccessTokenInput = {
   refreshToken: string;
 };
 
-export const GraphQLAPI = {
+export type CreateProjectInput = {
+  name: string;
+};
+
+export type DeleteProjectInput = {
+  projectId: string;
+};
+
+export class GetProjectInput {
+  id: string;
+}
+
+export class UpdateProjectInput {
+  projectId: string;
+  name: string;
+}
+
+type GraphQLQuery = string;
+
+export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
   [GraphQLResolverEnum.CREATE_USER]: `
     mutation CreateUser($input: CreateUserInput!) {
       createUser(input: $input) {
@@ -68,7 +92,68 @@ export const GraphQLAPI = {
       }
     }
   `,
-} as const;
+  [GraphQLResolverEnum.CREATE_PROJECT]: `
+    mutation CreateProject($input: CreateProjectInput!) {
+      createProject(input: $input) {
+        success
+        project {
+            id
+            name
+            userId
+        }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.DELETE_PROJECT]: `
+    mutation DeleteProject($input: DeleteProjectInput!) {
+      deleteProject(input: $input) {
+        success
+        project {
+            id
+            name
+            userId
+        }
+      }
+    } 
+  `,
+  [GraphQLResolverEnum.UPDATE_PROJECT]: `
+    mutation UpdateProject($input: UpdateProjectInput!) {
+      updateProject(input: $input) {
+         success
+          project {
+              id
+              name
+              userId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.GET_USER_PROJECT]: `
+    query GetProject($input: GetProjectInput!) {
+      getProject(input: $input) {
+        success
+        project {
+            id
+            name
+            userId
+        }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.GET_USER_ALL_PROJECT]: `
+    query GetAllProjects {
+      getAllProjects {
+          success
+          totalNumber
+          projects {
+              id
+              name
+              userId
+          }
+      }
+    }
+  `,
+};
 
 export async function executeGraphql(
   app: INestApplication,
