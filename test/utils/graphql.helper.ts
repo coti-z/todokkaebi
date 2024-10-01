@@ -46,7 +46,9 @@ export const GraphQLAPI = {
   `,
   [GraphQLResolverEnum.DELETE_ACCOUNT]: `
     mutation DeleteUser {
-      deleteUser
+      deleteUser {
+        success
+      }
     }
   `,
   [GraphQLResolverEnum.GET_USER]: `

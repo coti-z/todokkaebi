@@ -14,4 +14,4 @@ ENV DATABASE_URL=mysql://root:root@mysql:3306/test
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "npx --yes prisma migrate deploy && node dist/main.js"]

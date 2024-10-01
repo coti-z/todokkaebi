@@ -1,5 +1,6 @@
 import { HealthController } from '@/app/presentation/app.controller';
 import { AuthModule } from '@/auth/auth.module';
+import { TodoModule } from '@/todo/todo.module';
 import { GraphQLExceptionFilter } from '@/utils/filters/exception.filter';
 import { LoggingInterceptor } from '@/utils/interceptor/api.interceptor';
 import { LoggerModule } from '@/utils/logger/logger.module';
@@ -20,6 +21,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       isGlobal: true,
     }),
     AuthModule,
+    TodoModule,
   ],
   controllers: [HealthController],
   providers: [
