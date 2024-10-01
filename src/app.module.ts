@@ -4,6 +4,7 @@ import { TodoModule } from '@/todo/todo.module';
 import { GraphQLExceptionFilter } from '@/utils/filters/exception.filter';
 import { LoggingInterceptor } from '@/utils/interceptor/api.interceptor';
 import { LoggerModule } from '@/utils/logger/logger.module';
+import { SlackNotificationService } from '@/utils/slack/slack.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -25,6 +26,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
   ],
   controllers: [HealthController],
   providers: [
+    SlackNotificationService,
     {
       provide: 'APP_FILTER',
       useClass: GraphQLExceptionFilter,

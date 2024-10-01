@@ -1,6 +1,7 @@
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { LoggerService } from '@/utils/logger/logger.service';
+import { SlackNotificationService } from '@/utils/slack/slack.service';
 import {
   ArgumentsHost,
   Catch,
@@ -17,7 +18,10 @@ interface ErrorInfo {
 }
 @Catch()
 export class GraphQLExceptionFilter implements GqlExceptionFilter {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(
+    private readonly slackNotificationService: SlackNotificationService,
+    private readonly logger: LoggerService,
+  ) {}
 
   catch(exception: any, host: ArgumentsHost) {
     const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
@@ -58,7 +62,15 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
     };
   }
 
-  private logError(errorInfo: ErrorInfo, exception: any, req: any) {
+  private async logError(errorInfo: ErrorInfo, exception: any, req: any) {
+    await this.slackNotificationService.sendErrorNotification({
+      message: errorInfo.message,
+      status: errorInfo.status,
+      code: errorInfo.code,
+      body: req.body,
+      stack: exception.stack,
+    });
+
     this.logger.warn(errorInfo.message, {
       status: errorInfo.status,
       code: errorInfo.code,
