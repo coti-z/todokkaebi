@@ -54,6 +54,6 @@ jobs:
             docker stop todogebi-server || true
             docker rm todogebi-server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
-            docker run -d --name todogebi-server --restart always -p 5000:5000 --network app-network ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest
+            docker run -d --name todogebi-server --restart always -p 5000:5000  --network app-network ${{ steps.login-ecr.outputs.registry }}/todogebi-server:latest 
             docker image prune -af
 

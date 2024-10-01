@@ -8,6 +8,7 @@ import { CreateUserInput } from '@/auth/presentation/resolver/dto/input/create-u
 import { ReissueAccessTokenInput } from '@/auth/presentation/resolver/dto/input/reissue-access-token.input';
 import { UpdateUserInfoInput } from '@/auth/presentation/resolver/dto/input/update-user-info.input';
 import { AccessToken } from '@/auth/presentation/resolver/dto/object/access-token.object';
+import { DeleteUser } from '@/auth/presentation/resolver/dto/object/delete-user.object';
 import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
 import { TokenInfo } from '@/utils/decorators/token-info.decorator';
 import { JwtAuthGuard } from '@/utils/guard/jwt-auth.guard';
@@ -55,9 +56,9 @@ export class UserAuthResolver {
     const command = new ReissueAccessTokenCommand(input.refreshToken);
     return await this.commandBus.execute(command);
   }
-  @Mutation(() => Boolean)
+  @Mutation(() => DeleteUser)
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@TokenInfo() payload: JwtPayload): Promise<boolean> {
+  async deleteUser(@TokenInfo() payload: JwtPayload): Promise<DeleteUser> {
     const command = new DeleteUserCommand(payload.userId);
     return await this.commandBus.execute(command);
   }
