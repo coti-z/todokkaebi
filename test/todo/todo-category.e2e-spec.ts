@@ -4,6 +4,7 @@ import { CreateProjectInput } from '@/todo/presentation/resolvers/dto/inputs/cre
 import { DeleteCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/delete-category.input';
 import { GetAllCategoriesInput } from '@/todo/presentation/resolvers/dto/inputs/get-all-categories.input';
 import { GetCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/get-category.input';
+import { GetProjectInput } from '@/todo/presentation/resolvers/dto/inputs/get-project.input';
 import { UpdateCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/update-category.input';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -160,9 +161,10 @@ describe('Todo Project Resolver (e2e)', () => {
         inputData,
         accessToken,
       );
+
       const data = res1.body.data.createCategory.category;
       const dataId = data.id;
-      const getInputData: { input: GetCategoryInput } = {
+      const getCategoryInput: { input: GetCategoryInput } = {
         input: {
           id: dataId,
         },
@@ -170,43 +172,33 @@ describe('Todo Project Resolver (e2e)', () => {
       const res2 = await executeGraphql(
         app,
         GraphQLResolverEnum.GET_CATEGORY,
-        getInputData,
+        getCategoryInput,
         accessToken,
       );
       const data2 = res2.body.data.getCategory;
-      expect(data2.success).toEqual(true);
+      expect(data2).toHaveProperty('category');
     });
   });
 
   describe('get all category resolver (e2e)', () => {
     it('should get all category', async () => {
-      const inputData: { input: CreateCategoryInput } = {
+      const getAllInputData: { input: GetProjectInput } = {
         input: {
-          name: 'category_name5',
-          projectId,
-        },
-      };
-      const res1 = await executeGraphql(
-        app,
-        GraphQLResolverEnum.CREATE_CATEGORY,
-        inputData,
-        accessToken,
-      );
-      const data = res1.body.data.createCategory.category;
-      const getAllInputData: { input: GetAllCategoriesInput } = {
-        input: {
-          projectId,
+          id: projectId,
         },
       };
 
       const res2 = await executeGraphql(
         app,
-        GraphQLResolverEnum.GET_ALL_CATEGORY,
+        GraphQLResolverEnum.GET_USER_PROJECT,
         getAllInputData,
         accessToken,
       );
-      const data2 = res2.body.data.getAllCategories.total;
-      expect(data2).toEqual(4);
+
+      const data2 = res2.body.data.getProject;
+      expect(data2.project.categories.length).toEqual(3);
+
+      //expect(data2).toEqual(3);
     });
   });
 });

@@ -23,12 +23,14 @@ export class CategoryRepository {
       where: {
         id,
       },
+      include: {
+        tasks: true,
+      },
     });
-
     if (!category) {
       return null;
     }
-    return CategoryMapper.toDomain(category);
+    return CategoryMapper.CategoryTasksToDomain(category);
   }
 
   async getUserIdWithCategoryId(id: string): Promise<string | null> {
@@ -76,5 +78,46 @@ export class CategoryRepository {
     });
 
     return CategoryMapper.toDomain(category);
+  }
+
+  async getCategoryUserId(id: string): Promise<string | null> {
+    const category = await this.prismaService.category.findUnique({
+      where: { id },
+      include: {
+        Project: {
+          select: { userId: true },
+        },
+      },
+    });
+    if (!category) {
+      return null;
+    }
+    return category.Project.userId;
+  }
+
+  async getCategoryRange(categoryId: string): Promise<{
+    categoryId: string;
+    startDate: Date | null;
+    endDate: Date | null;
+  }> {
+    const duration = await this.prismaService.task.aggregate({
+      _min: {
+        startDate: true,
+      },
+      _max: {
+        endDate: true,
+      },
+      where: {
+        Category: {
+          id: categoryId,
+        },
+      },
+    });
+
+    return {
+      categoryId,
+      startDate: duration._min.startDate,
+      endDate: duration._max.endDate,
+    };
   }
 }

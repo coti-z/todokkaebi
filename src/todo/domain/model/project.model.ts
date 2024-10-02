@@ -1,3 +1,4 @@
+import { CategoryModel } from '@/todo/domain/model/category.model';
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Project } from '@prisma/client';
 
@@ -17,4 +18,13 @@ export class ProjectModel implements Project {
 
   @HideField()
   updatedAt: Date;
+
+  @Field({ nullable: true })
+  endDate?: Date;
+
+  @Field({ nullable: true })
+  startDate?: Date;
+
+  @Field(() => [CategoryModel], { nullable: true })
+  categories?: CategoryModel[];
 }

@@ -12,6 +12,10 @@ export class DeleteCategoryHandler
   constructor(private readonly categoryService: CategoryService) {}
   async execute(command: DeleteCategoryCommand): Promise<CategoryResponse> {
     try {
+      await this.categoryService.validateUserId(
+        command.userId,
+        command.categoryId,
+      );
       const category = await this.categoryService.deleteCategory(command);
       return {
         success: true,

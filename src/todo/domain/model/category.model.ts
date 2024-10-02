@@ -1,3 +1,4 @@
+import { TaskModel } from '@/todo/domain/model/task.model';
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Category } from '@prisma/client';
 
@@ -17,4 +18,13 @@ export class CategoryModel implements Category {
 
   @HideField()
   updatedAt: Date;
+
+  @Field({ nullable: true })
+  startedAt?: Date;
+
+  @Field({ nullable: true })
+  endedAt?: Date;
+
+  @Field(() => [TaskModel], { nullable: true })
+  tasks?: TaskModel[];
 }

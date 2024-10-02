@@ -9,35 +9,6 @@ import { Prisma } from '@prisma/client';
 export class ProjectRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getProjectForTimeline(id: string): Promise<ProjectWithTaskModel> {
-    const projects = await this.prismaService.project.findUnique({
-      where: { id },
-      include: {
-        categories: {
-          include: {
-            tasks: {
-              orderBy: [{ startDate: 'asc' }, { endDate: 'desc' }],
-            },
-          },
-        },
-      },
-    });
-    return projects;
-  }
-  async getProjectWithId(id: string): Promise<ProjectModel | null> {
-    const project = await this.prismaService.project.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!project) {
-      return null;
-    }
-
-    return ProjectMapper.toDomain(project);
-  }
-
   async getProjectsWithUserId(userId: string): Promise<ProjectModel[]> {
     const projects = await this.prismaService.project.findMany({
       where: {
@@ -45,6 +16,26 @@ export class ProjectRepository {
       },
     });
     return ProjectMapper.toDomains(projects);
+  }
+  async getProjectWithId(id: string): Promise<ProjectModel | null> {
+    const project = await this.prismaService.project.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return ProjectMapper.ProjectCategoryTaskToDomains(project);
   }
 
   async createProject(data: Prisma.ProjectCreateInput): Promise<ProjectModel> {
@@ -72,5 +63,33 @@ export class ProjectRepository {
       },
     });
     return ProjectMapper.toDomain(project);
+  }
+
+  async getProjectRange(projectId: string): Promise<{
+    projectId: string;
+    startDate: Date | null;
+    endDate: Date | null;
+  }> {
+    const duration = await this.prismaService.task.aggregate({
+      _min: {
+        startDate: true,
+      },
+      _max: {
+        endDate: true,
+      },
+      where: {
+        Category: {
+          Project: {
+            id: projectId,
+          },
+        },
+      },
+    });
+
+    return {
+      projectId,
+      startDate: duration._min.startDate,
+      endDate: duration._max.endDate,
+    };
   }
 }

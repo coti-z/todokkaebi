@@ -7,7 +7,7 @@ export class GetAllProjectsResponse {
   success: boolean;
 
   @Field()
-  totalNumber: number;
+  total: number;
 
   @Field(() => [ProjectModel])
   projects: ProjectModel[];

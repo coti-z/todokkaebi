@@ -4,19 +4,21 @@ import { GetAllProjectsResponse } from '@/todo/presentation/resolvers/dto/object
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-@QueryHandler(GetAllProjectsQuery)
 @Injectable()
-export class GetAllProjectsHandler implements IQueryHandler {
+@QueryHandler(GetAllProjectsQuery)
+export class GetAllProjectHandler
+  implements IQueryHandler<GetAllProjectsQuery>
+{
   constructor(private readonly projectService: ProjectService) {}
-  async execute(command: GetAllProjectsQuery): Promise<GetAllProjectsResponse> {
+  async execute(query: GetAllProjectsQuery): Promise<GetAllProjectsResponse> {
     try {
       const projects = await this.projectService.getProjectsWithUserId(
-        command.userId,
+        query.userId,
       );
       return {
         success: true,
-        totalNumber: projects.length,
-        projects,
+        total: projects.length,
+        projects: projects,
       };
     } catch (e) {
       throw e;

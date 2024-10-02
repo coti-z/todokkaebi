@@ -72,12 +72,16 @@ model Task {
   endDate         DateTime
   actualStartDate DateTime?
   actualEndDate   DateTime?
-  Check           Boolean
+  check           Boolean   @default(false)
   status          TaskState @default(PENDING)
   Category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId      String
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([startDate])
+  @@index([endDate])
 }
 
 enum TaskState {

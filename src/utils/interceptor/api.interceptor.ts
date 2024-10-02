@@ -19,6 +19,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(data => {
         this.logger.info(`Success ${resolverName}`, { date: now });
+
         return data;
       }),
     );

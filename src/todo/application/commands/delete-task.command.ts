@@ -1,8 +1,8 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class DeleteCategoryCommand implements ICommand {
+export class DeleteTaskCommand implements ICommand {
   constructor(
     public readonly userId: string,
-    public readonly categoryId: string,
+    public readonly id: string,
   ) {}
 }

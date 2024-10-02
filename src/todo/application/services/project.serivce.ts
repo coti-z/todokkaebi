@@ -11,60 +11,19 @@ import { Injectable } from '@nestjs/common';
 export class ProjectService {
   constructor(private readonly projectRepository: ProjectRepository) {}
 
-  async getProjectTimeLine(id: string) {
-    const projects = await this.projectRepository.getProjectForTimeline(id);
-    if (!projects) {
-      throw new Error('Project not found');
-    }
-
-    let projectStartDate: Date | null = null;
-    let projectEndDate: Date | null = null;
-    projects.categories.map(category => {
-      const tasks = category.tasks;
-      const categoryStartDate =
-        tasks.length > 0 ? tasks[0].actualStartDate : null;
-      const categoryEndDate =
-        tasks.length > 0 ? tasks[tasks.length - 1].actualEndDate : null;
-
-      // Update project start and end dates
-      if (
-        categoryStartDate &&
-        (!projectStartDate || categoryStartDate < projectStartDate)
-      ) {
-        projectStartDate = categoryStartDate;
-      }
-      if (
-        categoryEndDate &&
-        (!projectEndDate || categoryEndDate > projectEndDate)
-      ) {
-        projectEndDate = categoryEndDate;
-      }
-
-      return {
-        ...category,
-        startDate: categoryStartDate,
-        endDate: categoryEndDate,
-        tasks: tasks.map(task => ({
-          ...task,
-          startDate: task.actualStartDate,
-          endDate: task.actualEndDate,
-        })),
-      };
-      console.log(projects);
-    });
-  }
-
   async getProjectWithId(id: string): Promise<ProjectModel> {
     const project = await this.projectRepository.getProjectWithId(id);
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    return project;
+    const projectWithRange = await this.getProjectRange(project);
+    return projectWithRange;
   }
 
   async getProjectsWithUserId(userId: string): Promise<ProjectModel[]> {
     const projects = await this.projectRepository.getProjectsWithUserId(userId);
-    return projects;
+    const promise = projects.map(project => this.getProjectRange(project));
+    return await Promise.all(promise);
   }
 
   async createProject(cmd: CreateProjectCommand): Promise<ProjectModel> {
@@ -112,5 +71,27 @@ export class ProjectService {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     return project.userId;
+  }
+
+  async validateProjectOwnerWithUserId(
+    projectId: string,
+    userId: string,
+  ): Promise<void> {
+    const project = await this.projectRepository.getProjectWithId(projectId);
+    if (!project) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+
+    if (project.userId !== userId) {
+      throw errorFactory(ErrorCode.UNAUTHORIZED);
+    }
+  }
+  private async getProjectRange(
+    projectModel: ProjectModel,
+  ): Promise<ProjectModel> {
+    const range = await this.projectRepository.getProjectRange(projectModel.id);
+    if (range.startDate) projectModel.startDate = range.startDate;
+    if (range.endDate) projectModel.endDate = range.endDate;
+    return projectModel;
   }
 }
