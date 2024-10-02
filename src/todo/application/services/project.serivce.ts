@@ -105,4 +105,12 @@ export class ProjectService {
     }
     return await this.projectRepository.deleteProject(cmd.id);
   }
+
+  async getProjectUserId(projectId: string): Promise<string> {
+    const project = await this.projectRepository.getProjectWithId(projectId);
+    if (!project) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    return project.userId;
+  }
 }

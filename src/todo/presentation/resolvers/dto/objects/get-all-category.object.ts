@@ -10,5 +10,5 @@ export class GetAllCategoryResponse {
   total: number;
 
   @Field(() => [CategoryModel])
-  projects: CategoryModel[];
+  categories: CategoryModel[];
 }

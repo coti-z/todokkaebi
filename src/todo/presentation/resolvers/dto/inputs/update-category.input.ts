@@ -1,6 +1,10 @@
-import { Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
+@InputType()
 export class UpdateCategoryInput {
   @Field()
-  name: string;
+  categoryId: string;
+
+  @Field()
+  categoryName: string;
 }

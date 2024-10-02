@@ -12,6 +12,11 @@ export enum GraphQLResolverEnum {
   UPDATE_PROJECT = 'UPDATE_PROJECT',
   GET_USER_PROJECT = 'GET_USER_PROJECT',
   GET_USER_ALL_PROJECT = 'GET_USER_ALL_PROJECT',
+  CREATE_CATEGORY = 'CREATE_CATEGORY',
+  UPDATE_CATEGORY = 'UPDATE_CATEGORY',
+  DELETE_CATEGORY = 'DELETE_CATEGORY',
+  GET_CATEGORY = 'GET_CATEGORY',
+  GET_ALL_CATEGORY = 'GET_ALL_CATEGORY',
 }
 
 export type CreateUserInput = {
@@ -29,23 +34,6 @@ export type UpdateUserInfoInput = {
 export type ReissueAccessTokenInput = {
   refreshToken: string;
 };
-
-export type CreateProjectInput = {
-  name: string;
-};
-
-export type DeleteProjectInput = {
-  projectId: string;
-};
-
-export class GetProjectInput {
-  id: string;
-}
-
-export class UpdateProjectInput {
-  projectId: string;
-  name: string;
-}
 
 type GraphQLQuery = string;
 
@@ -152,6 +140,68 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
           }
       }
     }
+  `,
+  [GraphQLResolverEnum.CREATE_CATEGORY]: `
+    mutation CreateCategory($input: CreateCategoryInput!) {
+      createCategory(input: $input) {
+          success
+          category {
+              id
+              name
+              projectId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.UPDATE_CATEGORY]: `
+    mutation UpdateCategory($input: UpdateCategoryInput!) {
+      updateCategory(input: $input) {
+          success
+          category {
+              id
+              name
+              projectId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.DELETE_CATEGORY]: `
+    mutation DeleteCategory($input: DeleteCategoryInput!) {
+      deleteCategory(input: $input) {
+          success
+          category {
+              id
+              name
+              projectId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.GET_CATEGORY]: `
+    mutation GetCategory($input: GetCategoryInput!) {
+      getCategory(input: $input) {
+          success
+          category {
+              id
+              name
+              projectId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.GET_ALL_CATEGORY]: `
+    mutation GetAllCategories($input: GetAllCategoriesInput!) {
+      getAllCategories(input: $input) {
+          success
+          total
+          categories {
+              id
+              name
+              projectId
+          }
+      }
+    }
+
   `,
 };
 

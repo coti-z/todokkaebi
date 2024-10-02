@@ -58,8 +58,8 @@ model Project {
 model Category {
   id        String   @id @default(uuid())
   name      String
-  Project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId String?
+  Project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
   tasks     Task[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,8 +74,8 @@ model Task {
   actualEndDate   DateTime?
   Check           Boolean
   status          TaskState @default(PENDING)
-  Category        Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId      String?
+  Category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId      String
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }

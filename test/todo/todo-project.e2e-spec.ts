@@ -12,7 +12,7 @@ import {
   GraphQLResolverEnum,
 } from '../utils/graphql.helper';
 
-describe('Todo Resolver (e2e)', () => {
+describe('Todo Project Resolver (e2e)', () => {
   let app: INestApplication;
 
   let accessToken: string;
