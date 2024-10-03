@@ -13,6 +13,7 @@ import { KakaoModule } from '@/auth/infrastructure/kakao/kakao.moduel';
 import { KakaoAuthResolver } from '@/auth/presentation/resolver/kakao-auth.resolver';
 import { UserAuthResolver } from '@/auth/presentation/resolver/user-auth.resolver';
 import { JwtTokenModule } from '@/utils/jwt/jwt.module';
+import { TaskUpdateScheduler } from '@/utils/schedulers/task-update.scheduler';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 

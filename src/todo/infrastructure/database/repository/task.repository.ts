@@ -2,7 +2,7 @@ import { TaskMapper } from '@/todo/domain/mapper/task.mapper';
 import { TaskModel } from '@/todo/domain/model/task.model';
 import { PrismaService } from '@/todo/infrastructure/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskState } from '@prisma/client';
 
 @Injectable()
 export class TaskRepository {
@@ -24,6 +24,39 @@ export class TaskRepository {
       data,
     });
     return TaskMapper.toDomain(task);
+  }
+
+  async checkTasksPendingToProgress(now: Date): Promise<number> {
+    const updatePending = this.prismaService.task.updateMany({
+      where: {
+        startDate: {
+          lt: now,
+        },
+        status: TaskState.PENDING,
+      },
+      data: {
+        status: TaskState.IN_PROGRESS,
+        actualStartDate: now,
+      },
+    });
+    const updateINPROFRESS = this.prismaService.task.updateMany({
+      where: {
+        startDate: {
+          gt: now,
+        },
+        status: TaskState.IN_PROGRESS,
+      },
+      data: {
+        status: TaskState.PENDING,
+        actualStartDate: null, // 실제 시작 날짜도 null로 리셋할 수 있음
+      },
+    });
+    const [updatedToInProgress, revertedToPending] = await Promise.all([
+      updatePending,
+      updateINPROFRESS,
+    ]);
+
+    return updatedToInProgress.count + revertedToPending.count;
   }
 
   async deleteTask(id: string): Promise<TaskModel> {

@@ -20,6 +20,12 @@ export class CategoryModel implements Category {
   updatedAt: Date;
 
   @Field({ nullable: true })
+  actualEndDate?: Date;
+
+  @Field({ nullable: true })
+  actualStartDate?: Date;
+
+  @Field({ nullable: true })
   startedAt?: Date;
 
   @Field({ nullable: true })
@@ -27,10 +33,4 @@ export class CategoryModel implements Category {
 
   @Field(() => [TaskModel], { nullable: true })
   tasks?: TaskModel[];
-
-  @Field({ defaultValue: 0 })
-  totalTask?: number;
-
-  @Field({ defaultValue: 0 })
-  completeTask?: number;
 }

@@ -96,7 +96,9 @@ describe('Todo Project Resolver (e2e)', () => {
         accessToken,
       );
       const data = res1.body.data.createTask;
+
       expect(data.success).toBe(true);
+      expect(DateUtils.fromISOString(data.task.startDate)).toEqual(minDate);
     });
 
     it('should create multiple task', async () => {
@@ -133,7 +135,7 @@ describe('Todo Project Resolver (e2e)', () => {
       const inputDate3: { input: GetProjectInput } = {
         input: {
           id: projectId,
-          state: TaskState.PENDING,
+          state: TaskState.IN_PROGRESS,
         },
       };
       const project = await executeGraphql(
@@ -142,17 +144,15 @@ describe('Todo Project Resolver (e2e)', () => {
         inputDate3,
         accessToken,
       );
-      expect(project.body.data.getProject.success);
+
       const projectData = project.body.data.getProject;
       const getEndDate = DateUtils.fromISOString(projectData.project.endDate);
       const getStartDate = DateUtils.fromISOString(
         projectData.project.startDate,
       );
-      console.log(projectData.project.categories);
-      console.log(projectData.project.categories[0].tasks);
-
       expect(getEndDate).toEqual(maxDate);
       expect(getStartDate).toEqual(minDate);
+      expect(projectData.project.categories[0].tasks.length).toEqual(2);
     });
   });
 
@@ -197,6 +197,7 @@ describe('Todo Project Resolver (e2e)', () => {
         accessToken,
       );
       const data2 = res2.body.data.updateTask;
+      console.log(data2);
       expect(data2.success).toBe(true);
       expect(data2.task.title).toBe(changeTitle);
       expect(DateUtils.fromISOString(data2.task.endDate)).toEqual(

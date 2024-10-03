@@ -6,57 +6,68 @@ import { TaskRepository } from '@/todo/infrastructure/database/repository/task.r
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
-import { TaskState } from '@prisma/client';
+import { Prisma, TaskState } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
   constructor(private readonly taskRepository: TaskRepository) {}
 
   async createTask(command: CreateTaskCommand): Promise<TaskModel> {
-    return await this.taskRepository.createTask({
+    const now = new Date();
+    let status: TaskState = TaskState.PENDING;
+    if (command.startDate && command.startDate < now) {
+      status = TaskState.IN_PROGRESS;
+    }
+
+    const createData: Prisma.TaskCreateInput = {
       title: command.title,
       startDate: command.startDate,
+      actualStartDate: command.startDate,
       endDate: command.endDate,
+      status,
       Category: {
         connect: {
           id: command.categoryId,
         },
       },
-    });
+    };
+
+    return await this.taskRepository.createTask(createData);
   }
 
   async deleteTask(command: DeleteTaskCommand): Promise<TaskModel> {
     return await this.taskRepository.deleteTask(command.id);
   }
+  async updatePendingToINProgress(date: Date): Promise<number> {
+    return await this.taskRepository.checkTasksPendingToProgress(date);
+  }
 
   async updateTask(command: UpdateTaskCommand): Promise<TaskModel> {
-    if (command.check) {
-      const task = await this.taskRepository.updateTask(command.id, {
-        title: command.title,
-        check: command.check,
-        startDate: command.startDate,
-        endDate: command.endDate,
-        status: TaskState.COMPLETE,
-        Category: {
-          connect: {
-            id: command.categoryId,
-          },
-        },
-      });
-      return task;
-    }
-    const task = await this.taskRepository.updateTask(command.id, {
+    const now = new Date();
+
+    const updateDate: Prisma.TaskUpdateInput = {
       title: command.title,
       check: command.check,
       startDate: command.startDate,
+      actualStartDate: command.startDate,
       endDate: command.endDate,
       Category: {
         connect: {
           id: command.categoryId,
         },
       },
-    });
-    return task;
+    };
+
+    if (command.check === true) {
+      updateDate.status = TaskState.COMPLETE;
+      updateDate.actualEndDate = now;
+    } else if (command.check === false) {
+      updateDate.status = TaskState.IN_PROGRESS;
+      if (command.startDate && now > command.startDate) {
+        updateDate.status = TaskState.PENDING;
+      }
+    }
+    return await this.taskRepository.updateTask(command.id, updateDate);
   }
   async getTaskWithTaskId(taskId: string): Promise<TaskModel> {
     const task = await this.taskRepository.getTask(taskId);

@@ -23,11 +23,18 @@ import { CategoryResolver } from '@/todo/presentation/resolvers/category.resolve
 import { ProjectResolver } from '@/todo/presentation/resolvers/project.resolver';
 import { TaskResolver } from '@/todo/presentation/resolvers/task.resolver';
 import { JwtTokenModule } from '@/utils/jwt/jwt.module';
+import { TaskUpdateScheduler } from '@/utils/schedulers/task-update.scheduler';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [JwtTokenModule, DatabaseModule, CqrsModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    JwtTokenModule,
+    DatabaseModule,
+    CqrsModule,
+  ],
   providers: [
     ProjectResolver,
     CategoryResolver,
@@ -58,6 +65,8 @@ import { CqrsModule } from '@nestjs/cqrs';
     TaskRepository,
     ProjectRepository,
     CategoryRepository,
+
+    TaskUpdateScheduler,
   ],
 })
 export class TodoModule {}

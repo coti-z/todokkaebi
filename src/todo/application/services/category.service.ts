@@ -86,12 +86,21 @@ export class CategoryService {
     );
     return await Promise.all(promise);
   }
+
+  async insertsCount(
+    categoryModels: CategoryModel[] | undefined,
+  ): Promise<CategoryModel[] | undefined> {
+    if (!categoryModels) return undefined;
+  }
+
   private async insertDate(
     categoryId: string,
     categoryModel: CategoryModel,
   ): Promise<CategoryModel> {
     const date = await this.categoryRepository.getCategoryRange(categoryId);
     if (date.startDate) categoryModel.startedAt = date.startDate;
+    if (date.startDate) categoryModel.actualStartDate = date.startDate;
+    if (date.actualEndDate) categoryModel.actualEndDate = date.actualEndDate;
     if (date.endDate) categoryModel.endedAt = date.endDate;
     return categoryModel;
   }

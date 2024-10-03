@@ -120,6 +120,7 @@ export class CategoryRepository {
     categoryId: string;
     startDate: Date | null;
     endDate: Date | null;
+    actualEndDate: Date | null;
   }> {
     const duration = await this.prismaService.task.aggregate({
       _min: {
@@ -134,11 +135,16 @@ export class CategoryRepository {
         },
       },
     });
-
+    const actualDuration = await this.prismaService.task.aggregate({
+      _max: {
+        actualEndDate: true,
+      },
+    });
     return {
       categoryId,
       startDate: duration._min.startDate,
       endDate: duration._max.endDate,
+      actualEndDate: actualDuration._max.actualEndDate,
     };
   }
 }

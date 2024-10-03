@@ -129,12 +129,16 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
             id
             name
             userId
+            totalTask
+            completeTask
             endDate
             startDate
             categories {
                 id
                 name
                 projectId
+                actualEndDate
+                actualStartDate
                 startedAt
                 endedAt
                 tasks {
