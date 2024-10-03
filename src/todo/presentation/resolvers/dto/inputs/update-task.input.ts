@@ -1,29 +1,33 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { TaskState } from '@prisma/client';
-import { IsDate } from 'class-validator';
+import { IsDate, IsOptional } from 'class-validator';
 
 @InputType()
 export class UpdateTaskInput {
   @Field()
   taskId: string;
 
-  @Field()
-  title: string;
+  @Field({ nullable: true })
+  @IsOptional()
+  title?: string;
 
-  @Field()
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
   @IsDate()
-  startDate: Date;
+  startDate?: Date;
 
-  @Field()
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
   @IsDate()
-  endDate: Date;
+  endDate?: Date;
 
   @Field()
   categoryId: string;
 
-  @Field()
-  taskState: TaskState;
+  @Field({ nullable: true })
+  taskState?: TaskState;
 
-  @Field()
-  check: boolean;
+  @Field({ nullable: true })
+  @IsOptional()
+  check?: boolean;
 }

@@ -5,6 +5,7 @@ import { GetProjectInput } from '@/todo/presentation/resolvers/dto/inputs/get-pr
 import { UpdateProjectInput } from '@/todo/presentation/resolvers/dto/inputs/update-project.input';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { TaskState } from '@prisma/client';
 import * as uuid from 'uuid';
 import {
   CreateUserInput,
@@ -80,6 +81,7 @@ describe('Todo Project Resolver (e2e)', () => {
       const inputData2: { input: GetProjectInput } = {
         input: {
           id: data1.id,
+          state: TaskState.PENDING,
         },
       };
       const res2 = await executeGraphql(

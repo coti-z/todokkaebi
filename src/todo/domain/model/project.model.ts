@@ -13,6 +13,12 @@ export class ProjectModel implements Project {
   @Field()
   userId: string;
 
+  @Field({ defaultValue: 0 })
+  totalTask?: number;
+
+  @Field({ defaultValue: 0 })
+  completeTask?: number;
+
   @HideField()
   createdAt: Date;
 

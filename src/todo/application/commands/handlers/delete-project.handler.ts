@@ -12,6 +12,10 @@ export class DeleteProjectHandler
   constructor(private readonly projectService: ProjectService) {}
   async execute(command: DeleteProjectCommand): Promise<ProjectResponseObject> {
     try {
+      await this.projectService.validateProjectOwnerWithUserId(
+        command.id,
+        command.userId,
+      );
       const project = await this.projectService.deleteProject(command);
       return {
         success: true,

@@ -12,13 +12,13 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 export class UpdateProjectHandler
   implements ICommandHandler<UpdateProjectCommand>
 {
-  constructor(
-    private readonly projectService: ProjectService,
-    private readonly categoryService: CategoryService,
-    private readonly taskService: TaskService,
-  ) {}
+  constructor(private readonly projectService: ProjectService) {}
   async execute(command: UpdateProjectCommand): Promise<ProjectResponseObject> {
     try {
+      await this.projectService.validateProjectOwnerWithUserId(
+        command.id,
+        command.userId,
+      );
       const project = await this.projectService.updateProject(command);
 
       return {

@@ -1,10 +1,14 @@
 import { ProjectMapper } from '@/todo/domain/mapper/project.mapper';
-import { ProjectWithTaskModel } from '@/todo/domain/model/project-with-task.model';
 import { ProjectModel } from '@/todo/domain/model/project.model';
 import { PrismaService } from '@/todo/infrastructure/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskState } from '@prisma/client';
 
+export enum TaskStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+}
 @Injectable()
 export class ProjectRepository {
   constructor(private readonly prismaService: PrismaService) {}
@@ -17,7 +21,10 @@ export class ProjectRepository {
     });
     return ProjectMapper.toDomains(projects);
   }
-  async getProjectWithId(id: string): Promise<ProjectModel | null> {
+  async getProjectWithIdAndStatus(
+    id: string,
+    status: TaskState,
+  ): Promise<ProjectModel | null> {
     const project = await this.prismaService.project.findUnique({
       where: {
         id: id,
@@ -25,7 +32,11 @@ export class ProjectRepository {
       include: {
         categories: {
           include: {
-            tasks: true,
+            tasks: {
+              where: {
+                status,
+              },
+            },
           },
         },
       },
@@ -36,6 +47,20 @@ export class ProjectRepository {
     }
 
     return ProjectMapper.ProjectCategoryTaskToDomains(project);
+  }
+
+  async getOnlyProject(id: string): Promise<ProjectModel | null> {
+    const project = await this.prismaService.project.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return ProjectMapper.toDomain(project);
   }
 
   async createProject(data: Prisma.ProjectCreateInput): Promise<ProjectModel> {
@@ -51,9 +76,16 @@ export class ProjectRepository {
       where: {
         id: projectId,
       },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
       data,
     });
-    return ProjectMapper.toDomain(project);
+    return ProjectMapper.ProjectCategoryTaskToDomains(project);
   }
 
   async deleteProject(id: string): Promise<ProjectModel> {
@@ -63,6 +95,28 @@ export class ProjectRepository {
       },
     });
     return ProjectMapper.toDomain(project);
+  }
+
+  async countProjectTasks(projectId: string): Promise<number> {
+    const counts = await this.prismaService.task.count({
+      where: {
+        Category: {
+          projectId: projectId,
+        },
+      },
+    });
+    return counts;
+  }
+  async countProjectCompleteTasks(projectId: string): Promise<number> {
+    const counts = await this.prismaService.task.count({
+      where: {
+        check: true,
+        Category: {
+          projectId: projectId,
+        },
+      },
+    });
+    return counts;
   }
 
   async getProjectRange(projectId: string): Promise<{

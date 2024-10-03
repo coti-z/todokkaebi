@@ -50,10 +50,6 @@ export class CategoryService {
   }
 
   async updateCategory(cmd: UpdateCategoryCommand): Promise<CategoryModel> {
-    const category = await this.categoryRepository.getCategoryById(cmd.id);
-    if (!category) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
-    }
     const updateCategory = await this.categoryRepository.updateCategory(
       cmd.id,
       {
@@ -64,16 +60,14 @@ export class CategoryService {
   }
 
   async deleteCategory(cmd: DeleteCategoryCommand): Promise<CategoryModel> {
-    const category = await this.categoryRepository.getCategoryById(
-      cmd.categoryId,
-    );
-    if (!category) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
-    }
     return await this.categoryRepository.deleteCategory(cmd.categoryId);
   }
 
   async validateUserId(userId: string, categoryId: string): Promise<void> {
+    const category = await this.categoryRepository.getCategoryById(categoryId);
+    if (!category) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
     const categoryUserId =
       await this.categoryRepository.getCategoryUserId(categoryId);
     if (!categoryUserId) {
@@ -90,8 +84,7 @@ export class CategoryService {
     const promise = categoryModels.map(model =>
       this.insertDate(model.id, model),
     );
-    const models = await Promise.all(promise);
-    return models;
+    return await Promise.all(promise);
   }
   private async insertDate(
     categoryId: string,

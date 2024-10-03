@@ -6,6 +6,7 @@ import { TaskRepository } from '@/todo/infrastructure/database/repository/task.r
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
+import { TaskState } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
@@ -13,7 +14,9 @@ export class TaskService {
 
   async createTask(command: CreateTaskCommand): Promise<TaskModel> {
     return await this.taskRepository.createTask({
-      ...command,
+      title: command.title,
+      startDate: command.startDate,
+      endDate: command.endDate,
       Category: {
         connect: {
           id: command.categoryId,
@@ -27,14 +30,33 @@ export class TaskService {
   }
 
   async updateTask(command: UpdateTaskCommand): Promise<TaskModel> {
-    return await this.taskRepository.updateTask(command.id, {
-      ...command,
+    if (command.check) {
+      const task = await this.taskRepository.updateTask(command.id, {
+        title: command.title,
+        check: command.check,
+        startDate: command.startDate,
+        endDate: command.endDate,
+        status: TaskState.COMPLETE,
+        Category: {
+          connect: {
+            id: command.categoryId,
+          },
+        },
+      });
+      return task;
+    }
+    const task = await this.taskRepository.updateTask(command.id, {
+      title: command.title,
+      check: command.check,
+      startDate: command.startDate,
+      endDate: command.endDate,
       Category: {
         connect: {
           id: command.categoryId,
         },
       },
     });
+    return task;
   }
   async getTaskWithTaskId(taskId: string): Promise<TaskModel> {
     const task = await this.taskRepository.getTask(taskId);

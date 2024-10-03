@@ -17,7 +17,11 @@ export enum GraphQLResolverEnum {
   DELETE_CATEGORY = 'DELETE_CATEGORY',
   GET_CATEGORY = 'GET_CATEGORY',
   GET_ALL_CATEGORY = 'GET_ALL_CATEGORY',
-  CREAT_TASK = 'CREATE_TASK',
+  CREATE_TASK = 'CREATE_TASK',
+  UPDATE_TASK = 'UPDATE_TASK',
+  DELETE_TASK = 'DELETE_TASK',
+  GET_TASK = 'GET_TASK',
+  GET_TASKS_WITH_CATEGORY_ID = 'GET_TASK_WITH_CATEGORY_ID',
 }
 
 export type CreateUserInput = {
@@ -237,7 +241,98 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
           }
       }
     }
+  `,
+  [GraphQLResolverEnum.CREATE_TASK]: `
+      mutation CreateTask($input: CreateTaskInput!) {
+        createTask(input: $input) {
+            success
+            task {
+                id
+                actualStartDate
+                actualEndDate
+                startDate
+                endDate
+                title
+                check
+                status
+                categoryId
+            }
+        }
+    }
+    `,
+  [GraphQLResolverEnum.DELETE_TASK]: `
+    mutation DeleteTask($input: DeleteTaskInput!){
+    deleteTask(input: $input) {
+        success
+        task {
+            id
+            actualStartDate
+            actualEndDate
+            startDate
+            endDate
+            title
+            check
+            status
+            categoryId
+        }
+    }
+}
 
+    
+  `,
+  [GraphQLResolverEnum.UPDATE_TASK]: `
+      mutation UpdateTask($input: UpdateTaskInput!) {
+        updateTask(input: $input) {
+            success
+            task {
+                id
+                actualStartDate
+                actualEndDate
+                startDate
+                endDate
+                title
+                check
+                status
+                categoryId
+            }
+        }
+      }
+  `,
+  [GraphQLResolverEnum.GET_TASK]: `
+    query GetTask($input: GetTaskInput!) {
+      getTask(input: $input) {
+          success
+          task {
+              id
+              actualStartDate
+              actualEndDate
+              startDate
+              endDate
+              title
+              check
+              status
+              categoryId
+          }
+      }
+    }
+  `,
+  [GraphQLResolverEnum.GET_TASKS_WITH_CATEGORY_ID]: `
+    query GetTasksWithCategoryId($input: GetAllTaskWithCategoryIdInput!) {
+    getTasksWithCategoryId(input: $input) {
+        success
+        task {
+            id
+            actualStartDate
+            actualEndDate
+            startDate
+            endDate
+            title
+            check
+            status
+            categoryId
+        }
+      }
+    }
   `,
 };
 

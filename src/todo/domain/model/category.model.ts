@@ -1,6 +1,6 @@
 import { TaskModel } from '@/todo/domain/model/task.model';
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
-import { Category } from '@prisma/client';
+import { Category, TaskState } from '@prisma/client';
 
 @ObjectType()
 export class CategoryModel implements Category {
@@ -27,4 +27,10 @@ export class CategoryModel implements Category {
 
   @Field(() => [TaskModel], { nullable: true })
   tasks?: TaskModel[];
+
+  @Field({ defaultValue: 0 })
+  totalTask?: number;
+
+  @Field({ defaultValue: 0 })
+  completeTask?: number;
 }

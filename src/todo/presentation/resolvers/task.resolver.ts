@@ -47,8 +47,12 @@ export class TaskResolver {
   ) {
     const command = new UpdateTaskCommand(
       payload.userId,
+      input.taskId,
+      input.categoryId,
       input.title,
-      input.taskState,
+      input.startDate,
+      input.endDate,
+      input.check,
     );
     return await this.commandBus.execute(command);
   }

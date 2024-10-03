@@ -32,6 +32,27 @@ export class CategoryRepository {
     }
     return CategoryMapper.CategoryTasksToDomain(category);
   }
+  async countCategoryTasks(categoryId: string): Promise<number> {
+    const counts = await this.prismaService.task.count({
+      where: {
+        Category: {
+          id: categoryId,
+        },
+      },
+    });
+    return counts;
+  }
+  async countCategoryCompleteTasks(categoryId: string): Promise<number> {
+    const counts = await this.prismaService.task.count({
+      where: {
+        check: true,
+        Category: {
+          id: categoryId,
+        },
+      },
+    });
+    return counts;
+  }
 
   async getUserIdWithCategoryId(id: string): Promise<string | null> {
     const category = await this.prismaService.category.findUnique({

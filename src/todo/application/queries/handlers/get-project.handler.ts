@@ -14,7 +14,7 @@ export class GetProjectHandler implements IQueryHandler<GetProjectQuery> {
   ) {}
   async execute(query: GetProjectQuery): Promise<ProjectResponseObject> {
     try {
-      const project = await this.projectService.getProjectWithId(query.id);
+      const project = await this.projectService.getProjectWithId(query);
       project.categories = await this.categoryService.insertsDate(
         project.categories,
       );

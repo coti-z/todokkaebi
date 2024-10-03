@@ -38,7 +38,7 @@ export class ProjectResolver {
     @Args('input') input: GetProjectInput,
     @TokenInfo() payload: JwtPayload,
   ): Promise<ProjectResponseObject> {
-    const query = new GetProjectQuery(payload.userId, input.id);
+    const query = new GetProjectQuery(payload.userId, input.id, input.state);
     return await this.queryBus.execute(query);
   }
 

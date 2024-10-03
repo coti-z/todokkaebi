@@ -10,6 +10,7 @@ export class GetCategoryHandler implements IQueryHandler {
   constructor(private readonly categoryService: CategoryService) {}
   async execute(query: GetCategoryQuery): Promise<CategoryResponse> {
     try {
+      await this.categoryService.validateUserId(query.userId, query.id);
       const category = await this.categoryService.getCategoryWithId(query);
       return {
         category,

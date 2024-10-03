@@ -8,6 +8,7 @@ import { GetProjectInput } from '@/todo/presentation/resolvers/dto/inputs/get-pr
 import { UpdateCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/update-category.input';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { TaskState } from '@prisma/client';
 import * as uuid from 'uuid';
 import {
   CreateUserInput,
@@ -185,6 +186,7 @@ describe('Todo Project Resolver (e2e)', () => {
       const getAllInputData: { input: GetProjectInput } = {
         input: {
           id: projectId,
+          state: TaskState.PENDING,
         },
       };
 

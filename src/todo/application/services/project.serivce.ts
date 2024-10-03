@@ -1,6 +1,7 @@
 import { CreateProjectCommand } from '@/todo/application/commands/create-project.command';
 import { DeleteProjectCommand } from '@/todo/application/commands/delete-project.command';
 import { UpdateProjectCommand } from '@/todo/application/commands/update-project.command';
+import { GetProjectQuery } from '@/todo/application/queries/get-project.query';
 import { ProjectModel } from '@/todo/domain/model/project.model';
 import { ProjectRepository } from '@/todo/infrastructure/database/repository/project.repository';
 import { ErrorCode } from '@/utils/exception/error-code.enum';
@@ -11,19 +12,31 @@ import { Injectable } from '@nestjs/common';
 export class ProjectService {
   constructor(private readonly projectRepository: ProjectRepository) {}
 
-  async getProjectWithId(id: string): Promise<ProjectModel> {
-    const project = await this.projectRepository.getProjectWithId(id);
+  async getProjectWithId(query: GetProjectQuery): Promise<ProjectModel> {
+    const project = await this.projectRepository.getProjectWithIdAndStatus(
+      query.id,
+      query.status,
+    );
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     const projectWithRange = await this.getProjectRange(project);
+    projectWithRange.totalTask = await this.countProjectTaskCounts(query.id);
+    projectWithRange.completeTask = await this.countProjectCompleteTask(
+      query.id,
+    );
     return projectWithRange;
   }
 
   async getProjectsWithUserId(userId: string): Promise<ProjectModel[]> {
     const projects = await this.projectRepository.getProjectsWithUserId(userId);
-    const promise = projects.map(project => this.getProjectRange(project));
-    return await Promise.all(promise);
+    const promise1 = projects.map(project => this.getProjectRange(project));
+
+    const insertDatesProjects = await Promise.all(promise1);
+    const promise2 = insertDatesProjects.map(project =>
+      this.insertCountProjectCompleteTasks(project),
+    );
+    return await Promise.all(promise2);
   }
 
   async createProject(cmd: CreateProjectCommand): Promise<ProjectModel> {
@@ -40,44 +53,22 @@ export class ProjectService {
   }
 
   async updateProject(cmd: UpdateProjectCommand): Promise<ProjectModel> {
-    const project = await this.projectRepository.getProjectWithId(cmd.id);
-    if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
-    }
-    if (project.userId !== cmd.userId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
-    }
-    const project2 = await this.projectRepository.updateProject(cmd.id, {
+    const project = await this.projectRepository.updateProject(cmd.id, {
       ...cmd,
     });
-
-    return project2;
+    const insertDate = await this.getProjectRange(project);
+    return await this.insertCountProjectCompleteTasks(insertDate);
   }
 
   async deleteProject(cmd: DeleteProjectCommand): Promise<ProjectModel> {
-    const project = await this.projectRepository.getProjectWithId(cmd.id);
-    if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
-    }
-    if (project.userId !== cmd.userId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
-    }
     return await this.projectRepository.deleteProject(cmd.id);
-  }
-
-  async getProjectUserId(projectId: string): Promise<string> {
-    const project = await this.projectRepository.getProjectWithId(projectId);
-    if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
-    }
-    return project.userId;
   }
 
   async validateProjectOwnerWithUserId(
     projectId: string,
     userId: string,
   ): Promise<void> {
-    const project = await this.projectRepository.getProjectWithId(projectId);
+    const project = await this.projectRepository.getOnlyProject(projectId);
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
@@ -86,6 +77,14 @@ export class ProjectService {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
   }
+
+  async countProjectTaskCounts(projectId: string): Promise<number> {
+    return await this.projectRepository.countProjectTasks(projectId);
+  }
+
+  async countProjectCompleteTask(projectId: string): Promise<number> {
+    return await this.projectRepository.countProjectCompleteTasks(projectId);
+  }
   private async getProjectRange(
     projectModel: ProjectModel,
   ): Promise<ProjectModel> {
@@ -93,5 +92,13 @@ export class ProjectService {
     if (range.startDate) projectModel.startDate = range.startDate;
     if (range.endDate) projectModel.endDate = range.endDate;
     return projectModel;
+  }
+
+  private async insertCountProjectCompleteTasks(
+    project: ProjectModel,
+  ): Promise<ProjectModel> {
+    project.completeTask = await this.countProjectCompleteTask(project.id);
+    project.totalTask = await this.countProjectTaskCounts(project.id);
+    return project;
   }
 }

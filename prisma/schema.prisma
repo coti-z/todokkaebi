@@ -71,9 +71,9 @@ model Task {
   startDate       DateTime
   endDate         DateTime
   actualStartDate DateTime?
+  status          TaskState @default(PENDING)
   actualEndDate   DateTime?
   check           Boolean   @default(false)
-  status          TaskState @default(PENDING)
   Category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId      String
   createdAt       DateTime  @default(now())
