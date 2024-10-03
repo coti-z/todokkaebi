@@ -38,11 +38,11 @@ export class KakaoAuth {
     }
   }
 
-  async getToken(code: string) {
+  async getToken(code: string, isTest: boolean) {
     const params = new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: this.CLIENT_ID,
-      redirect_uri: this.REDIRECT_URI,
+      redirect_uri: isTest ? this.TEST_REDIRECT_URI : this.REDIRECT_URI,
       client_secret: this.CLIENT_SECRET,
       code: code,
     });

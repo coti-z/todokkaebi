@@ -162,6 +162,7 @@ mutation KakaoAuth($input: KakaoAuthCodeInput!) {
 ```graphql
 type KakaoAuthCodeInput {
   code: string;  # 카카오 로그인 후 발급받은 인증 코드
+  test: boolean;
 }
 ```
 

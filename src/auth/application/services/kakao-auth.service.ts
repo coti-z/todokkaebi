@@ -1,3 +1,4 @@
+import { KakaoAuthCommand } from '@/auth/application/commands/kakao-auth.command';
 import { UserModel } from '@/auth/domain/model/user.model';
 import { UserRepository } from '@/auth/infrastructure/database/repository/user.repository';
 import { KakaoAuth } from '@/auth/infrastructure/kakao/auth/kakao.auth';
@@ -14,8 +15,11 @@ export class KakaoAuthService {
     return this.kakaoAuth.getAuthorizationUrl(test);
   }
 
-  async kakaoLogin(code: string): Promise<UserModel> {
-    const kakaoToken = await this.kakaoAuth.getToken(code);
+  async kakaoLogin(command: KakaoAuthCommand): Promise<UserModel> {
+    const kakaoToken = await this.kakaoAuth.getToken(
+      command.code,
+      command.isTest,
+    );
     const kakaoUser = await this.kakaoAuth.getUser(kakaoToken.access_token);
 
     const user = await this.userRepository.getKakaoUser(
