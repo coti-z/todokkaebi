@@ -5,7 +5,4 @@ import { TaskState } from '@prisma/client';
 export class GetAllTaskWithCategoryIdInput {
   @Field()
   categoryId: string;
-
-  @Field({ defaultValue: TaskState.PENDING })
-  state?: TaskState;
 }

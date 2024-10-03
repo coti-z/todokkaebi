@@ -1,8 +1,6 @@
 import { GetAllTasksWithCategoryIdQuery } from '@/todo/application/queries/get-all-tasks-with-categoryId.query';
 import { CategoryService } from '@/todo/application/services/category.service';
 import { TaskService } from '@/todo/application/services/task.service';
-import { GetAllProjectsResponse } from '@/todo/presentation/resolvers/dto/objects/get-all-projects.object';
-import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { TasksResponse } from '@/todo/presentation/resolvers/dto/objects/tasks-response.object';
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';

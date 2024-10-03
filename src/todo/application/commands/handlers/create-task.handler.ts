@@ -12,6 +12,7 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly taskService: TaskService,
+    private readonly projectService: ProjectService,
   ) {}
   async execute(command: CreateTaskCommand): Promise<TaskResponse> {
     try {
@@ -20,9 +21,15 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
         command.categoryId,
       );
       const task = await this.taskService.createTask(command);
+
+      const insertCountTask =
+        await this.projectService.insertTaskCountWithTaskModel(
+          task,
+          command.projectId,
+        );
       return {
         success: true,
-        task,
+        task: insertCountTask,
       };
     } catch (e) {
       throw e;

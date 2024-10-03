@@ -1,4 +1,4 @@
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { TaskState } from '@prisma/client';
 import { IsDate, IsOptional } from 'class-validator';
 
@@ -30,4 +30,7 @@ export class UpdateTaskInput {
   @Field({ nullable: true })
   @IsOptional()
   check?: boolean;
+
+  @Field()
+  projectId: string;
 }

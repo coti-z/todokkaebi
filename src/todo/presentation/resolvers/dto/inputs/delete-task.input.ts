@@ -4,4 +4,7 @@ import { Field, InputType } from '@nestjs/graphql';
 export class DeleteTaskInput {
   @Field()
   taskId: string;
+
+  @Field()
+  projectId: string;
 }

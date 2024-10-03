@@ -16,4 +16,7 @@ export class CreateTaskInput {
 
   @Field()
   categoryId: string;
+
+  @Field()
+  projectId: string;
 }

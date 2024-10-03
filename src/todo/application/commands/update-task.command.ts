@@ -5,6 +5,7 @@ export class UpdateTaskCommand implements ICommand {
     public readonly userId: string,
     public readonly id: string,
     public readonly categoryId: string,
+    public readonly projectId: string,
     public readonly title?: string,
     public readonly startDate?: Date,
     public readonly endDate?: Date,

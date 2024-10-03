@@ -7,5 +7,6 @@ export class CreateTaskCommand implements ICommand {
     public readonly startDate: Date,
     public readonly endDate: Date,
     public readonly categoryId: string,
+    public readonly projectId: string,
   ) {}
 }

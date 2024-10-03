@@ -87,6 +87,7 @@ describe('Todo Project Resolver (e2e)', () => {
           startDate: minDate,
           endDate: DateUtils.createDate(2024, 10, 3),
           title: 'test_111',
+          projectId,
         },
       };
       const res1 = await executeGraphql(
@@ -110,6 +111,7 @@ describe('Todo Project Resolver (e2e)', () => {
           startDate: DateUtils.createDate(1000, 8, 3),
           endDate: DateUtils.createDate(2024, 10, 3),
           title: 'test_222',
+          projectId,
         },
       };
       await executeGraphql(
@@ -124,6 +126,7 @@ describe('Todo Project Resolver (e2e)', () => {
           startDate: DateUtils.createDate(2025, 8, 3),
           endDate: maxDate,
           title: 'test_333',
+          projectId,
         },
       };
       await executeGraphql(
@@ -164,6 +167,7 @@ describe('Todo Project Resolver (e2e)', () => {
           endDate: DateUtils.createDate(2024, 10, 3),
           startDate: DateUtils.createDate(2024, 8, 3),
           title: 'test',
+          projectId,
         },
       };
       const res1 = await executeGraphql(
@@ -187,6 +191,7 @@ describe('Todo Project Resolver (e2e)', () => {
           check: true,
           taskState: TaskState.IN_PROGRESS,
           endDate: changeEndDate,
+          projectId,
         },
       };
 
@@ -196,6 +201,7 @@ describe('Todo Project Resolver (e2e)', () => {
         inputUpdateData,
         accessToken,
       );
+
       const data2 = res2.body.data.updateTask;
       expect(data2.success).toBe(true);
       expect(data2.task.title).toBe(changeTitle);
@@ -212,6 +218,7 @@ describe('Todo Project Resolver (e2e)', () => {
           endDate: DateUtils.createDate(2024, 10, 3),
           startDate: DateUtils.createDate(2024, 8, 3),
           title: 'test',
+          projectId,
         },
       };
       const res1 = await executeGraphql(
@@ -225,6 +232,7 @@ describe('Todo Project Resolver (e2e)', () => {
       const deleteInputDate: { input: DeleteTaskInput } = {
         input: {
           taskId,
+          projectId,
         },
       };
 

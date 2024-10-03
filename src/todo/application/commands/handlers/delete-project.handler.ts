@@ -17,6 +17,7 @@ export class DeleteProjectHandler
         command.userId,
       );
       const project = await this.projectService.deleteProject(command);
+
       return {
         success: true,
         project,

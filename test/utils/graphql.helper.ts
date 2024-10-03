@@ -275,6 +275,8 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
                 check
                 status
                 categoryId
+                totalProjectTask
+                completeProjectTask
             }
         }
     }
@@ -293,6 +295,8 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
             check
             status
             categoryId
+            totalProjectTask
+            completeProjectTask
         }
     }
 }
@@ -313,6 +317,8 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
                 check
                 status
                 categoryId
+                totalProjectTask
+                completeProjectTask
             }
         }
       }
@@ -331,6 +337,8 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
               check
               status
               categoryId
+              totalProjectTask
+              completeProjectTask
           }
       }
     }

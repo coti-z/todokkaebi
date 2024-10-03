@@ -35,6 +35,7 @@ export class TaskResolver {
       input.startDate,
       input.endDate,
       input.categoryId,
+      input.projectId,
     );
     return await this.commandBus.execute(command);
   }
@@ -49,6 +50,7 @@ export class TaskResolver {
       payload.userId,
       input.taskId,
       input.categoryId,
+      input.projectId,
       input.title,
       input.startDate,
       input.endDate,
@@ -63,7 +65,11 @@ export class TaskResolver {
     @Args('input') input: DeleteTaskInput,
     @TokenInfo() payload: JwtPayload,
   ) {
-    const command = new DeleteTaskCommand(payload.userId, input.taskId);
+    const command = new DeleteTaskCommand(
+      payload.userId,
+      input.taskId,
+      input.projectId,
+    );
     return await this.commandBus.execute(command);
   }
 
@@ -73,7 +79,11 @@ export class TaskResolver {
     @Args('input') input: GetTaskInput,
     @TokenInfo() payload: JwtPayload,
   ) {
-    const query = new GetTaskQuery(payload.userId, input.taskId);
+    const query = new GetTaskQuery(
+      payload.userId,
+      input.taskId,
+      input.projectId,
+    );
     return await this.queryBus.execute(query);
   }
 

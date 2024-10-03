@@ -3,10 +3,12 @@ import { DeleteProjectCommand } from '@/todo/application/commands/delete-project
 import { UpdateProjectCommand } from '@/todo/application/commands/update-project.command';
 import { GetProjectQuery } from '@/todo/application/queries/get-project.query';
 import { ProjectModel } from '@/todo/domain/model/project.model';
+import { TaskModel } from '@/todo/domain/model/task.model';
 import { ProjectRepository } from '@/todo/infrastructure/database/repository/project.repository';
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
+import { Task } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
@@ -76,6 +78,14 @@ export class ProjectService {
     if (project.userId !== userId) {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
+  }
+  async insertTaskCountWithTaskModel(
+    model: TaskModel,
+    projectId: string,
+  ): Promise<TaskModel> {
+    model.totalProjectTask = await this.countProjectTaskCounts(projectId);
+    model.completeProjectTask = await this.countProjectCompleteTask(projectId);
+    return model;
   }
 
   async countProjectTaskCounts(projectId: string): Promise<number> {

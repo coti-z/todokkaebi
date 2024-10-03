@@ -35,4 +35,10 @@ export class TaskModel implements Task {
 
   @HideField()
   updatedAt: Date;
+
+  @Field({ defaultValue: 0 })
+  totalProjectTask?: number;
+
+  @Field({ defaultValue: 0 })
+  completeProjectTask?: number;
 }
