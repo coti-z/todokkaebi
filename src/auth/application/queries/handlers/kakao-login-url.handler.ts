@@ -8,9 +8,9 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 @QueryHandler(KakaoLoginUrlQuery)
 export class KakaoLoginUrlHandler implements IQueryHandler<KakaoLoginUrlQuery> {
   constructor(private readonly kakaoAuthService: KakaoAuthService) {}
-  async execute(): Promise<KakaoLoginUrl> {
+  async execute(query: KakaoLoginUrlQuery): Promise<KakaoLoginUrl> {
     try {
-      const url = await this.kakaoAuthService.getKakaoAuthUrl();
+      const url = await this.kakaoAuthService.getKakaoAuthUrl(query.test);
       return { url };
     } catch (e) {
       throw e;

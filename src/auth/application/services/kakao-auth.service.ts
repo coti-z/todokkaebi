@@ -10,8 +10,8 @@ export class KakaoAuthService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async getKakaoAuthUrl(): Promise<string> {
-    return this.kakaoAuth.getAuthorizationUrl();
+  async getKakaoAuthUrl(test: boolean): Promise<string> {
+    return this.kakaoAuth.getAuthorizationUrl(test);
   }
 
   async kakaoLogin(code: string): Promise<UserModel> {

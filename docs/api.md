@@ -9,6 +9,7 @@
     - [1.5. 카카오 인증](#5-카카오-인증)
 - [2. Query (조회)](#2-query-조회)
     - [2.1. 유저 정보 조회](#1-유저-정보-조회)
+    - [2.2. 카카오 로그인 URL 조회](#2-카카오-로그인-URL-조회)
 - [3. Project (대분류)](#3-project-대분류)
     - [3.1. Mutation](#1-mutation)
         - [3.1.1. 프로젝트 생성](#11-프로젝트-생성)
@@ -219,8 +220,24 @@ query GetUserInfo {
 > - 카카오 인증 시 선택적으로 제공되는 정보이기 때문에, 일부 항목이 누락될 수 있습니다.
 > - 그러나 `id`(userId)는 반드시 응답에서 제공됩니다.
 
----
+### [2] 카카오 로그인 URL 조회
+목적: 카카오 로그인에 필요한 URL을 가져온다.
 
+```graphql
+query GetKakaoLoginUrl {
+    getKakaoLoginUrl(input: GetKakaoLoginUrlInput!) {
+        url
+    }
+}
+```
+**Input:**
+```graphql
+type GetKakaoLoginUrlInput {
+    test: boolean;
+}
+```
+
+---
 # TODO 서비스 GraphQL API 문서
 
 ## 서비스 개요
