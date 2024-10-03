@@ -2,7 +2,6 @@ import { AppModule } from '@/app.module';
 import { CreateCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/create-category.input';
 import { CreateProjectInput } from '@/todo/presentation/resolvers/dto/inputs/create-project.input';
 import { DeleteCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/delete-category.input';
-import { GetAllCategoriesInput } from '@/todo/presentation/resolvers/dto/inputs/get-all-categories.input';
 import { GetCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/get-category.input';
 import { GetProjectInput } from '@/todo/presentation/resolvers/dto/inputs/get-project.input';
 import { UpdateCategoryInput } from '@/todo/presentation/resolvers/dto/inputs/update-category.input';
@@ -75,6 +74,8 @@ describe('Todo Project Resolver (e2e)', () => {
         inputData,
         accessToken,
       );
+      console.log(res1.body);
+
       const data = res1.body.data.createCategory;
       expect(data).toHaveProperty('success');
       expect(data).toHaveProperty('category');

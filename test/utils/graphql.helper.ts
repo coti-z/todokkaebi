@@ -16,7 +16,6 @@ export enum GraphQLResolverEnum {
   UPDATE_CATEGORY = 'UPDATE_CATEGORY',
   DELETE_CATEGORY = 'DELETE_CATEGORY',
   GET_CATEGORY = 'GET_CATEGORY',
-  GET_ALL_CATEGORY = 'GET_ALL_CATEGORY',
   CREATE_TASK = 'CREATE_TASK',
   UPDATE_TASK = 'UPDATE_TASK',
   DELETE_TASK = 'DELETE_TASK',
@@ -85,6 +84,7 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
       }
     }
   `,
+
   [GraphQLResolverEnum.CREATE_PROJECT]: `
     mutation CreateProject($input: CreateProjectInput!) {
       createProject(input: $input) {
@@ -93,6 +93,10 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
             id
             name
             userId
+            totalTask
+            completeTask
+            endDate
+            startDate
         }
       }
     }
@@ -105,6 +109,10 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
             id
             name
             userId
+            totalTask
+            completeTask
+            endDate
+            startDate
         }
       }
     } 
@@ -112,12 +120,16 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
   [GraphQLResolverEnum.UPDATE_PROJECT]: `
     mutation UpdateProject($input: UpdateProjectInput!) {
       updateProject(input: $input) {
-         success
-          project {
-              id
-              name
-              userId
-          }
+        success
+        project {
+            id
+            name
+            userId
+            totalTask
+            completeTask
+            endDate
+            startDate
+        }
       }
     }
   `,
@@ -158,41 +170,51 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
     }
   `,
   [GraphQLResolverEnum.GET_USER_ALL_PROJECT]: `
-    query GetProject {
-      getAllProjects {
-        success
-        total
-        projects {
-            id
-            name
-            userId
-            endDate
-            startDate
+   query GetAllProjects {
+        getAllProjects {
+            success
+            total
+            projects {
+                id
+                name
+                userId
+                totalTask
+                completeTask
+                endDate
+                startDate
+            }
         }
-      }
-   }
+    }
   `,
   [GraphQLResolverEnum.CREATE_CATEGORY]: `
     mutation CreateCategory($input: CreateCategoryInput!) {
       createCategory(input: $input) {
-          success
-          category {
-              id
-              name
-              projectId
-          }
+        success
+        category {
+            id
+            name
+            projectId
+            actualEndDate
+            actualStartDate
+            startedAt
+            endedAt
+        }
       }
     }
   `,
   [GraphQLResolverEnum.UPDATE_CATEGORY]: `
     mutation UpdateCategory($input: UpdateCategoryInput!) {
       updateCategory(input: $input) {
-          success
-          category {
-              id
-              name
-              projectId
-          }
+        success
+        category {
+            id
+            name
+            projectId
+            actualEndDate
+            actualStartDate
+            startedAt
+            endedAt
+        }
       }
     }
   `,
@@ -201,10 +223,14 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
       deleteCategory(input: $input) {
           success
           category {
-              id
-              name
-              projectId
-          }
+            id
+            name
+            projectId
+            actualEndDate
+            actualStartDate
+            startedAt
+            endedAt
+        }
       }
     }
   `,
@@ -216,6 +242,8 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
             id
             name
             projectId
+            actualEndDate
+            actualStartDate
             startedAt
             endedAt
             tasks {
@@ -230,19 +258,6 @@ export const GraphQLAPI: Record<GraphQLResolverEnum, GraphQLQuery> = {
                 categoryId
             }
         }
-      }
-    }
-  `,
-  [GraphQLResolverEnum.GET_ALL_CATEGORY]: `
-    query GetAllCategories($input: GetAllCategoriesInput!) {
-      getAllCategories(input: $input) {
-          success
-          total
-          categories {
-              id
-              name
-              projectId
-          }
       }
     }
   `,

@@ -14,7 +14,6 @@ export class TaskUpdateScheduler {
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleTaskPending() {
-    console.log('queueue');
     try {
       const num = await this.taskService.updatePendingToINProgress(new Date());
       this.loggerService.info('cron service', {
