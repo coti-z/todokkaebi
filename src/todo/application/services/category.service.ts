@@ -3,6 +3,7 @@ import { DeleteCategoryCommand } from '@/todo/application/commands/delete-catego
 import { UpdateCategoryCommand } from '@/todo/application/commands/update-category.command';
 import { GetCategoryQuery } from '@/todo/application/queries/get-category.query';
 import { CategoryModel } from '@/todo/domain/model/category.model';
+import { ProjectModel } from '@/todo/domain/model/project.model';
 import { CategoryRepository } from '@/todo/infrastructure/database/repository/category.repository';
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
@@ -77,6 +78,23 @@ export class CategoryService {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
   }
+
+  async insertsDateWithProjects(
+    models: ProjectModel[],
+  ): Promise<ProjectModel[]> {
+    // 각 ProjectModel에서 categories 배열을 비동기로 처리
+    const projectsWithDates = await Promise.all(
+      models.map(async project => {
+        if (project.categories) {
+          // 각 project.categories 배열을 처리하여 새로운 값을 할당
+          project.categories = await this.insertsDate(project.categories);
+        }
+        return project;
+      }),
+    );
+    return projectsWithDates;
+  }
+
   async insertsDate(
     categoryModels: CategoryModel[] | undefined,
   ): Promise<CategoryModel[] | undefined> {
