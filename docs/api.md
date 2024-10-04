@@ -268,6 +268,8 @@ mutation CreateProject($input: CreateProjectInput!) {
       completeTask
       endDate
       startDate
+      totalTask
+      completeTask
     }
   }
 }
@@ -372,6 +374,8 @@ query GetProject($input: GetProjectInput!) {
         actualStartDate
         startedAt
         endedAt
+        totalTask
+        completeTask
         tasks {
           id
           actualStartDate
@@ -520,6 +524,8 @@ mutation UpdateCategory($input: UpdateCategoryInput!) {
       actualStartDate
       startedAt
       endedAt
+      totalTask
+      completeTask
     }
   }
 }
@@ -554,6 +560,8 @@ query GetCategory($input: GetCategoryInput!) {
       actualStartDate
       startedAt
       endedAt
+      totalTask
+      completeTask
       tasks {
         id
         actualStartDate

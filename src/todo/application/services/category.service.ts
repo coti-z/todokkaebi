@@ -84,7 +84,8 @@ export class CategoryService {
         name: cmd.name,
       },
     );
-    return await this.insertDate(updateCategory.id, updateCategory);
+    const insertDate = await this.insertDate(updateCategory.id, updateCategory);
+    return await this.insertCategoryTotalAndCompleteTaskCount(insertDate);
   }
 
   async deleteCategory(cmd: DeleteCategoryCommand): Promise<CategoryModel> {

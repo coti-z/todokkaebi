@@ -1,8 +1,5 @@
 import { UpdateProjectCommand } from '@/todo/application/commands/update-project.command';
-import { CategoryService } from '@/todo/application/services/category.service';
 import { ProjectService } from '@/todo/application/services/project.serivce';
-import { TaskService } from '@/todo/application/services/task.service';
-import { TaskModel } from '@/todo/domain/model/task.model';
 import { ProjectResponseObject } from '@/todo/presentation/resolvers/dto/objects/project-response.object';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
