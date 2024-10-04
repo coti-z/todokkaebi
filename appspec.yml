@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/todogebi-server
+
+permissions:
+  - object: /home/ubuntu/todogebi-server
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: deployment/start-server.sh
+      timeout: 60
+      runas: ubuntu
