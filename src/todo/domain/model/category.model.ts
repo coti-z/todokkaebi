@@ -33,4 +33,10 @@ export class CategoryModel implements Category {
 
   @Field(() => [TaskModel], { nullable: true })
   tasks?: TaskModel[];
+
+  @Field({ defaultValue: 0 })
+  totalTask?: number;
+
+  @Field({ defaultValue: 0 })
+  completeTask?: number;
 }

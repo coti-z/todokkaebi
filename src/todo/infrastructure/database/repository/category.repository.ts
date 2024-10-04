@@ -115,6 +115,14 @@ export class CategoryRepository {
     }
     return category.Project.userId;
   }
+  async getCategoryCompleteTaskCount(categoryId: string): Promise<number> {
+    return this.prismaService.task.count({
+      where: {
+        categoryId: categoryId,
+        check: true,
+      },
+    });
+  }
 
   async getCategoryRange(categoryId: string): Promise<{
     categoryId: string;

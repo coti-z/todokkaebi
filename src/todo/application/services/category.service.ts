@@ -36,7 +36,34 @@ export class CategoryService {
     if (!category) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    return await this.insertDate(category.id, category);
+    const insertDate = await this.insertDate(category.id, category);
+    const insertCount =
+      await this.insertCategoryTotalAndCompleteTaskCount(insertDate);
+    return insertCount;
+  }
+
+  async insertCategoryTotalAndCompleteTaskCount(
+    model: CategoryModel,
+  ): Promise<CategoryModel> {
+    model.completeTask =
+      await this.categoryRepository.getCategoryCompleteTaskCount(model.id);
+    model.totalTask = model.tasks?.length ?? 0;
+    return model;
+  }
+  async insertCategoriesTotalAndCompleteTaskCount(
+    models: CategoryModel[] | undefined,
+  ): Promise<CategoryModel[] | undefined> {
+    // 각 카테고리에 대해 insertCategoryTotalAndCompleteTaskCount 함수를 실행
+    if (!models) {
+      return undefined;
+    }
+    const updatedModels = await Promise.all(
+      models.map(async model => {
+        return this.insertCategoryTotalAndCompleteTaskCount(model);
+      }),
+    );
+
+    return updatedModels;
   }
 
   async createCategory(command: CreateCategoryCommand): Promise<CategoryModel> {

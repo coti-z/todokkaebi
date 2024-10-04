@@ -19,6 +19,11 @@ export class GetProjectHandler implements IQueryHandler<GetProjectQuery> {
         project.categories,
       );
 
+      project.categories =
+        await this.categoryService.insertCategoriesTotalAndCompleteTaskCount(
+          project.categories,
+        );
+
       return {
         success: true,
         project,
