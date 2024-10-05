@@ -185,7 +185,6 @@ describe('Todo Project Resolver (e2e)', () => {
       const inputUpdateData: { input: UpdateTaskInput } = {
         input: {
           taskId,
-          categoryId,
           title: changeTitle,
           startDate: changeStartDate,
           check: true,

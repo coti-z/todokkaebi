@@ -51,11 +51,6 @@ export class TaskService {
       startDate: command.startDate,
       actualStartDate: command.startDate,
       endDate: command.endDate,
-      Category: {
-        connect: {
-          id: command.categoryId,
-        },
-      },
     };
 
     if (command.check === true) {

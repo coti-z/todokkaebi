@@ -49,7 +49,6 @@ export class TaskResolver {
     const command = new UpdateTaskCommand(
       payload.userId,
       input.taskId,
-      input.categoryId,
       input.projectId,
       input.title,
       input.startDate,

@@ -4,7 +4,6 @@ export class UpdateTaskCommand implements ICommand {
   constructor(
     public readonly userId: string,
     public readonly id: string,
-    public readonly categoryId: string,
     public readonly projectId: string,
     public readonly title?: string,
     public readonly startDate?: Date,

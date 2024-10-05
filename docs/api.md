@@ -709,9 +709,6 @@ type UpdateTaskInput {
 
   endDate?: Date;        # 업데이트할 Task의 종료 날짜 (옵션)
 
-  categoryId: string;    # 해당 Task가 속한 카테고리 ID
-
-
   taskState?: TaskState; # Task의 상태 (PENDING, IN_PROGRESS, COMPLETE 등)
 
 

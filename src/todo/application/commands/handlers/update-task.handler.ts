@@ -16,6 +16,10 @@ export class UpdateTaskHandler implements ICommandHandler<UpdateTaskCommand> {
   async execute(command: UpdateTaskCommand): Promise<TaskResponse> {
     try {
       await this.taskService.validateTaskWithUserId(command.id, command.userId);
+      await this.projectService.validateProjectOwnerWithUserId(
+        command.projectId,
+        command.userId,
+      );
 
       const task = await this.taskService.updateTask(command);
       const insertCountTask =

@@ -21,9 +21,6 @@ export class UpdateTaskInput {
   @IsDate()
   endDate?: Date;
 
-  @Field()
-  categoryId: string;
-
   @Field({ nullable: true })
   taskState?: TaskState;
 
