@@ -49,6 +49,36 @@ export class ProjectRepository {
     return ProjectMapper.ProjectCategoryTaskToDomains(project);
   }
 
+  async getProjectWithIdAndNotStatus(
+    id: string,
+    status: TaskState,
+  ): Promise<ProjectModel | null> {
+    const project = await this.prismaService.project.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        categories: {
+          include: {
+            tasks: {
+              where: {
+                status: {
+                  not: status,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return ProjectMapper.ProjectCategoryTaskToDomains(project);
+  }
+
   async getOnlyProject(id: string): Promise<ProjectModel | null> {
     const project = await this.prismaService.project.findUnique({
       where: {

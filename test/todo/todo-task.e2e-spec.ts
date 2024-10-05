@@ -201,7 +201,9 @@ describe('Todo Project Resolver (e2e)', () => {
         accessToken,
       );
 
+      console.log(res2.body.data.updateTask.task);
       const data2 = res2.body.data.updateTask;
+      expect(taskId).toEqual(res2.body.data.updateTask.task.id);
       expect(data2.success).toBe(true);
       expect(data2.task.title).toBe(changeTitle);
       expect(DateUtils.fromISOString(data2.task.endDate)).toEqual(

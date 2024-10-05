@@ -8,17 +8,25 @@ import { ProjectRepository } from '@/todo/infrastructure/database/repository/pro
 import { ErrorCode } from '@/utils/exception/error-code.enum';
 import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
-import { Task } from '@prisma/client';
+import { TaskState } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
   constructor(private readonly projectRepository: ProjectRepository) {}
 
   async getProjectWithId(query: GetProjectQuery): Promise<ProjectModel> {
-    const project = await this.projectRepository.getProjectWithIdAndStatus(
-      query.id,
-      query.status,
-    );
+    let project;
+    if (query.status === TaskState.IN_PROGRESS) {
+      project = await this.projectRepository.getProjectWithIdAndNotStatus(
+        query.id,
+        TaskState.PENDING,
+      );
+    } else {
+      project = await this.projectRepository.getProjectWithIdAndStatus(
+        query.id,
+        query.status,
+      );
+    }
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
