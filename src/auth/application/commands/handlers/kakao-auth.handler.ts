@@ -15,7 +15,7 @@ export class KakaoAuthHandler implements ICommandHandler<KakaoAuthCommand> {
 
   async execute(cmd: KakaoAuthCommand): Promise<TokenPair> {
     try {
-      const user = await this.kakaoAuthService.kakaoLogin(cmd.code);
+      const user = await this.kakaoAuthService.kakaoLogin(cmd);
       return this.jwtTokenService.generateTokenPair({
         userId: user.id,
       });

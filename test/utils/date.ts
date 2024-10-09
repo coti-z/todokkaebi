@@ -1,23 +1,42 @@
+import { DateTime } from 'luxon';
+
 export class DateUtils {
   /**
-   * 년, 월, 일을 받아 Date 객체로 변환합니다.
-   * @param year 연도 (예: 2023)
-   * @param month 월 (1-12)
-   * @param day 일 (1-31)
-   * @returns Date 객체
+   * Creates a Date object in UTC for the given year, month, and day.
+   * @param year The year
+   * @param month The month (1-12)
+   * @param day The day of the month
+   * @returns A Date object in UTC
    */
   static createDate(year: number, month: number, day: number): Date {
-    // JavaScript의 월은 0부터 시작하므로 1을 빼줍니다.
-    return new Date(Date.UTC(year, month - 1, day));
+    return DateTime.utc(year, month, day).toJSDate();
   }
 
   /**
-   * 'YYYY-MM-DD' 형식의 문자열을 Date 객체로 변환합니다.
-   * @param dateString 'YYYY-MM-DD' 형식의 날짜 문자열
-   * @returns Date 객체
+   * Converts a Date object to an ISO string in UTC
+   * @param date The Date object to convert
+   * @returns An ISO string representation of the date in UTC
    */
-  static parseDate(dateString: string): Date {
-    const [year, month, day] = dateString.split('-').map(Number);
-    return this.createDate(year, month, day);
+  static toISOString(date: Date): string {
+    return date.toISOString();
+  }
+
+  /**
+   * Parses an ISO string to a Date object
+   * @param isoString The ISO string to parse
+   * @returns A Date object
+   */
+  static fromISOString(isoString: string): Date {
+    return new Date(isoString);
+  }
+
+  /**
+   * Formats a Date object to a specific format in UTC
+   * @param date The Date object to format
+   * @param format The desired format (e.g., 'yyyy-MM-dd')
+   * @returns A formatted string representation of the date in UTC
+   */
+  static formatUTC(date: Date, format: string): string {
+    return DateTime.fromJSDate(date).toUTC().toFormat(format);
   }
 }

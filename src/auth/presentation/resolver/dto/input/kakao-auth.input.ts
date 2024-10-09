@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 
 @InputType({
   description: '카카오 토큰 발급 위한 Code',
@@ -11,4 +11,8 @@ export class KakaoAuthCodeInput {
   })
   @IsString()
   code: string;
+
+  @Field()
+  @IsBoolean()
+  test: boolean;
 }
