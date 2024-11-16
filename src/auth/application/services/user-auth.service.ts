@@ -1,10 +1,9 @@
-import { CreateUserCommand } from '@/auth/application/commands/create-user.command';
-import { UpdateUserInfoCommand } from '@/auth/application/commands/update-user-info.command';
-import { UserModel } from '@/auth/domain/model/user.model';
-import { UserRepository } from '@/auth/infrastructure/database/repository/user.repository';
-import { ErrorCode } from '@/utils/exception/error-code.enum';
-import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
+import { UserRepository } from '@src/auth/infrastructure/database/repository/user.repository';
+import { CreateUserCommand } from '@src/auth/application/commands/create-user.command';
+import { ErrorCode, errorFactory } from '@libs/exception';
+import { UserModel } from '@src/auth/domain/model/user.model';
+import { UpdateUserInfoCommand } from '@src/auth/application/commands/update-user-info.command';
 
 @Injectable()
 export class UserAuthService {

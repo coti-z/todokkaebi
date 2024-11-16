@@ -1,21 +1,20 @@
-import { CreateUserCommand } from '@/auth/application/commands/create-user.command';
-import { DeleteUserCommand } from '@/auth/application/commands/delete-user-info.command';
-import { ReissueAccessTokenCommand } from '@/auth/application/commands/reissue-access-token.command';
-import { UpdateUserInfoCommand } from '@/auth/application/commands/update-user-info.command';
-import { GetUserInfoQuery } from '@/auth/application/queries/get-user-info.query';
-import { UserModel } from '@/auth/domain/model/user.model';
-import { CreateUserInput } from '@/auth/presentation/resolver/dto/input/create-user.input';
-import { ReissueAccessTokenInput } from '@/auth/presentation/resolver/dto/input/reissue-access-token.input';
-import { UpdateUserInfoInput } from '@/auth/presentation/resolver/dto/input/update-user-info.input';
-import { AccessToken } from '@/auth/presentation/resolver/dto/object/access-token.object';
-import { DeleteUser } from '@/auth/presentation/resolver/dto/object/delete-user.object';
-import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
-import { TokenInfo } from '@/utils/decorators/token-info.decorator';
-import { JwtAuthGuard } from '@/utils/guard/jwt-auth.guard';
-import { JwtPayload } from '@/utils/jwt/jwt-token.interface';
 import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UserModel } from '@src/auth/domain/model/user.model';
+import { TokenPair } from '@src/auth/presentation/resolver/dto/object/token-pair.object';
+import { CreateUserInput } from '@src/auth/presentation/resolver/dto/input/create-user.input';
+import { CreateUserCommand } from '@src/auth/application/commands/create-user.command';
+import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
+import { UpdateUserInfoInput } from '@src/auth/presentation/resolver/dto/input/update-user-info.input';
+import { UpdateUserInfoCommand } from '@src/auth/application/commands/update-user-info.command';
+import { TokenInfo } from '@libs/decorators';
+import { AccessToken } from '@src/auth/presentation/resolver/dto/object/access-token.object';
+import { ReissueAccessTokenInput } from '../../../../test/utils/graphql.helper';
+import { ReissueAccessTokenCommand } from '@src/auth/application/commands/reissue-access-token.command';
+import { DeleteUser } from '@src/auth/presentation/resolver/dto/object/delete-user.object';
+import { DeleteUserCommand } from '@src/auth/application/commands/delete-user-info.command';
+import { GetUserInfoQuery } from '@src/auth/application/queries/get-user-info.query';
 
 @Resolver(() => UserModel)
 export class UserAuthResolver {

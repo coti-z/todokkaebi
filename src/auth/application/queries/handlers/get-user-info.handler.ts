@@ -1,8 +1,8 @@
-import { GetUserInfoQuery } from '@/auth/application/queries/get-user-info.query';
-import { UserAuthService } from '@/auth/application/services/user-auth.service';
-import { UserModel } from '@/auth/domain/model/user.model';
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { UserAuthService } from '@src/auth/application/services/user-auth.service';
+import { GetUserInfoQuery } from '@src/auth/application/queries/get-user-info.query';
+import { UserModel } from '@src/auth/domain/model/user.model';
 
 @Injectable()
 @QueryHandler(GetUserInfoQuery)

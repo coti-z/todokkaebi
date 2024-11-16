@@ -1,5 +1,5 @@
-import { UserModel } from '@/auth/domain/model/user.model';
 import { User } from '@prisma/client';
+import { UserModel } from '@src/auth/domain/model/user.model';
 
 export class UserMapper {
   static toDomain(user: User): UserModel {

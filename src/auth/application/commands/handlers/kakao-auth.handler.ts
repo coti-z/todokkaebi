@@ -1,9 +1,8 @@
-import { KakaoAuthCommand } from '@/auth/application/commands/kakao-auth.command';
-import { KakaoAuthService } from '@/auth/application/services/kakao-auth.service';
-import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
-import { JwtTokenService } from '@/utils/jwt/jwt.service';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { JwtTokenService, TokenPair } from '@libs/jwt';
+import { KakaoAuthService } from '@src/auth/application/services/kakao-auth.service';
+import { KakaoAuthCommand } from '@src/auth/application/commands/kakao-auth.command';
 
 @Injectable()
 @CommandHandler(KakaoAuthCommand)

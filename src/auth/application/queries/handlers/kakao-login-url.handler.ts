@@ -1,8 +1,9 @@
-import { KakaoLoginUrlQuery } from '@/auth/application/queries/kakao-login-url.query';
-import { KakaoAuthService } from '@/auth/application/services/kakao-auth.service';
-import { KakaoLoginUrl } from '@/auth/presentation/resolver/dto/object/kakao-login-url.object';
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { KakaoAuthService } from '@src/auth/application/services/kakao-auth.service';
+import { KakaoLoginUrlQuery } from '@src/auth/application/queries/kakao-login-url.query';
+import { KakaoLoginUrl } from '@src/auth/presentation/resolver/dto/object/kakao-login-url.object';
+
 
 @Injectable()
 @QueryHandler(KakaoLoginUrlQuery)

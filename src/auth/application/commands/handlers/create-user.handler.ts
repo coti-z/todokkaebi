@@ -1,9 +1,8 @@
-import { CreateUserCommand } from '@/auth/application/commands/create-user.command';
-import { UserAuthService } from '@/auth/application/services/user-auth.service';
-import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
-import { JwtTokenService } from '@/utils/jwt/jwt.service';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { JwtTokenService, TokenPair } from '@libs/jwt';
+import { UserAuthService } from '@src/auth/application/services/user-auth.service';
+import { CreateUserCommand } from '@src/auth/application/commands/create-user.command';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)

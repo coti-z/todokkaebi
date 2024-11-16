@@ -1,8 +1,8 @@
-import { DeleteUserCommand } from '@/auth/application/commands/delete-user-info.command';
-import { UserAuthService } from '@/auth/application/services/user-auth.service';
-import { DeleteUser } from '@/auth/presentation/resolver/dto/object/delete-user.object';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UserAuthService } from '@src/auth/application/services/user-auth.service';
+import { DeleteUserCommand } from '@src/auth/application/commands/delete-user-info.command';
+import { DeleteUser } from '@src/auth/presentation/resolver/dto/object/delete-user.object';
 
 @Injectable()
 @CommandHandler(DeleteUserCommand)

@@ -1,11 +1,11 @@
-import { KakaoAuthCommand } from '@/auth/application/commands/kakao-auth.command';
-import { KakaoLoginUrlQuery } from '@/auth/application/queries/kakao-login-url.query';
-import { GetKakaoLoginUrlInput } from '@/auth/presentation/resolver/dto/input/get-kakao-login-url.input';
-import { KakaoAuthCodeInput } from '@/auth/presentation/resolver/dto/input/kakao-auth.input';
-import { KakaoLoginUrl } from '@/auth/presentation/resolver/dto/object/kakao-login-url.object';
-import { TokenPair } from '@/auth/presentation/resolver/dto/object/token-pair.object';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { KakaoLoginUrl } from '@src/auth/presentation/resolver/dto/object/kakao-login-url.object';
+import { GetKakaoLoginUrlInput } from '@src/auth/presentation/resolver/dto/input/get-kakao-login-url.input';
+import { KakaoLoginUrlQuery } from '@src/auth/application/queries/kakao-login-url.query';
+import { TokenPair } from '@src/auth/presentation/resolver/dto/object/token-pair.object';
+import { KakaoAuthCodeInput } from '@src/auth/presentation/resolver/dto/input/kakao-auth.input';
+import { KakaoAuthCommand } from '@src/auth/application/commands/kakao-auth.command';
 
 @Resolver(() => TokenPair)
 export class KakaoAuthResolver {
@@ -13,6 +13,7 @@ export class KakaoAuthResolver {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
   @Query(() => KakaoLoginUrl, {
     description:
       '카카오 토큰을 발급을 위한 code를 받기 위해서, 카카오 로그인 페이지를 받아오는 곳',

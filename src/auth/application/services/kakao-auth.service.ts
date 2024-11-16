@@ -1,8 +1,8 @@
-import { KakaoAuthCommand } from '@/auth/application/commands/kakao-auth.command';
-import { UserModel } from '@/auth/domain/model/user.model';
-import { UserRepository } from '@/auth/infrastructure/database/repository/user.repository';
-import { KakaoAuth } from '@/auth/infrastructure/kakao/auth/kakao.auth';
 import { Injectable } from '@nestjs/common';
+import { KakaoAuthCommand } from '@src/auth/application/commands/kakao-auth.command';
+import { KakaoAuth } from '@src/auth/infrastructure/kakao/auth/kakao.auth';
+import { UserRepository } from '@src/auth/infrastructure/database/repository/user.repository';
+import { UserModel } from '@src/auth/domain/model/user.model';
 
 @Injectable()
 export class KakaoAuthService {

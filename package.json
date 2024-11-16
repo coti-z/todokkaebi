@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -80,7 +80,8 @@
     "rootDir": ".",
     "roots": [
       "<rootDir>/src",
-      "<rootDir>/test"
+      "<rootDir>/test",
+      "<rootDir>/libs/"
     ],
     "testRegex": ".*\\.(spec|e2e-spec)\\.ts$",
     "transform": {
@@ -90,7 +91,8 @@
       "**/*.(t|j)s"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^libs/decorators(|/.*)$": "<rootDir>/libs/decorators/src/$1"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
