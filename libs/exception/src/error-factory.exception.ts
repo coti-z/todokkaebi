@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql';
-import { ERROR_MAP, ErrorResponse } from '@libs/exception/error-map.interface';
-import { ErrorCode } from '@libs/exception/error-code.enum';
+import { ERROR_MAP, ErrorResponse } from './error-map.interface';
+import { ErrorCode } from './error-code.enum';
 
 export function errorFactory(errorCode: ErrorCode): GraphQLError {
   const errorInfo: ErrorResponse = ERROR_MAP[errorCode];

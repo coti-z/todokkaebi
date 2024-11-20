@@ -1,14 +1,14 @@
-import { HealthController } from '@/app/presentation/app.controller';
-import { AuthModule } from '@/auth/auth.module';
-import { TodoModule } from '@/todo/todo.module';
-import { GraphQLExceptionFilter } from '@/utils/filters/exception.filter';
-import { LoggingInterceptor } from '@/utils/interceptor/api.interceptor';
-import { LoggerModule } from '@/utils/logger/logger.module';
-import { SlackNotificationService } from '@/utils/slack/slack.service';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { LoggerModule } from '@libs/logger';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from '@src/auth/auth.module';
+import { TodoModule } from '@src/todo/todo.module';
+import { UserModule } from '@src/user/user.module';
+import { SlackNotificationService } from '@libs/slack';
+import { GraphQLExceptionFilter } from '@libs/filter';
+import { LoggingInterceptor } from '@libs/interceptor';
 
 @Module({
   imports: [
@@ -23,8 +23,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     }),
     AuthModule,
     TodoModule,
+    UserModule,
   ],
-  controllers: [HealthController],
+  controllers: [],
   providers: [
     SlackNotificationService,
     {

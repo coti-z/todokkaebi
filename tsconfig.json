@@ -24,6 +24,7 @@
       "@src/*": [
         "src/*"
       ],
+
       "@libs/decorators": [
         "libs/decorators/src"
       ],
@@ -77,6 +78,12 @@
       ],
       "@libs/database/*": [
         "libs/database/src/*"
+      ],
+      "@libs/response": [
+        "libs/response/src"
+      ],
+      "@libs/response/*": [
+        "libs/response/src/*"
       ]
     },
 
