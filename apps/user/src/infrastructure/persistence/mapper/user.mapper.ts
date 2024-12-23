@@ -9,14 +9,6 @@ interface UserPersistenceRecord {
   updatedAt: Date;
 }
 
-interface UserDomainRecord {
-  id: string;
-  email: string;
-  nickname: string;
-  birthday?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
 export class UserMapper {
   static toPersistence(user: User): UserPersistenceRecord {
     return {
@@ -29,7 +21,7 @@ export class UserMapper {
     };
   }
 
-  static toDomain(record: UserDomainRecord): User {
+  static toDomain(record: UserPersistenceRecord): User {
     return User.fromPersistence({
       id: record.id,
       email: record.email,

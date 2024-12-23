@@ -4,7 +4,7 @@ FROM node:18 AS development
 # 작업 디렉토리
 WORKDIR /app
 
-COPY package*.json package-lock.json ./
+COPY package*.json package-lock.json apps/user/src/infrastructure/prisma/schema.prisma ./
 
 RUN npm install
 

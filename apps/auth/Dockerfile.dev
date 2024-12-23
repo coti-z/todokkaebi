@@ -1,0 +1,12 @@
+FROM node:18 AS development
+
+WORKDIR /app
+
+COPY package*.json package-lock.json apps/auth/src/infrastructure/prisma/schema.prisma ./
+
+RUN npm install
+
+RUN npx prisma generate --schema=schema.prisma
+
+
+CMD ["npm", "run", "start:auth:dev"]

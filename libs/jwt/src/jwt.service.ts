@@ -27,11 +27,25 @@ export class JwtTokenService {
       type: TokenEnum.REFRESH,
     });
 
-    return { accessToken, refreshToken };
+    return {
+      accessToken: accessToken.token,
+      accessTokenExpires: accessToken.expiresAt,
+      refreshToken: refreshToken.token,
+      refreshTokenExpires: refreshToken.expiresAt,
+    };
   }
-  generateToken(payload: JwtPayload): string {
+  generateToken(payload: JwtPayload) {
     const expiresIn = this.getExpirationTime(payload.type);
-    return this.jwtService.sign(payload, { expiresIn });
+    const token = this.jwtService.sign(payload, { expiresIn });
+    const decoded = this.jwtService.decode(token) as {
+      exp: number;
+      iat: number;
+    };
+    const expiresAt = new Date(decoded.exp * 1000);
+    return {
+      token,
+      expiresAt,
+    };
   }
 
   verifyToken(token: string): JwtVerifyResult {
@@ -45,14 +59,9 @@ export class JwtTokenService {
       throw errorFactory(ErrorCode.INVALID_TOKEN);
     }
   }
-  verifyRefreshToken(token: string): JwtVerifyResult {
-    try {
-      const payload: JwtPayload = this.jwtService.verify(token);
-      if (payload.type !== TokenEnum.REFRESH) {
-        throw errorFactory(ErrorCode.INVALID_TOKEN);
-      }
-      return { isValid: true, payload };
-    } catch {
+  verifyRefreshToken(token: string) {
+    const payload: JwtPayload = this.jwtService.verify(token);
+    if (payload.type !== TokenEnum.REFRESH) {
       throw errorFactory(ErrorCode.INVALID_TOKEN);
     }
   }

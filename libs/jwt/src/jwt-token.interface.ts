@@ -15,5 +15,7 @@ export interface JwtVerifyResult {
 
 export interface TokenPair {
   accessToken: string;
+  accessTokenExpires: Date;
   refreshToken: string;
+  refreshTokenExpires: Date;
 }

@@ -10,9 +10,25 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: "mysql://root:rootpassword@db:3306/exampledb?schema=user"  # localhost:5555 -> db:3306
-    command: sh -c "npx prisma migrate dev --schema=apps/user/src/infrastructure/prisma/schema.prisma -n 1 && npm run start:user:dev"
+    command: sh -c "npx prisma generate --schema=apps/user/src/infrastructure/prisma/schema.prisma &&npx prisma migrate deploy --schema=apps/user/src/infrastructure/prisma/schema.prisma  && npm run start:user:dev"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile.dev
+    ports:
+      - "3002:3000"
+    volumes:
+      - .:/app
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: "mysql://root:rootpassword@db:3306/exampledb?schema=auth"  # localhost:5555 -> db:3306
+    command: sh -c "npx prisma generate --schema=apps/auth/src/infrastructure/prisma/schema.prisma && npx prisma migrate deploy --schema=apps/auth/src/infrastructure/prisma/schema.prisma  && npm run start:auth:dev"
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: mysql:latest
     environment:
@@ -24,5 +40,11 @@ services:
       - '3306:3306'
     volumes:
       - 'mysqldata:/var/lib/mysql'
+    healthcheck: # 헬스체크 설정 추가
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 5s    # 5초마다 체크
+      timeout: 5s     # 5초 안에 응답이 없으면 실패로 간주
+      retries: 5      # 5번까지 재시도
+      start_period: 30s  # 컨테이너 시작 후 30초는 실패해도 무시
 volumes:
   mysqldata:

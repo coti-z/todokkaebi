@@ -24,17 +24,17 @@
       "@user/*": [
         "apps/user/src/*"
       ],
+      "@auth": [
+        "apps/auth/src"
+      ],
+      "@auth/*": [
+        "apps/auth/src/*"
+      ],
       "@libs/decorators": [
         "libs/decorators/src"
       ],
       "@libs/decorators/*": [
         "libs/decorators/src/*"
-      ],
-      "@auth/auth": [
-        "libs/auth/src"
-      ],
-      "@auth/auth/*": [
-        "libs/auth/src/*"
       ],
       "@libs/jwt": [
         "libs/jwt/src"
