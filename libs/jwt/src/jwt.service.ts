@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import {
   JwtPairPayload,
   JwtPayload,
-  JwtVerifyResult,
   TokenPair,
 } from '@libs/jwt/jwt-token.interface';
 import { TokenEnum, TokenTimeEnum } from '@libs/jwt/token.enum';
@@ -48,16 +47,8 @@ export class JwtTokenService {
     };
   }
 
-  verifyToken(token: string): JwtVerifyResult {
-    try {
-      const payload: JwtPayload = this.jwtService.verify(token);
-      if (payload.type !== TokenEnum.ACCESS) {
-        throw errorFactory(ErrorCode.INVALID_TOKEN);
-      }
-      return { isValid: true, payload };
-    } catch {
-      throw errorFactory(ErrorCode.INVALID_TOKEN);
-    }
+  verifyToken(token: string) {
+    this.jwtService.verify(token);
   }
   verifyRefreshToken(token: string) {
     const payload: JwtPayload = this.jwtService.verify(token);

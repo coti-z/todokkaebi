@@ -6,6 +6,7 @@ import { UserCredentialRepository } from '@auth/infrastructure/persistence/crede
 import { ErrorCode, errorFactory } from '@libs/exception';
 import { UpdateCredentialParam } from '@auth/application/params/update-credential.param';
 import { DeleteUserCredentialParam } from '@auth/application/params/delete-credential.param';
+import { UserCredentials } from '@prisma/client';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
@@ -32,7 +33,7 @@ export class UserAuthService {
       await this.userCredentialRepository.findUserCredentials({
         userId: param.userId,
       });
-    if (userCredential) {
+    if (!userCredential) {
       throw errorFactory(ErrorCode.USER_ALREADY_EXISTS);
     }
     const createdUserCredential = UserCredentialEntity.create({
@@ -90,7 +91,7 @@ export class UserAuthService {
    * @param params - 검증에 필요한 정보를 담은 파라미터
    * @throws {ErrorCode.UNAUTHORIZED} 자격정보가 존재하지 않거나 일치하지 않는 경우
    */
-  async validatePassword(params: ValidateUserParams) {
+  async validatePassword(params: ValidateUserParams): Promise<UserCredentials> {
     // 1. DB에서 유저 도메인을 가져오고
     const userCredential =
       await this.userCredentialRepository.findUserCredentialsByEmail({
@@ -104,5 +105,7 @@ export class UserAuthService {
     if (userCredential.passwordHash !== params.password) {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
+
+    return userCredential;
   }
 }

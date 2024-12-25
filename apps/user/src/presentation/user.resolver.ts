@@ -15,7 +15,6 @@ import { CreateUserResult } from '@user/application/results/create-user.result';
 @Resolver()
 export class UserResolver {
   constructor(private readonly commandBus: CommandBus) {}
-
   @Mutation(() => UpdateUserResult)
   async updateUser(
     @Args('input') input: UpdateUserInput,
@@ -35,7 +34,7 @@ export class UserResolver {
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<ApiResponse<CreateUserResult>> {
-    const result = await this.commandBus.execute(
+    const data = await this.commandBus.execute(
       new CreateUserCommand(
         input.email,
         input.nickname,
@@ -43,7 +42,7 @@ export class UserResolver {
         input.birthday,
       ),
     );
-    return ResponseManager.create(result);
+    return ResponseManager.success(data);
   }
 
   @Mutation(() => ApiResponse)

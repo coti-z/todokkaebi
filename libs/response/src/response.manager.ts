@@ -2,7 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiResponse } from '@libs/response/reponose.object';
 
 export class ResponseManager {
-  static create<T>(
+  static success<T>(
     data?: T,
     status: HttpStatus = HttpStatus.OK,
     message?: string,

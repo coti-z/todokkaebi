@@ -1,8 +1,7 @@
-import { ErrorCode } from '@/utils/exception/error-code.enum';
-import { errorFactory } from '@/utils/exception/error-factory.exception';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { ErrorCode, errorFactory } from '@libs/exception';
 
 @Injectable()
 export class KakaoAuth {

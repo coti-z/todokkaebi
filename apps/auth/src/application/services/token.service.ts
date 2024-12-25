@@ -4,7 +4,7 @@ import { CreateTokenParam } from '@auth/application/params/create-token.param';
 import { Token } from '@auth/domain/entities/token.entity';
 import { TokenRepository } from '@auth/infrastructure/persistence/token.repository';
 import { ReissueTokenParam } from '@auth/application/params/update-access-token.param';
-import { ApplicationException, ErrorCode, errorFactory } from '@libs/exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 import { RevokeTokenParam } from '@auth/application/params/revoke-token.param';
 
 /**
@@ -46,7 +46,7 @@ export class TokenService {
     await this.tokenRepository.update(token);
 
     // 토큰 재발급 및 DB 반영
-    const reissuedToken = this.issueToken(param.userId);
+    const reissuedToken = this.issueToken(token.userId);
     await this.tokenRepository.save(reissuedToken);
     return reissuedToken;
   }
