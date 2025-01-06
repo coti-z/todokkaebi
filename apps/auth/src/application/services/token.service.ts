@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtTokenService } from '@libs/jwt';
-import { CreateTokenParam } from '@auth/application/params/create-token.param';
+import { CreateTokenParam } from '@auth/application/dto/params/create-token.param';
 import { Token } from '@auth/domain/entities/token.entity';
 import { TokenRepository } from '@auth/infrastructure/persistence/token.repository';
-import { ReissueTokenParam } from '@auth/application/params/update-access-token.param';
+import { ReissueTokenParam } from '@auth/application/dto/params/update-access-token.param';
 import { ApplicationException, ErrorCode } from '@libs/exception';
-import { RevokeTokenParam } from '@auth/application/params/revoke-token.param';
+import { RevokeTokenParam } from '@auth/application/dto/params/revoke-token.param';
 
 /**
  * 토큰의 유효성 관련 서비스를 제공하는 클래스입니다.

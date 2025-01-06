@@ -20,7 +20,7 @@ interface UserPersistenceProps {
 }
 export class User {
   private constructor(
-    public readonly id: string,
+     public readonly id: string,
     private _email: string,
     private _nickname: string,
     private _createAt: Date,

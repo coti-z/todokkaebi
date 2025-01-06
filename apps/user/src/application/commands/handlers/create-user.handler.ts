@@ -2,8 +2,8 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { CreateUserCommand } from '@user/application/commands/create-user.command';
 import { UserService } from '@user/application/services/user.service';
-import { CreateUserParam } from '@user/application/params/create-user.param';
-import { CreateUserResult } from '@user/application/results/create-user.result';
+import { CreateUserParam } from '@user/application/dto/params/create-user.param';
+import { CreateUserResult } from '@user/application/dto/results/create-user.result';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)

@@ -2,7 +2,7 @@ import {
   FindTokenByAccessTokenArgs,
   FindTokenByRefreshTokenArgs,
   ITokensRepository,
-} from '@auth/domain/interfaces/token-repository.interface';
+} from '@auth/application/port/out/token-repository.port';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mapper';
@@ -18,7 +18,7 @@ export class TokenRepository implements ITokensRepository {
       data,
     });
   }
-  async update(entity: Token): Promise<void> {
+  async update(entity: Token): Promise<VOID> {
     const data = TokenMapper.toPersistence(entity);
     await this.prisma.tokens.update({
       where: {

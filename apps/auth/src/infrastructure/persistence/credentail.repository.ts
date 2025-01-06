@@ -6,7 +6,7 @@ import {
   FindUserCredentialArgs,
   FindUserCredentialByEmailArgs,
   IUserCredentialRepository,
-} from '@auth/domain/interfaces/user-credential-repository.interface';
+} from '@auth/application/port/out/user-credential-repository.port';
 import { UserCredentialMapper } from '@auth/infrastructure/persistence/mapper/user-credential.mapper';
 
 @Injectable()

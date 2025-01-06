@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SlackNotificationService } from '@libs/slack';
 import { GraphQLExceptionFilter } from '@libs/filter';
 import { LoggingInterceptor } from '@libs/interceptor';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [

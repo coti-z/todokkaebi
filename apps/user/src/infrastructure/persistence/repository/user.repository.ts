@@ -3,8 +3,8 @@ import { PrismaService } from '@libs/database';
 import {
   IUserRepositoryGeneric,
   UserBasicRepositoryArgs,
-} from '@user/domain/interface/user-repository.interface';
-import { UserMapper } from '@user/infrastructure/persistence/mapper/user.mapper';
+} from '@user/application/port/out/user-repository.port';
+import { UserMapper } from '@user/infrastructure/mapper/user.mapper';
 import { User } from '@user/domain/entity/user.entity';
 
 // 유저 생성, 삭제, 조회, 업데이트
@@ -15,17 +15,17 @@ export class PrismaUserRepositoryImpl
   constructor(private readonly prisma: PrismaService) {}
   async createUser(args: UserBasicRepositoryArgs['createUser']): Promise<void> {
     const data = UserMapper.toPersistence(args);
-    await this.prisma.user.create({ data });
+    await this.prisma.users.create({ data });
   }
   async updateUser(args: UserBasicRepositoryArgs['updateUser']): Promise<void> {
     const data = UserMapper.toPersistence(args);
-    await this.prisma.user.update({
+    await this.prisma.users.update({
       where: { id: data.id },
       data,
     });
   }
   async deleteUser(args: UserBasicRepositoryArgs['deleteUser']): Promise<void> {
-    await this.prisma.user.delete({
+    await this.prisma.users.delete({
       where: { id: args.id },
     });
   }
@@ -33,7 +33,7 @@ export class PrismaUserRepositoryImpl
   async findUser(
     args: UserBasicRepositoryArgs['findUser'],
   ): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { id: args.id } });
+    const user = await this.prisma.users.findUnique({ where: { id: args.id } });
     if (!user) {
       return null;
     }

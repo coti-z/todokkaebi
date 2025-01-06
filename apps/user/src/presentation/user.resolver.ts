@@ -9,8 +9,8 @@ import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input
 import { CreateUserCommand } from '@user/application/commands/create-user.command';
 import { UseGuards } from '@nestjs/common';
 import { DeleteUserCommand } from '@user/application/commands/delete-user.command';
-import { UpdateUserResult } from '@user/application/results/update-user.result';
-import { CreateUserResult } from '@user/application/results/create-user.result';
+import { UpdateUserResult } from '@user/application/dto/results/update-user.result';
+import { CreateUserResult } from '@user/application/dto/results/create-user.result';
 
 @Resolver()
 export class UserResolver {
@@ -28,7 +28,7 @@ export class UserResolver {
         input.password,
       ),
     );
-    return ResponseManager.create(result);
+    return ResponseManager.success(result);
   }
   @Mutation(() => CreateUserResult)
   async createUser(
@@ -49,6 +49,6 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   async deleteUser(@TokenInfo() payload: JwtPayload) {
     await this.commandBus.execute(new DeleteUserCommand(payload.userId));
-    return ResponseManager.create();
+    return ResponseManager.success();
   }
 }

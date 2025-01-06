@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteUserCommand } from '@user/application/commands/delete-user.command';
 import { UserService } from '@user/application/services/user.service';
-import { DeleteUserParam } from '@user/application/params/delete-user.param';
+import { DeleteUserParam } from '@user/application/dto/params/delete-user.param';
 @Injectable()
 @CommandHandler(DeleteUserCommand)
 export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {

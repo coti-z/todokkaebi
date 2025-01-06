@@ -4,11 +4,11 @@ import {
   IUserRepositoryGeneric,
   UserBasicRepositoryArgs,
   UserRepositorySymbol,
-} from '@user/domain/interface/user-repository.interface';
-import { CreateUserParam } from '@user/application/params/create-user.param';
+} from '@user/application/port/out/user-repository.port';
+import { CreateUserParam } from '@user/application/dto/params/create-user.param';
 import { User } from '@user/domain/entity/user.entity';
-import { UpdateUserParam } from '@user/application/params/update-user.param';
-import { DeleteUserParam } from '@user/application/params/delete-user.param';
+import { UpdateUserParam } from '@user/application/dto/params/update-user.param';
+import { DeleteUserParam } from '@user/application/dto/params/delete-user.param';
 
 @Injectable()
 export class UserService {

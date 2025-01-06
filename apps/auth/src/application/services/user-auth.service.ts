@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ValidateUserParams } from '../params/validate-user.param';
-import { CreateCredentialParam } from '@auth/application/params/ create-credential.param';
+import { ValidateUserParams } from '@auth/application/dto/params/validate-user.param';
+import { CreateCredentialParam } from '@auth/application/dto/params/ create-credential.param';
 import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
 import { UserCredentialRepository } from '@auth/infrastructure/persistence/credentail.repository';
 import { ErrorCode, errorFactory } from '@libs/exception';
-import { UpdateCredentialParam } from '@auth/application/params/update-credential.param';
-import { DeleteUserCredentialParam } from '@auth/application/params/delete-credential.param';
+import { UpdateCredentialParam } from '@auth/application/dto/params/update-credential.param';
+import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-credential.param';
 import { UserCredentials } from '@prisma/client';
 
 /**

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserService } from '@user/application/services/user.service';
 import { UpdateUserCommand } from '@user/application/commands/update-user.command';
-import { UpdateUserParam } from '@user/application/params/update-user.param';
+import { UpdateUserParam } from '@user/application/dto/params/update-user.param';
 
 @Injectable()
 @CommandHandler(UpdateUserCommand)

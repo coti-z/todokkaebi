@@ -1,0 +1,76 @@
+services:
+  user:
+    build:
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+      target: development
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: "mysql://user:1234@mysql-user:5432/userdb"
+    command: sh apps/scripts/start-user.sh
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+
+  mysql-user:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: userdb
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '6001:3306'
+    volumes:
+      - 'mysql_user_data:/var/lib/mysql'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    ports:
+      - "3002:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+    environment:
+      DATABASE_URL: "mysql://user:1234@mysql-auth:5432/authdb"
+    command: sh apps/scripts/start-auth.sh
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+
+  mysql-auth:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: authdb
+      MYSQL_USER: 'auth'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '6002:3306'
+    volumes:
+        - 'mysql_auth_data:/var/lib/mysql'
+    healthcheck:
+        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+        start_period: 30s
+
+volumes:
+  mysql_user_data:
+  mysql_auth_data:
