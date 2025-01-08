@@ -6,7 +6,7 @@ export interface DeleteUserArgs {
   id: string;
 }
 
-export interface FindUserArgs {
+export interface FindUserByIdArgs {
   id: string;
 }
 
@@ -15,13 +15,12 @@ export type UserBasicRepositoryArgs = {
   createUser: User;
   updateUser: User;
   deleteUser: DeleteUserArgs;
-  findUser: FindUserArgs;
+  findUser: FindUserByIdArgs;
 };
 
-// 제너릭을 활용한 유연한 UserRepository 인터페이스
-export interface IUserRepositoryGeneric<T extends Record<string, any>> {
-  createUser(args: T['createUser']): Promise<void>;
-  updateUser(args: T['updateUser']): Promise<void>;
-  deleteUser(args: T['deleteUser']): Promise<void>;
-  findUser(args: T['findUser']): Promise<User | null>;
+export interface IUserRepository {
+  createUser(data: User): Promise<void>;
+  updateUser(args: User): Promise<void>;
+  deleteUser(args: DeleteUserArgs): Promise<void>;
+  findUser(args: FindUserByIdArgs): Promise<User | null>;
 }

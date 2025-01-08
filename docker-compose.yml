@@ -10,7 +10,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      DATABASE_URL: "mysql://user:1234@mysql-user:5432/userdb"
+      DATABASE_URL: "mysql://root:1234@mysql-user:3306/userdb"
     command: sh apps/scripts/start-user.sh
     depends_on:
       mysql-user:
@@ -47,7 +47,7 @@ services:
       - /usr/src/app/node_modules
 
     environment:
-      DATABASE_URL: "mysql://user:1234@mysql-auth:5432/authdb"
+      DATABASE_URL: "mysql://root:1234@mysql-auth:3306/authdb"
     command: sh apps/scripts/start-auth.sh
     depends_on:
       mysql-auth:

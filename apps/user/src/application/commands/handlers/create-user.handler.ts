@@ -14,7 +14,12 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   ) {}
   async execute(command: CreateUserCommand): Promise<CreateUserResult> {
     const user = await this.userService.createUser(
-      new CreateUserParam(command.email, command.nickname, command.birthday),
+      new CreateUserParam(
+        command.email,
+        command.nickname,
+        command.password,
+        command.birthday,
+      ),
     );
     return {
       birthday: user.birthday,

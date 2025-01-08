@@ -1,11 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from '@auth/auth.module';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { authGrpcOptions } from '@auth/infrastructure/adapter/grpc/options/auth-grpc.option';
 
-
-@Injectable()
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
 
-  await app.listen(5000);
+  app.connectMicroservice<MicroserviceOptions>(authGrpcOptions);
+
+  await app.startAllMicroservices();
+  await app.listen(3001);
 }
+
 bootstrap();

@@ -18,6 +18,7 @@ export class UserCredentialRepository implements IUserCredentialRepository {
   }
   async updateUserCredential(entity: UserCredentialEntity): Promise<void> {
     const record = UserCredentialMapper.toPersistence(entity);
+
     await this.prisma.userCredentials.update({
       where: {
         id: entity.id,

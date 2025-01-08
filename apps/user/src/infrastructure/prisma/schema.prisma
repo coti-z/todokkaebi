@@ -11,6 +11,7 @@ model Users {
   id        String    @id @default(uuid())
   email     String    @unique
   nickname  String
+  password  String
   birthday  DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

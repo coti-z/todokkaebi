@@ -83,6 +83,24 @@
       ],
       "@libs/response/*": [
         "libs/response/src/*"
+      ],
+      "@libs/common": [
+        "libs/common/src"
+      ],
+      "@libs/common/*": [
+        "libs/common/src/*"
+      ],
+      "@libs/test": [
+        "libs/test/src"
+      ],
+      "@libs/test/*": [
+        "libs/test/src/*"
+      ],
+      "@libs/grpc": [
+        "libs/grpc/src"
+      ],
+      "@libs/grpc/*": [
+        "libs/grpc/src/*"
       ]
     }
   }

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  rpc CreateUserCredential(CreateUserCredentialRequest) returns (CreateUserResponse);
+  rpc UpdateUserCredential(UpdateUserCredentialRequest) returns (UpdateUserCredentialRequest);
+}
+
+message CreateUserCredentialRequest {
+  string user_id = 1;
+  string email = 2;
+  string passwordHash = 3;
+  string createdAt = 4;
+  string updatedAt = 5;
+}
+
+message UpdateUserCredentialRequest {
+  string user_id = 1;
+  optional string email = 2;
+  optional string passwordHash = 3;
+  optional string createdAt = 4;
+  optional string updatedAt = 5;
+}
+
+message CreateUserResponse {
+  bool success = 1;
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+}

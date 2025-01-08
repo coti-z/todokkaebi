@@ -17,6 +17,15 @@
         "tsConfigPath": "libs/decorators/tsconfig.lib.json"
       }
     },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
     "api-gateway": {
       "type": "application",
       "root": "apps/api-gateway",
@@ -42,6 +51,24 @@
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json"
+      }
+    },
+    "test": {
+      "type": "library",
+      "root": "libs/test",
+      "entryFile": "index",
+      "sourceRoot": "libs/test/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/test/tsconfig.lib.json"
+      }
+    },
+    "grpc": {
+      "type": "library",
+      "root": "libs/grpc",
+      "entryFile": "index",
+      "sourceRoot": "libs/grpc/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/grpc/tsconfig.lib.json"
       }
     }
   },
