@@ -10,7 +10,7 @@ import {
 import { UserCredentialMapper } from '@auth/infrastructure/persistence/mapper/user-credential.mapper';
 
 @Injectable()
-export class UserCredentialRepository implements IUserCredentialRepository {
+export class UserCredentialRepositoryImpl implements IUserCredentialRepository {
   constructor(private readonly prisma: PrismaService) {}
   async createUserCredential(entity: UserCredentialEntity): Promise<void> {
     const data = UserCredentialMapper.toPersistence(entity);
@@ -26,19 +26,19 @@ export class UserCredentialRepository implements IUserCredentialRepository {
       data: record,
     });
   }
-  async deleteUserCredential(args: DeleteUserCredentialArgs): Promise<void> {
+  async deleteUserCredential(data: DeleteUserCredentialArgs): Promise<void> {
     await this.prisma.userCredentials.delete({
       where: {
-        id: args.id,
+        id: data.id,
       },
     });
   }
   async findUserCredentials(
-    args: FindUserCredentialArgs,
+    data: FindUserCredentialArgs,
   ): Promise<UserCredentialEntity | null> {
     const record = await this.prisma.userCredentials.findUnique({
       where: {
-        userId: args.userId,
+        userId: data.userId,
       },
     });
     if (!record) {
@@ -48,11 +48,11 @@ export class UserCredentialRepository implements IUserCredentialRepository {
   }
 
   async findUserCredentialsByEmail(
-    args: FindUserCredentialByEmailArgs,
+    data: FindUserCredentialByEmailArgs,
   ): Promise<UserCredentialEntity | null> {
     const record = await this.prisma.userCredentials.findUnique({
       where: {
-        email: args.email,
+        email: data.email,
       },
     });
     if (!record) return null;

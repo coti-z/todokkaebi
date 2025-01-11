@@ -15,6 +15,6 @@ COPY nest-cli.json nest-cli.json
 RUN npm install
 
 
-CMD ["npm", "run", "start:user:dev"]
+CMD ["npm", "run", "START:user:dev"]
 
 # TODO: production 환경 도커 파일 작성

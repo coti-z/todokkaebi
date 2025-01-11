@@ -5,7 +5,11 @@ export const authGrpcServerOptions: GrpcOptions = {
   transport: Transport.GRPC,
   options: {
     package: 'auth',
-    protoPath: join(__dirname, '../../../../proto/auth.proto'),
+    protoPath: join(
+      __dirname,
+      '../../../../../../../../../../proto/auth.proto',
+    ),
+
     url: 'auth:50051',
   },
 };

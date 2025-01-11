@@ -1,6 +1,7 @@
 import { User } from '@user/domain/entity/user.entity';
 
 export const UserRepositorySymbol = Symbol.for('UserRepository');
+``;
 
 export interface DeleteUserArgs {
   id: string;

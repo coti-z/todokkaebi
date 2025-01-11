@@ -9,6 +9,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      - ./proto:/usr/src/app/apps/user/src/infrastructure/proto
     environment:
       DATABASE_URL: "mysql://root:1234@mysql-user:3306/userdb"
     command: sh apps/scripts/start-user.sh

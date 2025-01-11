@@ -1,16 +1,29 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '@libs/database';
 import { UserRepositorySymbol } from '@user/application/port/out/user-repository.port';
 import { UserRepositoryImpl } from '@user/infrastructure/persistence/repository/user.repository';
+import { DatabaseModule } from '@libs/database';
+import { ClientGrpc, ClientsModule, Transport } from '@nestjs/microservices';
 import {
   USER_GRPC_CLIENT_SYMBOL,
   USER_GRPC_SERVICE_SYMBOL,
 } from '@user/infrastructure/adapter/grpc/options/user-grpc-client.options';
-import { ClientGrpc } from '@nestjs/microservices';
 import { AuthMicroservice } from '@libs/grpc';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    DatabaseModule,
+    ClientsModule.register([
+      {
+        name: USER_GRPC_CLIENT_SYMBOL,
+        transport: Transport.GRPC,
+        options: {
+          package: 'auth',
+          protoPath: './proto/auth.proto',
+          url: 'localhost:50051',
+        },
+      },
+    ]),
+  ],
   providers: [
     {
       provide: UserRepositorySymbol,

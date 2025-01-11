@@ -11,14 +11,18 @@ export interface FindUserCredentialByEmailArgs {
   email: string;
 }
 
+export const UserCredentialRepositorySymbol = Symbol.for(
+  'UserCredentialRepository',
+);
+
 export interface IUserCredentialRepository {
   createUserCredential(entity: UserCredentialEntity): Promise<void>;
   updateUserCredential(entity: UserCredentialEntity): Promise<void>;
-  deleteUserCredential(args: DeleteUserCredentialArgs): Promise<void>;
+  deleteUserCredential(data: DeleteUserCredentialArgs): Promise<void>;
   findUserCredentials(
-    args: FindUserCredentialArgs,
+    data: FindUserCredentialArgs,
   ): Promise<UserCredentialEntity | null>;
   findUserCredentialsByEmail(
-    args: FindUserCredentialByEmailArgs,
+    data: FindUserCredentialByEmailArgs,
   ): Promise<UserCredentialEntity | null>;
 }

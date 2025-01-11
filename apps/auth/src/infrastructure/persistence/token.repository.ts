@@ -9,7 +9,7 @@ import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mappe
 import { Token } from '@auth/domain/entities/token.entity';
 
 @Injectable()
-export class TokenRepository implements ITokensRepository {
+export class TokenRepositoryImpl implements ITokensRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(entity: Token): Promise<void> {
@@ -18,7 +18,7 @@ export class TokenRepository implements ITokensRepository {
       data,
     });
   }
-  async update(entity: Token): Promise<VOID> {
+  async update(entity: Token): Promise<void> {
     const data = TokenMapper.toPersistence(entity);
     await this.prisma.tokens.update({
       where: {
