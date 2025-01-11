@@ -1,12 +1,7 @@
 #!/bin/sh
 
 # 1. 의존성 설치
-if [ -d "node_modules" ]; then
-  echo "Dependencies already installed. Skipping npm install."
-else
-  echo "Installing dependencies..."
-  npm install
-fi
+npm install
 
 # 2. Prisma 설정
 if [ -d "apps/auth/src/infrastructure/prisma/migrations" ]; then

@@ -21,4 +21,4 @@ import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructu
     UserAuthService,
   ],
 })
-export class AuthPresentaionModule {}
+export class AuthPresentationModule {}
