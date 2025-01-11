@@ -1,7 +1,7 @@
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
-export const authGrpcOptions: GrpcOptions = {
+export const authGrpcServerOptions: GrpcOptions = {
   transport: Transport.GRPC,
   options: {
     package: 'auth',
