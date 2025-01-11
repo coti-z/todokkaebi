@@ -34,7 +34,6 @@ services:
       retries: 5
       start_period: 30s
 
-
   auth:
     build:
       context: .
@@ -44,14 +43,14 @@ services:
       - "3002:3000"
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
-
+      - /usr/src/app/node_modules:/usr/src/app/node_modules
     environment:
       DATABASE_URL: "mysql://root:1234@mysql-auth:3306/authdb"
     command: sh apps/scripts/start-auth.sh
     depends_on:
       mysql-auth:
         condition: service_healthy
+
 
   mysql-auth:
     image: mysql:latest

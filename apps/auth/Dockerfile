@@ -12,9 +12,6 @@ COPY nest-cli.json nest-cli.json
 # 패키지 설치
 RUN npm install
 
-## 서비스 소스코드(메인 서비스, 라이브러리)
-COPY apps/auth apps/auth
-COPY libs libs
 
 CMD ["npm", "run", "start:auth:dev"]
 

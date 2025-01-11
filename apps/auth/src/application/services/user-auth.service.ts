@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ValidateUserParams } from '@auth/application/dto/params/validate-user.param';
 import { CreateCredentialParam } from '@auth/application/dto/params/ create-credential.param';
 import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
@@ -6,7 +6,6 @@ import { UserCredentialRepository } from '@auth/infrastructure/persistence/crede
 import { ErrorCode, errorFactory } from '@libs/exception';
 import { UpdateCredentialParam } from '@auth/application/dto/params/update-credential.param';
 import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-credential.param';
-import { UserCredentials } from '@prisma/client';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
@@ -15,6 +14,7 @@ import { UserCredentials } from '@prisma/client';
 @Injectable()
 export class UserAuthService {
   constructor(
+    @Inject()
     private readonly userCredentialRepository: UserCredentialRepository,
   ) {}
 

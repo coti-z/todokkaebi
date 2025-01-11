@@ -1,7 +1,6 @@
 // auth/schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../"
 }
 
 datasource authDB {
