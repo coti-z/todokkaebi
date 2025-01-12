@@ -1,21 +1,82 @@
 services:
-  backend-server:
+  user:
     build:
-      context: ./
-      dockerfile: Dockerfile
-    image: backend-server:latest
-    container_name: backend-server
-    restart: always
-    environment:
-      - NODE_ENV=test
-      - DATABASE_URL=mysql://root:root@mysql:3306/test
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+      target: development
     ports:
-      - "5000:5000"
-    networks:
-      - app-network
+      - "3001:3001"
     volumes:
-      - ./prisma:/app/prisma
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./proto:/usr/src/app/apps/user/src/infrastructure/proto
+      - ./apps/user/src/infrastructure/prisma:/usr/src/app/apps/user/src/infrastructure/prisma
 
-networks:
-  app-network:
-    external: true
+    environment:
+      DATABASE_USER_URL: "mysql://root:1234@mysql-user:3306/userdb"
+    command: sh apps/scripts/start-user.sh
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+
+  mysql-user:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: userdb
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '6001:3306'
+    volumes:
+      - 'mysql_user_data:/var/lib/mysql'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    expose:
+      - 50051
+    ports:
+      - "3002:3002"
+      - "50051:50051"    # gRPC 포트 추가
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules:/usr/src/app/node_modules
+      - ./apps/auth/src/infrastructure/prisma:/usr/src/app/apps/auth/src/infrastructure/prisma
+    environment:
+      DATABASE_AUTH_URL: "mysql://root:1234@mysql-auth:3306/authdb"
+    command: sh apps/scripts/start-auth.sh
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+
+
+  mysql-auth:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: authdb
+      MYSQL_USER: 'auth'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '6002:3306'
+    volumes:
+        - 'mysql_auth_data:/var/lib/mysql'
+    healthcheck:
+        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+        start_period: 30s
+
+volumes:
+  mysql_user_data:
+  mysql_auth_data:

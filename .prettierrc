@@ -10,5 +10,20 @@
   "quoteProps": "as-needed",
   "proseWrap": "preserve",
   "htmlWhitespaceSensitivity": "css",
-  "embeddedLanguageFormatting": "auto"
+  "embeddedLanguageFormatting": "auto",
+
+  "useTabs": false,
+  "bracketSameLine": false,
+  "jsxSingleQuote": true,
+  "parser": "typescript",
+  "requirePragma": false,
+  "insertPragma": false,
+  "overrides": [
+    {
+      "files": "*.spec.ts",
+      "options": {
+        "printWidth": 100
+      }
+    }
+  ]
 }

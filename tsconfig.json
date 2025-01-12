@@ -6,19 +6,102 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@user": [
+        "apps/user/src"
+      ],
+      "@user/*": [
+        "apps/user/src/*"
+      ],
+      "@auth": [
+        "apps/auth/src"
+      ],
+      "@auth/*": [
+        "apps/auth/src/*"
+      ],
+      "@libs/decorators": [
+        "libs/decorators/src"
+      ],
+      "@libs/decorators/*": [
+        "libs/decorators/src/*"
+      ],
+      "@libs/jwt": [
+        "libs/jwt/src"
+      ],
+      "@libs/jwt/*": [
+        "libs/jwt/src/*"
+      ],
+      "@libs/exception": [
+        "libs/exception/src"
+      ],
+      "@libs/exception/*": [
+        "libs/exception/src/*"
+      ],
+      "@libs/logger": [
+        "libs/logger/src"
+      ],
+      "@libs/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@libs/slack": [
+        "libs/slack/src"
+      ],
+      "@libs/slack/*": [
+        "libs/slack/src/*"
+      ],
+      "@libs/filter": [
+        "libs/filter/src"
+      ],
+      "@libs/filter/*": [
+        "libs/filter/src/*"
+      ],
+      "@libs/interceptor": [
+        "libs/interceptor/src"
+      ],
+      "@libs/interceptor/*": [
+        "libs/interceptor/src/*"
+      ],
+      "@libs/database": [
+        "libs/database/src"
+      ],
+      "@libs/database/*": [
+        "libs/database/src/*"
+      ],
+      "@libs/response": [
+        "libs/response/src"
+      ],
+      "@libs/response/*": [
+        "libs/response/src/*"
+      ],
+      "@libs/common": [
+        "libs/common/src"
+      ],
+      "@libs/common/*": [
+        "libs/common/src/*"
+      ],
+      "@libs/test": [
+        "libs/test/src"
+      ],
+      "@libs/test/*": [
+        "libs/test/src/*"
+      ],
+      "@libs/grpc": [
+        "libs/grpc/src"
+      ],
+      "@libs/grpc/*": [
+        "libs/grpc/src/*"
+      ]
+    }
   }
 }
