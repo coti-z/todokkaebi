@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { ApiResponseOf } from '@libs/response/api-response-factory';
 
 @ObjectType()
 export class LoginOutput {
@@ -11,3 +12,5 @@ export class LoginOutput {
   @Field()
   accessToken: string;
 }
+@ObjectType()
+export class ApiResponseOfLoginOutput extends ApiResponseOf(LoginOutput) {}
