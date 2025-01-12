@@ -1,4 +1,4 @@
-import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
+import { UserCredential } from '@auth/domain/entities/user-credential.entity';
 
 export interface FindUserCredentialArgs {
   userId: string;
@@ -16,13 +16,13 @@ export const UserCredentialRepositorySymbol = Symbol.for(
 );
 
 export interface IUserCredentialRepository {
-  createUserCredential(entity: UserCredentialEntity): Promise<void>;
-  updateUserCredential(entity: UserCredentialEntity): Promise<void>;
+  createUserCredential(data: UserCredential): Promise<void>;
+  updateUserCredential(data: UserCredential): Promise<void>;
   deleteUserCredential(data: DeleteUserCredentialArgs): Promise<void>;
   findUserCredentials(
     data: FindUserCredentialArgs,
-  ): Promise<UserCredentialEntity | null>;
+  ): Promise<UserCredential | null>;
   findUserCredentialsByEmail(
     data: FindUserCredentialByEmailArgs,
-  ): Promise<UserCredentialEntity | null>;
+  ): Promise<UserCredential | null>;
 }

@@ -3,30 +3,35 @@ syntax = "proto3";
 package auth;
 
 service AuthService {
-  rpc CreateUserCredential(CreateUserCredentialRequest) returns (CreateUserResponse);
-  rpc UpdateUserCredential(UpdateUserCredentialRequest) returns (UpdateUserCredentialRequest);
+  rpc StoreUserCredential(StoreUserCredentialRequest) returns (StoreUserCredentialResponse);
+  rpc UpdateUserCredential(UpdateUserCredentialRequest) returns (UpdateUserCredentialResponse);
+  rpc DeleteUserCredential(DeleteUserCredentialRequest) returns (DeleteUserCredentialResponse);
 }
 
-message CreateUserCredentialRequest {
+message StoreUserCredentialRequest {
   string user_id = 1;
   string email = 2;
   string passwordHash = 3;
-  string createdAt = 4;
-  string updatedAt = 5;
 }
 
 message UpdateUserCredentialRequest {
   string user_id = 1;
   optional string email = 2;
   optional string passwordHash = 3;
-  optional string createdAt = 4;
-  optional string updatedAt = 5;
 }
 
-message CreateUserResponse {
+message DeleteUserCredentialRequest {
+  string user_id = 1;
+}
+
+message StoreUserCredentialResponse {
   bool success = 1;
 }
 
-message UpdateUserResponse {
+message UpdateUserCredentialResponse {
+  bool success = 1;
+}
+
+message DeleteUserCredentialResponse {
   bool success = 1;
 }
