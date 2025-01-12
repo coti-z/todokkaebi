@@ -3,52 +3,50 @@ import { CommandBus } from '@nestjs/cqrs';
 import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 import { TokenInfo } from '@libs/decorators';
 import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
-import { ApiResponse, ResponseManager } from '@libs/response';
-import { UpdateUserCommand } from '@user/application/commands/update-user.command';
+import { ResponseManager } from '@libs/response';
 import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
-import { CreateUserCommand } from '@user/application/commands/create-user.command';
 import { UseGuards } from '@nestjs/common';
-import { DeleteUserCommand } from '@user/application/commands/delete-user.command';
-import { UpdateUserResult } from '@user/application/dto/results/update-user.result';
-import { CreateUserResult } from '@user/application/dto/results/create-user.result';
+import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/output/create-user.output';
+import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
+import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
+import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
 
 @Resolver()
 export class UserResolver {
   constructor(private readonly commandBus: CommandBus) {}
-  @Mutation(() => UpdateUserResult)
+
+  @Mutation(() => ApiResponseOfCreateUserOutput)
+  async createUser(
+    @Args('input') input: CreateUserInput,
+  ): Promise<ApiResponseOfCreateUserOutput> {
+    const command = UserPresentationMapper.toCreateUserCommand(input);
+    const result = await this.commandBus.execute(command);
+    const output = UserPresentationMapper.createUserToPresentation(result);
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => ApiResponseOfUpdateUserOutput)
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,
-  ): Promise<ApiResponse<CreateUserResult>> {
-    const result = await this.commandBus.execute(
-      new UpdateUserCommand(
-        payload.userId,
-        input.nickname,
-        input.email,
-        input.password,
-      ),
+  ): Promise<ApiResponseOfUpdateUserOutput> {
+    const command = UserPresentationMapper.toUpdateUserCommand(
+      payload.userId,
+      input,
     );
-    return ResponseManager.success(result);
-  }
-  @Mutation(() => CreateUserResult)
-  async createUser(
-    @Args('input') input: CreateUserInput,
-  ): Promise<ApiResponse<CreateUserResult>> {
-    const data = await this.commandBus.execute(
-      new CreateUserCommand(
-        input.email,
-        input.nickname,
-        input.password,
-        input.birthday,
-      ),
-    );
-    return ResponseManager.success(data);
+    await this.commandBus.execute(command);
+    const output = UserPresentationMapper.updateUserToPresentation();
+    return ResponseManager.success(output);
   }
 
-  @Mutation(() => ApiResponse)
+  @Mutation(() => ApiResponseOfDeleteUserOutput)
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@TokenInfo() payload: JwtPayload) {
-    await this.commandBus.execute(new DeleteUserCommand(payload.userId));
-    return ResponseManager.success();
+  async deleteUser(
+    @TokenInfo() payload: JwtPayload,
+  ): Promise<ApiResponseOfDeleteUserOutput> {
+    const command = UserPresentationMapper.toDeleteUserCommand(payload.userId);
+    await this.commandBus.execute(command);
+    const output = UserPresentationMapper.deleteUserToPresentation();
+    return ResponseManager.success(output);
   }
 }

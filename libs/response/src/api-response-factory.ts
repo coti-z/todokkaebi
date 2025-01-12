@@ -9,6 +9,9 @@ export function ApiResponseOf<T extends object>(classRef: ClassType<T>) {
     @Field(() => Int)
     status: HttpStatus;
 
+    @Field()
+    success: boolean;
+
     @Field({ nullable: true })
     message?: string;
 

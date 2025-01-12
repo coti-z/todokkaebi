@@ -8,9 +8,10 @@ export class ResponseManager {
     message?: string,
   ): ApiResponse<T> {
     return {
-      data,
-      status,
-      message,
+      data: data,
+      status: status,
+      message: message,
+      success: true,
     };
   }
 }

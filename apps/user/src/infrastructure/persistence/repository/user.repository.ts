@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import {
+  DeleteUserArgs, FindUserByIdArgs,
   IUserRepository,
-  UserBasicRepositoryArgs,
 } from '@user/application/port/out/user-repository.port';
 import { UserMapper } from '@user/infrastructure/mapper/user.mapper';
 import { User } from '@user/domain/entity/user.entity';
@@ -11,11 +11,12 @@ import { User } from '@user/domain/entity/user.entity';
 @Injectable()
 export class UserRepositoryImpl implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async createUser(args: UserBasicRepositoryArgs['createUser']): Promise<void> {
+
+  async createUser(args: User): Promise<void> {
     const data = UserMapper.toPersistence(args);
     await this.prisma.users.create({ data });
   }
-  async updateUser(args: UserBasicRepositoryArgs['updateUser']): Promise<void> {
+  async updateUser(data: User): Promise<void> {
     const data = UserMapper.toPersistence(args);
 
     await this.prisma.users.update({
@@ -23,14 +24,14 @@ export class UserRepositoryImpl implements IUserRepository {
       data,
     });
   }
-  async deleteUser(args: UserBasicRepositoryArgs['deleteUser']): Promise<void> {
+  async deleteUser(args: DeleteUserArgs): Promise<void>
     await this.prisma.users.delete({
       where: { id: args.id },
     });
   }
 
   async findUser(
-    args: UserBasicRepositoryArgs['findUser'],
+    data: FindUserByIdArgs
   ): Promise<User | null> {
     const user = await this.prisma.users.findUnique({ where: { id: args.id } });
     if (!user) {
