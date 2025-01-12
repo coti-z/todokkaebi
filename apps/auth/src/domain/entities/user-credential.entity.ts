@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+
 interface UserCredentialProps {
   userId: string;
   email: string;
@@ -12,7 +13,7 @@ interface UserCredentialPersistenceProps {
   createdAt: Date;
   updatedAt: Date;
 }
-export class UserCredentialEntity {
+export class UserCredential {
   private constructor(
     public readonly id: string,
     public readonly userId: string,
@@ -21,30 +22,6 @@ export class UserCredentialEntity {
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
-
-  static create(props: UserCredentialProps): UserCredentialEntity {
-    const now = new Date();
-    return new UserCredentialEntity(
-      uuid(),
-      props.userId,
-      props.email,
-      props.passwordHash,
-      now,
-      now,
-    );
-  }
-  static fromPersistence(
-    props: UserCredentialPersistenceProps,
-  ): UserCredentialEntity {
-    return new UserCredentialEntity(
-      props.id,
-      props.userId,
-      props.email,
-      props.passwordHash,
-      props.createdAt,
-      props.updatedAt,
-    );
-  }
 
   get email() {
     return this._email;
@@ -60,5 +37,30 @@ export class UserCredentialEntity {
 
   get updatedAt() {
     return this._updatedAt;
+  }
+
+  static create(props: UserCredentialProps): UserCredential {
+    const now = new Date();
+    return new UserCredential(
+      uuid(),
+      props.userId,
+      props.email,
+      props.passwordHash,
+      now,
+      now,
+    );
+  }
+
+  static fromPersistence(
+    props: UserCredentialPersistenceProps,
+  ): UserCredential {
+    return new UserCredential(
+      props.id,
+      props.userId,
+      props.email,
+      props.passwordHash,
+      props.createdAt,
+      props.updatedAt,
+    );
   }
 }

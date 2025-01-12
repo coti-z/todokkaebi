@@ -1,4 +1,4 @@
-import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
+import { UserCredential } from '@auth/domain/entities/user-credential.entity';
 
 interface UserCredentialRecord {
   id: string;
@@ -10,7 +10,7 @@ interface UserCredentialRecord {
 }
 
 export class UserCredentialMapper {
-  static toPersistence(entity: UserCredentialEntity): UserCredentialRecord {
+  static toPersistence(entity: UserCredential): UserCredentialRecord {
     return {
       id: entity.id,
       email: entity.email,
@@ -22,7 +22,7 @@ export class UserCredentialMapper {
   }
 
   static toDomain(record: UserCredentialRecord) {
-    return UserCredentialEntity.fromPersistence({
+    return UserCredential.fromPersistence({
       id: record.id,
       email: record.email,
       userId: record.id,

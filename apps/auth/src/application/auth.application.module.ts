@@ -3,10 +3,10 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { BasicLoginHandler } from '@auth/application/commands/handlers/basic-login.handler';
 import { BasicLogoutCommand } from '@auth/application/commands/basic-logout.command';
 import { ReissueTokenHandler } from '@auth/application/commands/handlers/reissue-token.handler';
-import { UserAuthService } from '@auth/application/services/user-auth.service';
 import { TokenService } from '@auth/application/services/token.service';
 import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
 import { JwtTokenModule } from '@libs/jwt';
+import { UserCredentialService } from '@auth/application/services/user-credential.service';
 
 @Module({
   imports: [CqrsModule, JwtTokenModule, AuthInfrastructureModule],
@@ -14,14 +14,14 @@ import { JwtTokenModule } from '@libs/jwt';
     BasicLoginHandler,
     BasicLogoutCommand,
     ReissueTokenHandler,
-    UserAuthService,
+    UserCredentialService,
     TokenService,
   ],
   exports: [
     BasicLoginHandler,
     BasicLogoutCommand,
     ReissueTokenHandler,
-    UserAuthService,
+    UserCredentialService,
     TokenService,
   ],
 })

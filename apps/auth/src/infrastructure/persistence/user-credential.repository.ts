@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
 import {
   DeleteUserCredentialArgs,
   FindUserCredentialArgs,
@@ -8,17 +7,17 @@ import {
   IUserCredentialRepository,
 } from '@auth/application/port/out/user-credential-repository.port';
 import { UserCredentialMapper } from '@auth/infrastructure/persistence/mapper/user-credential.mapper';
+import { UserCredential } from '@auth/domain/entities/user-credential.entity';
 
 @Injectable()
 export class UserCredentialRepositoryImpl implements IUserCredentialRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async createUserCredential(entity: UserCredentialEntity): Promise<void> {
+  async createUserCredential(entity: UserCredential): Promise<void> {
     const data = UserCredentialMapper.toPersistence(entity);
     await this.prisma.userCredentials.create({ data });
   }
-  async updateUserCredential(entity: UserCredentialEntity): Promise<void> {
+  async updateUserCredential(entity: UserCredential): Promise<void> {
     const record = UserCredentialMapper.toPersistence(entity);
-
     await this.prisma.userCredentials.update({
       where: {
         id: entity.id,
@@ -35,7 +34,7 @@ export class UserCredentialRepositoryImpl implements IUserCredentialRepository {
   }
   async findUserCredentials(
     data: FindUserCredentialArgs,
-  ): Promise<UserCredentialEntity | null> {
+  ): Promise<UserCredential | null> {
     const record = await this.prisma.userCredentials.findUnique({
       where: {
         userId: data.userId,
@@ -49,7 +48,7 @@ export class UserCredentialRepositoryImpl implements IUserCredentialRepository {
 
   async findUserCredentialsByEmail(
     data: FindUserCredentialByEmailArgs,
-  ): Promise<UserCredentialEntity | null> {
+  ): Promise<UserCredential | null> {
     const record = await this.prisma.userCredentials.findUnique({
       where: {
         email: data.email,

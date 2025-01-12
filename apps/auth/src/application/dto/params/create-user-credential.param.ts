@@ -1,4 +1,4 @@
-export class CreateCredentialParam {
+export class CreateUserCredentialParam {
   constructor(
     public readonly userId: string,
     public readonly email: string,

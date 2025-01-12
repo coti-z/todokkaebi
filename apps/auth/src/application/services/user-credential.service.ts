@@ -1,22 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ValidateUserParams } from '@auth/application/dto/params/validate-user.param';
-import { CreateCredentialParam } from '@auth/application/dto/params/ create-credential.param';
-import { UserCredentialEntity } from '@auth/domain/entities/credential.entity';
 import { ErrorCode, errorFactory } from '@libs/exception';
 import { UpdateCredentialParam } from '@auth/application/dto/params/update-credential.param';
-import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-credential.param';
 import {
   IUserCredentialRepository,
   UserCredentialRepositorySymbol,
 } from '@auth/application/port/out/user-credential-repository.port';
 import { UserCredentials } from '@prisma/client';
+import { CreateUserCredentialParam } from '@auth/application/dto/params/create-user-credential.param';
+import { UserCredential } from '@auth/domain/entities/user-credential.entity';
+import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
  * 사용자 자격 정보의 생성, 삭제, 업데이트, 검증 기능을 담당합니다.
  */
 @Injectable()
-export class UserAuthService {
+export class UserCredentialService {
   constructor(
     @Inject(UserCredentialRepositorySymbol)
     private readonly userCredentialRepository: IUserCredentialRepository,
@@ -30,8 +30,8 @@ export class UserAuthService {
    * @throws {ErrorCode.USER_ALREADY_EXISTS} 해당 사용자의 ID에 자격증명이 생성이 된 경우
    */
   async createCredential(
-    param: CreateCredentialParam,
-  ): Promise<UserCredentialEntity> {
+    param: CreateUserCredentialParam,
+  ): Promise<UserCredential> {
     // 중복 이메일 확인
     const userCredential =
       await this.userCredentialRepository.findUserCredentials({
@@ -40,7 +40,7 @@ export class UserAuthService {
     if (!userCredential) {
       throw errorFactory(ErrorCode.USER_ALREADY_EXISTS);
     }
-    const createdUserCredential = UserCredentialEntity.create({
+    const createdUserCredential = UserCredential.create({
       email: param.email,
       userId: param.userId,
       passwordHash: param.passwordHash,
@@ -66,6 +66,8 @@ export class UserAuthService {
     if (!userCredential) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
+
+    await this.userCredentialRepository.updateUserCredential(userCredential);
   }
 
   /**

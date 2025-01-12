@@ -1,18 +1,18 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BasicLoginCommand } from '@auth/application/commands/basic-login.command';
 import { TokenService } from '@auth/application/services/token.service';
-import { UserAuthService } from '@auth/application/services/user-auth.service';
 import {
   BaseBusinessException,
   ErrorCode,
   errorFactory,
 } from '@libs/exception';
 import { Token } from '@auth/domain/entities/token.entity';
+import { UserCredentialService } from '@auth/application/services/user-credential.service';
 
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
   constructor(
-    private readonly userAuthService: UserAuthService,
+    private readonly userAuthService: UserCredentialService,
     private readonly tokenService: TokenService,
   ) {}
   async execute(command: BasicLoginCommand): Promise<Token> {

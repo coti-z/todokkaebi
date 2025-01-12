@@ -1,1 +1,1 @@
-export * from './protos';
+export * from './proto';
