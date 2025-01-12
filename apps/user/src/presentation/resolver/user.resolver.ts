@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 import { TokenInfo } from '@libs/decorators';
@@ -15,13 +15,18 @@ import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/del
 export class UserResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
+  @Query(() => String)
+  async healthCheck() {
+    return 'OK';
+  }
+
   @Mutation(() => ApiResponseOfCreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<ApiResponseOfCreateUserOutput> {
     const command = UserPresentationMapper.toCreateUserCommand(input);
     const result = await this.commandBus.execute(command);
-    const output = UserPresentationMapper.createUserToPresentation(result);
+    const output = UserPresentationMapper.resultToCreateUserOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -34,8 +39,8 @@ export class UserResolver {
       payload.userId,
       input,
     );
-    await this.commandBus.execute(command);
-    const output = UserPresentationMapper.updateUserToPresentation();
+    const result = await this.commandBus.execute(command);
+    const output = UserPresentationMapper.resultToUpdateUserOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -45,8 +50,8 @@ export class UserResolver {
     @TokenInfo() payload: JwtPayload,
   ): Promise<ApiResponseOfDeleteUserOutput> {
     const command = UserPresentationMapper.toDeleteUserCommand(payload.userId);
-    await this.commandBus.execute(command);
-    const output = UserPresentationMapper.deleteUserToPresentation();
+    const result = await this.commandBus.execute(command);
+    const output = UserPresentationMapper.resultToDeleteUserOutput(result);
     return ResponseManager.success(output);
   }
 }

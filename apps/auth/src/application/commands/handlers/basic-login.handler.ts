@@ -7,7 +7,7 @@ import {
   ErrorCode,
   errorFactory,
 } from '@libs/exception';
-import { LoginOutput } from '@auth/presentation/resolver/dto/output/login.output';
+import { Token } from '@auth/domain/entities/token.entity';
 
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
@@ -15,20 +15,15 @@ export class BasicLoginHandler implements ICommandHandler {
     private readonly userAuthService: UserAuthService,
     private readonly tokenService: TokenService,
   ) {}
-  async execute(command: BasicLoginCommand): Promise<LoginOutput> {
+  async execute(command: BasicLoginCommand): Promise<Token> {
     try {
       const credential = await this.userAuthService.validatePassword({
         email: command.email,
         password: command.password,
       });
-      const token = await this.tokenService.createToken({
+      return await this.tokenService.createToken({
         userId: credential.userId,
       });
-      return {
-        accessToken: token.accessToken,
-        refreshToken: token.refreshToken,
-        id: token.userId,
-      };
     } catch (err) {
       if (err instanceof BaseBusinessException) {
         throw errorFactory(err.errorCode);

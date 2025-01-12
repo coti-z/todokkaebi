@@ -6,7 +6,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
   imports: [CqrsModule],
-  providers: [BasicAuthResolver, TokenResolver, AuthGrpcController],
-  exports: [BasicAuthResolver, TokenResolver, AuthGrpcController],
+  providers: [BasicAuthResolver, TokenResolver],
+  controllers: [AuthGrpcController],
+  exports: [BasicAuthResolver, TokenResolver],
 })
 export class AuthPresentationModule {}

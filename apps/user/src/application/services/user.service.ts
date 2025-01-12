@@ -29,6 +29,7 @@ export class UserService {
       birthday: param.birthday,
     });
     await this.userRepository.createUser(user);
+    console.log('hello');
     const response = await firstValueFrom(
       this.authClient.createUserCredential({
         createdAt: user.createdAt.toDateString(),
@@ -45,7 +46,7 @@ export class UserService {
     return user;
   }
 
-  async deleteUser(param: DeleteUserParam): Promise<void> {
+  async deleteUser(param: DeleteUserParam): Promise<User> {
     const user = await this.userRepository.findUser({ id: param.id });
     if (!user) {
       throw errorFactory(ErrorCode.USER_NOT_FOUND);
@@ -53,6 +54,7 @@ export class UserService {
     await this.userRepository.deleteUser({
       id: user.id,
     });
+    return user;
   }
   async updateUser(param: UpdateUserParam): Promise<User> {
     const user = await this.userRepository.findUser({ id: param.id });

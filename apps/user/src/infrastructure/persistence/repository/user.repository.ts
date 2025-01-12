@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import {
-  DeleteUserArgs, FindUserByIdArgs,
+  DeleteUserArgs,
+  FindUserByIdArgs,
   IUserRepository,
 } from '@user/application/port/out/user-repository.port';
 import { UserMapper } from '@user/infrastructure/mapper/user.mapper';
@@ -16,23 +17,20 @@ export class UserRepositoryImpl implements IUserRepository {
     const data = UserMapper.toPersistence(args);
     await this.prisma.users.create({ data });
   }
-  async updateUser(data: User): Promise<void> {
+  async updateUser(args: User): Promise<void> {
     const data = UserMapper.toPersistence(args);
-
     await this.prisma.users.update({
-      where: { id: data.id },
+      where: { id: args.id },
       data,
     });
   }
-  async deleteUser(args: DeleteUserArgs): Promise<void>
+  async deleteUser(args: DeleteUserArgs): Promise<void> {
     await this.prisma.users.delete({
       where: { id: args.id },
     });
   }
 
-  async findUser(
-    data: FindUserByIdArgs
-  ): Promise<User | null> {
+  async findUser(args: FindUserByIdArgs): Promise<User | null> {
     const user = await this.prisma.users.findUnique({ where: { id: args.id } });
     if (!user) {
       return null;

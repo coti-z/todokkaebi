@@ -6,13 +6,14 @@ import {
   ErrorCode,
   errorFactory,
 } from '@libs/exception';
+import { Token } from '@auth/domain/entities/token.entity';
 
 @CommandHandler(BasicLogoutCommand)
 export class BasicLogoutHandler implements ICommandHandler {
   constructor(private readonly tokenService: TokenService) {}
-  async execute(command: BasicLogoutCommand): Promise<void> {
+  async execute(command: BasicLogoutCommand): Promise<Token> {
     try {
-      await this.tokenService.revokeToken({
+      return await this.tokenService.revokeToken({
         refreshToken: command.refreshToken,
       });
     } catch (err) {

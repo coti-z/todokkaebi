@@ -11,7 +11,7 @@ import { USER_GRPC_CLIENT_SYMBOL } from '@user/infrastructure/adapter/grpc/optio
         options: {
           package: 'auth',
           protoPath: './proto/auth.proto',
-          url: 'localhost:50051',
+          url: 'auth:50051',
         },
       },
     ]),

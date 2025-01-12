@@ -1,11 +1,12 @@
-// auth/schema.prisma
+// apps/auth/src/infra/prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource authDB {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_AUTH_URL")
 }
 
 model Tokens {

@@ -4,6 +4,9 @@ import { ApiResponseOf } from '@libs/response/api-response-factory';
 @ObjectType()
 export class ReissueTokenOutput {
   @Field()
+  userId: string;
+
+  @Field()
   refreshToken: string;
 
   @Field()

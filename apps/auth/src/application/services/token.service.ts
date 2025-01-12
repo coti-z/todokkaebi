@@ -59,7 +59,7 @@ export class TokenService {
    * 저장된 토큰의 발급을 무효화 합니다.
    * @param param - 무효화할 토큰의 정보가 담긴 파라미터
    */
-  async revokeToken(param: RevokeTokenParam): Promise<void> {
+  async revokeToken(param: RevokeTokenParam): Promise<Token> {
     // userId의 토큰 가져오기
     const token = await this.tokenRepository.findTokenByRefreshToken({
       refreshToken: param.refreshToken,
@@ -70,6 +70,7 @@ export class TokenService {
     // 토큰 무효화 및 DB 반영
     token.revokeToken();
     await this.tokenRepository.update(token);
+    return token;
   }
 
   /**

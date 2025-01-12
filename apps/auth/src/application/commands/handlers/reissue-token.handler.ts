@@ -1,25 +1,21 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ReissueTokenCommand } from '@auth/application/commands/reissue-token.command';
-import { ReissueTokenOutput } from '@auth/presentation/resolver/dto/output/reissue-token.output';
 import { TokenService } from '@auth/application/services/token.service';
 import {
   BaseBusinessException,
   ErrorCode,
   errorFactory,
 } from '@libs/exception';
+import { Token } from '@auth/domain/entities/token.entity';
 
 @CommandHandler(ReissueTokenCommand)
 export class ReissueTokenHandler implements ICommandHandler {
   constructor(private readonly tokenService: TokenService) {}
-  async execute(command: ReissueTokenCommand): Promise<ReissueTokenOutput> {
+  async execute(command: ReissueTokenCommand): Promise<Token> {
     try {
-      const token = await this.tokenService.reissueTokens({
+      return await this.tokenService.reissueTokens({
         refreshToken: command.refreshToken,
       });
-      return {
-        accessToken: token.accessToken,
-        refreshToken: token.refreshToken,
-      };
     } catch (err) {
       if (err instanceof BaseBusinessException) {
         throw errorFactory(err.errorCode);

@@ -1,10 +1,11 @@
+// apps/user/src/infra/prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_USER_URL")
 }
 
 model Users {

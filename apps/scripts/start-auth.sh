@@ -3,20 +3,15 @@
 # 1. 의존성 설치
 npm install
 
-# 2. Prisma 설정
-if [ -d "apps/auth/src/infrastructure/prisma/migrations" ]; then
-  echo "Migrations directory exists."
-else
-  echo "Migrations directory not found. Creating migrations..."
-  mkdir -p apps/auth/src/infrastructure/prisma/migrations
-fi
 
-echo "Generating Prisma client..."
-npx prisma generate --schema=apps/auth/src/infrastructure/prisma/schema.prisma
 
-echo "Applying database migrations..."
-npx prisma migrate deploy --schema=apps/auth/src/infrastructure/prisma/schema.prisma
+cd /usr/src/app/apps/auth
+npx prisma generate --schema=./src/infrastructure/prisma/schema.prisma
+
+echo "Running migrations..."
+npx prisma migrate dev --schema=./src/infrastructure/prisma/schema.prisma --name init
 
 # 3. 애플리케이션 시작
 echo "Starting application..."
+cd /usr/src/app
 npm run start:auth:dev

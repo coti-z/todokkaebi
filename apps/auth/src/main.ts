@@ -6,6 +6,7 @@ import { authGrpcServerOptions } from '@auth/infrastructure/adapter/grpc/options
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   app.connectMicroservice<MicroserviceOptions>(authGrpcServerOptions);
+  await app.startAllMicroservices();
   await app.listen(3000);
 }
 

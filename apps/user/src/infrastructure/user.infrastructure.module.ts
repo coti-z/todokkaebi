@@ -19,7 +19,7 @@ import { AuthMicroservice } from '@libs/grpc';
         options: {
           package: 'auth',
           protoPath: './proto/auth.proto',
-          url: 'localhost:50051',
+          url: 'auth:50051',
         },
       },
     ]),

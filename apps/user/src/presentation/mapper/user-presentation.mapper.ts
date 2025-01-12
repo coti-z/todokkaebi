@@ -34,22 +34,26 @@ export class UserPresentationMapper {
     return new DeleteUserCommand(userId);
   }
 
-  static createUserToPresentation(entity: User): CreateUserOutput {
+  static resultToCreateUserOutput(result: User): CreateUserOutput {
     return {
-      id: entity.id,
-      createdAt: entity.createdAt,
-      email: entity.email,
-      nickname: entity.nickname,
-      updatedAt: entity.updatedAt,
-      birthday: entity.birthday,
+      id: result.id,
+      createdAt: result.createdAt,
+      email: result.email,
+      nickname: result.nickname,
+      updatedAt: result.updatedAt,
+      birthday: result.birthday,
     };
   }
 
-  static updateUserToPresentation(): UpdateUserOutput {
-    return {};
+  static resultToUpdateUserOutput(result: User): UpdateUserOutput {
+    return {
+      userId: result.id,
+    };
   }
 
-  static deleteUserToPresentation(): DeleteUserOutput {
-    return {};
+  static resultToDeleteUserOutput(result: User): DeleteUserOutput {
+    return {
+      userId: result.id,
+    };
   }
 }

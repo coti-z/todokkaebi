@@ -6,8 +6,7 @@ import {
 } from '@auth/presentation/resolver/dto/output/reissue-token.output';
 import { ApiResponse, ResponseManager } from '@libs/response';
 import { ReissueTokenInput } from '@auth/presentation/resolver/dto/input/reissue-token.input';
-import { ReissueTokenCommand } from '@auth/application/commands/reissue-token.command';
-import { HttpStatus } from '@nestjs/common';
+import { TokenPresentationMapper } from '@auth/presentation/mapper/token-presentation.mapper';
 
 @Resolver()
 export class TokenResolver {
@@ -17,8 +16,9 @@ export class TokenResolver {
   async reissueToken(
     @Args('input') input: ReissueTokenInput,
   ): Promise<ApiResponse<ReissueTokenOutput>> {
-    const command = new ReissueTokenCommand(input.refreshToken);
-    const data = await this.commandBus.execute(command);
-    return ResponseManager.success(data, HttpStatus.OK);
+    const command = TokenPresentationMapper.toReissueTokenCommand(input);
+    const result = await this.commandBus.execute(command);
+    const output = TokenPresentationMapper.resultToTokenReissueOutput(result);
+    return ResponseManager.success(output);
   }
 }

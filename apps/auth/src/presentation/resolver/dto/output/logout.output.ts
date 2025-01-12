@@ -4,7 +4,7 @@ import { ApiResponseOf } from '@libs/response/api-response-factory';
 @ObjectType()
 export class LogoutOutput {
   @Field()
-  success: boolean;
+  userId: string;
 }
 
 @ObjectType()

@@ -5,13 +5,15 @@ services:
       dockerfile: ./apps/user/Dockerfile
       target: development
     ports:
-      - "3001:3000"
+      - "3001:3001"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - ./proto:/usr/src/app/apps/user/src/infrastructure/proto
+      - ./apps/user/src/infrastructure/prisma:/usr/src/app/apps/user/src/infrastructure/prisma
+
     environment:
-      DATABASE_URL: "mysql://root:1234@mysql-user:3306/userdb"
+      DATABASE_USER_URL: "mysql://root:1234@mysql-user:3306/userdb"
     command: sh apps/scripts/start-user.sh
     depends_on:
       mysql-user:
@@ -40,13 +42,17 @@ services:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
+    expose:
+      - 50051
     ports:
-      - "3002:3000"
+      - "3002:3002"
+      - "50051:50051"    # gRPC 포트 추가
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules:/usr/src/app/node_modules
+      - ./apps/auth/src/infrastructure/prisma:/usr/src/app/apps/auth/src/infrastructure/prisma
     environment:
-      DATABASE_URL: "mysql://root:1234@mysql-auth:3306/authdb"
+      DATABASE_AUTH_URL: "mysql://root:1234@mysql-auth:3306/authdb"
     command: sh apps/scripts/start-auth.sh
     depends_on:
       mysql-auth:

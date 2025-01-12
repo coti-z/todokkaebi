@@ -4,7 +4,13 @@
 echo "Installing dependencies..."
 npm install
 
-rm -rf apps/user/src/infrastructure/prisma/migrations
-npx prisma generate --schema=apps/user/src/infrastructure/prisma/schema.prisma
-npx prisma migrate deploy --schema=apps/user/src/infrastructure/prisma/schema.prisma
+
+# Prisma 설정
+cd /usr/src/app/apps/user
+npx prisma generate --schema=./src/infrastructure/prisma/schema.prisma
+
+echo "Running migrations..."
+npx prisma migrate dev --schema=./src/infrastructure/prisma/schema.prisma --name init
+
+cd /usr/src/app
 npm run start:user:dev

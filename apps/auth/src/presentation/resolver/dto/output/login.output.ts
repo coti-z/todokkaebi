@@ -4,7 +4,7 @@ import { ApiResponseOf } from '@libs/response/api-response-factory';
 @ObjectType()
 export class LoginOutput {
   @Field()
-  id: string;
+  userId: string;
 
   @Field()
   refreshToken: string;
