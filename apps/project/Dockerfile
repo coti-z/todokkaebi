@@ -15,6 +15,6 @@ COPY proto ./proto
 RUN npm install
 
 
-CMD ["npm", "run", "start:auth:dev"]
+CMD ["npm", "run", "start:project:dev"]
 
 # TODO: production 환경 도커 파일 작성

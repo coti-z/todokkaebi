@@ -31,9 +31,7 @@ export class UserService {
     await this.userRepository.createUser(user);
     console.log('hello');
     const response = await firstValueFrom(
-      this.authClient.createUserCredential({
-        createdAt: user.createdAt.toDateString(),
-        updatedAt: user.updatedAt.toDateString(),
+      this.authClient.storeUserCredential({
         email: user.email,
         userId: user.id,
         passwordHash: user.password,

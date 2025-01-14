@@ -1,16 +1,11 @@
 #!/bin/sh
 
-# 1. 의존성이 없거나 변경되었는지 확인하고 설치
-echo "Installing dependencies..."
 npm install
 
+ls
+echo "Starting db sync"
 
-# Prisma 설정
-cd /usr/src/app/apps/user
-npx prisma generate --schema=./src/infrastructure/prisma/schema.prisma
+npx prisma generate --schema=/usr/src/app/apps/user/src/infrastructure/prisma/schema.prisma --generator user
+npx prisma migrate dev --schema=/usr/src/app/apps/user/src/infrastructure/prisma/schema.prisma --name user_init
 
-echo "Running migrations..."
-npx prisma migrate dev --schema=./src/infrastructure/prisma/schema.prisma --name init
-
-cd /usr/src/app
 npm run start:user:dev

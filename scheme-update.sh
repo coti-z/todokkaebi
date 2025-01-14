@@ -24,6 +24,7 @@ print_help() {
     echo "서비스:"
     echo "  user      사용자 서비스 및 데이터베이스"
     echo "  auth      인증 서비스 및 데이터베이스"
+    echo "  project   프로잭트 서비스 및 데이터베이스"
     echo "  all       모든 서비스"
     echo
     echo "옵션:"
@@ -74,10 +75,23 @@ docker_compose_operation() {
                 docker compose restart mysql-auth auth
             fi
             ;;
+        project)
+            if [ "$operation" = "setup" ]; then
+                echo -e "${YELLOW}Starting project database container...${NC}"
+                docker compose up $detach_opt mysql-project
+            elif [ "$operation" = "up" ]; then
+                echo -e "${YELLOW}Starting all project service containers...${NC}"
+                docker compose up $detach_opt mysql-project project
+            elif [ "$operation" = "down" ]; then
+                docker compose rm -sf mysql-project project
+            else
+                docker compose restart mysql-project project
+            fi
+            ;;
         all)
             if [ "$operation" = "setup" ]; then
                 echo -e "${YELLOW}Starting all database containers...${NC}"
-                docker compose up $detach_opt mysql-user mysql-auth
+                docker compose up $detach_opt mysql-user mysql-auth mysql-project
             elif [ "$operation" = "up" ]; then
                 echo -e "${YELLOW}Starting all service containers...${NC}"
                 docker compose up $detach_opt
@@ -136,6 +150,27 @@ update_auth_schema() {
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }
 
+
+# Prisma 스키마 업데이트 함수 - 인증 DB
+update_project_schema() {
+    echo -e "${GREEN}Updating auth database schema...${NC}"
+
+    export DATABASE_URL=mysql://root:1234@localhost:6003/projectdb
+
+    echo "Cleaning up previous migrations..."
+    rm -rf apps/project/src/infrastructure/prisma/migrations
+
+    echo "Generating Prisma client..."
+    npx prisma generate --schema=apps/project/src/infrastructure/prisma/schema.prisma
+
+    echo "Creating and applying migrations..."
+    # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
+    npx prisma migrate dev --name init --schema=apps/project/src/infrastructure/prisma/schema.prisma --force
+
+    echo -e "${GREEN}Auth database schema update completed!${NC}"
+}
+
+
 # 메인 실행 함수
 main() {
     # 최소 인자 수 확인
@@ -166,9 +201,13 @@ main() {
                 auth)
                     update_auth_schema
                     ;;
+                project)
+                    update_project_schema
+                    ;;
                 all)
                     update_user_schema
                     update_auth_schema
+                    update_project_schema
                     ;;
             esac
             ;;

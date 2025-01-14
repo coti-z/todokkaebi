@@ -9,12 +9,14 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
+COPY apps/scripts ./apps/scripts
+COPY proto ./proto
 
 
 # 패키지 설치
 RUN npm install
 
 
-CMD ["npm", "run", "START:user:dev"]
+CMD ["npm", "run", "start:user:dev"]
 
 # TODO: production 환경 도커 파일 작성

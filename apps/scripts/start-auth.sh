@@ -1,17 +1,11 @@
 #!/bin/sh
 
-# 1. 의존성 설치
 npm install
 
+ls
 
+echo "Starting db sync"
+npx prisma generate --schema=./apps/auth/src/infrastructure/prisma/schema.prisma --generator auth
+npx prisma migrate dev --schema=./apps/auth/src/infrastructure/prisma/schema.prisma --name auth_init
 
-cd /usr/src/app/apps/auth
-npx prisma generate --schema=./src/infrastructure/prisma/schema.prisma
-
-echo "Running migrations..."
-npx prisma migrate dev --schema=./src/infrastructure/prisma/schema.prisma --name init
-
-# 3. 애플리케이션 시작
-echo "Starting application..."
-cd /usr/src/app
 npm run start:auth:dev
