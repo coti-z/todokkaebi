@@ -52,7 +52,6 @@
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     },
-
     "grpc": {
       "type": "library",
       "root": "libs/grpc",
@@ -60,6 +59,15 @@
       "sourceRoot": "libs/grpc/src",
       "compilerOptions": {
         "tsConfigPath": "libs/grpc/tsconfig.lib.json"
+      }
+    },
+    "project": {
+      "type": "application",
+      "root": "apps/project",
+      "entryFile": "main",
+      "sourceRoot": "apps/project/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/project/tsconfig.app.json"
       }
     }
   },
