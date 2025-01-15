@@ -9,6 +9,7 @@ interface TaskProps {
   startDate: Date;
   endDate: Date;
   actualStartDate: Date;
+  actualEndDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +23,7 @@ export class Task {
     private _startDate: Date,
     private _endDate: Date,
     private _actualStartDate: Date,
+    private _actualEndDate: Date,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {}
@@ -54,6 +56,10 @@ export class Task {
     return this._actualStartDate;
   }
 
+  get actualEndDate() {
+    return this._actualEndDate;
+  }
+
   get createdAt() {
     return this._createdAt;
   }
@@ -73,8 +79,9 @@ export class Task {
       props.startDate,
       props.endDate,
       props.actualStartDate,
-      props.createdAt,
+      props.actualEndDate,
       props.updatedAt,
+      props.createdAt,
     );
   }
 }
