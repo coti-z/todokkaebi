@@ -1,4 +1,4 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { CreateUserCommand } from '@user/application/commands/create-user.command';
 import { UserService } from '@user/application/services/user.service';
@@ -8,10 +8,7 @@ import { User } from '@user/domain/entity/user.entity';
 @Injectable()
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
-  constructor(
-    private readonly userService: UserService,
-    private readonly eventBus: EventBus,
-  ) {}
+  constructor(private readonly userService: UserService) {}
   async execute(command: CreateUserCommand): Promise<User> {
     return await this.userService.createUser(
       new CreateUserParam(

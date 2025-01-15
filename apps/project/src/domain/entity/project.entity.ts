@@ -4,7 +4,6 @@ import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 
 interface ProjectProps {
-  id: string;
   name: string;
   adminId: string;
   memberships?: ProjectMembership[];

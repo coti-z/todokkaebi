@@ -1,5 +1,6 @@
-import { Project } from '../../../domain/entity/project.entity';
+import { Project } from '@project/domain/entity/project.entity';
 
-export interface IProjectRepositoryPort {
-  createProject(entity: Project): void;
+export const ProjectRepositorySymbol = Symbol.for('ProjectRepository');
+export interface IProjectRepository {
+  createProject(entity: Project): Promise<void>;
 }

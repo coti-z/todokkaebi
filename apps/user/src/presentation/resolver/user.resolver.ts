@@ -6,10 +6,14 @@ import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
 import { UseGuards } from '@nestjs/common';
-import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/output/create-user.output';
+import {
+  ApiResponseOfCreateUserOutput,
+  CreateUserOutput,
+} from '@user/presentation/dto/output/create-user.output';
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
+import { ApiResponseOf } from '@libs/response/api-response-factory';
 
 @Resolver()
 export class UserResolver {
@@ -20,7 +24,7 @@ export class UserResolver {
     return 'OK';
   }
 
-  @Mutation(() => ApiResponseOfCreateUserOutput)
+  @Mutation(() => ApiResponseOf(CreateUserOutput))
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<ApiResponseOfCreateUserOutput> {

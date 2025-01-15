@@ -1,5 +1,8 @@
 import { ICommand } from '@nestjs/cqrs';
 
 export class CreateProjectCommand implements ICommand {
-  constructor(public readonly name: string) {}
+  constructor(
+    public readonly userId: string,
+    public readonly name: string,
+  ) {}
 }
