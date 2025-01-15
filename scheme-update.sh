@@ -116,7 +116,7 @@ docker_compose_operation() {
 update_user_schema() {
     echo -e "${GREEN}Updating user database schema...${NC}"
 
-    export DATABASE_URL=mysql://root:1234@localhost:6001/userdb
+    export DATABASE_USER_URL=mysql://root:1234@localhost:6001/userdb
 
     echo "Cleaning up previous migrations..."
     rm -rf apps/user/src/infrastructure/prisma/migrations
@@ -135,10 +135,10 @@ update_user_schema() {
 update_auth_schema() {
     echo -e "${GREEN}Updating auth database schema...${NC}"
 
-    export DATABASE_URL=mysql://root:1234@localhost:6002/authdb
+    export DATABASE_AUTH_URL=mysql://root:1234@localhost:6002/authdb
 
-    echo "Cleaning up previous migrations..."
-    rm -rf apps/auth/src/infrastructure/prisma/migrations
+    #echo "Cleaning up previous migrations..."
+    #rm -rf apps/auth/src/infrastructure/prisma/migrations
 
     echo "Generating Prisma client..."
     npx prisma generate --schema=apps/auth/src/infrastructure/prisma/schema.prisma
@@ -155,7 +155,7 @@ update_auth_schema() {
 update_project_schema() {
     echo -e "${GREEN}Updating auth database schema...${NC}"
 
-    export DATABASE_URL=mysql://root:1234@localhost:6003/projectdb
+    export DATABASE_PROJECT_URL=mysql://root:1234@localhost:6003/projectdb
 
     echo "Cleaning up previous migrations..."
     rm -rf apps/project/src/infrastructure/prisma/migrations
