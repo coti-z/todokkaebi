@@ -13,4 +13,25 @@ export class ProjectRepositoryImpl implements IProjectRepository {
       data,
     });
   }
+
+  async findProjectById(id: string): Promise<Project | null> {
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return ProjectInfraMapper.projectToDomain(project);
+  }
+  async deleteProject(entity: Project): Promise<void> {
+    await this.prisma.project.delete({
+      where: {
+        id: entity.id,
+      },
+    });
+  }
 }

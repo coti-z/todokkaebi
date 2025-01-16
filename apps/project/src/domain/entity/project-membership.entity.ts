@@ -1,53 +1,74 @@
 import { v4 as uuidv4 } from 'uuid';
 import { MembershipRole } from '../value-objects/membership-role.vo';
 
-interface ProjectMembershipProps {
-  projectId: string;
+type ProjectMembershipImmutableProps = {
+  readonly id: string;
+  readonly projectId: string;
+};
+
+type ProjectMembershipMutableProps = {
   userId: string;
   role: MembershipRole;
-}
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type ProjectMembershipProps = ProjectMembershipMutableProps &
+  ProjectMembershipImmutableProps;
+
+type CreateProjectMembershipProps = Omit<
+  ProjectMembershipProps,
+  'id' | 'updatedAt' | 'createdAt'
+>;
 
 export class ProjectMembership {
-  constructor(
-    public readonly id: string,
-    private _projectId: string,
-    private _userId: string,
-    private _role: MembershipRole,
-    private _createdAt: Date,
-    private _updatedAt: Date,
-  ) {}
+  constructor(private readonly props: ProjectMembershipProps) {}
 
+  get id(): string {
+    return this.props.id;
+  }
   get projectId() {
-    return this._projectId;
+    return this.props.projectId;
   }
 
   get userId() {
-    return this._userId;
+    return this.props.userId;
   }
 
   get role() {
-    return this._role;
+    return this.props.role;
   }
 
   get createdAt() {
-    return this._createdAt;
+    return this.props.createdAt;
   }
 
   get updatedAt() {
-    return this._updatedAt;
+    return this.props.updatedAt;
   }
 
-  static create(props: ProjectMembershipProps): ProjectMembership {
+  static create(props: CreateProjectMembershipProps): ProjectMembership {
     const id = uuidv4();
     const now = new Date();
 
-    return new ProjectMembership(
-      id,
-      props.projectId,
-      props.userId,
-      props.role,
-      now,
-      now,
-    );
+    return new ProjectMembership({
+      id: id,
+      userId: props.userId,
+      role: props.role,
+      createdAt: now,
+      updatedAt: now,
+      projectId: props.projectId,
+    });
+  }
+
+  static reconstitute(props: ProjectMembershipProps): ProjectMembership {
+    return new ProjectMembership({
+      id: props.id,
+      userId: props.userId,
+      role: props.role,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt,
+      projectId: props.projectId,
+    });
   }
 }

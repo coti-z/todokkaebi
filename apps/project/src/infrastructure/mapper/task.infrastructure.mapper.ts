@@ -15,7 +15,7 @@ export interface TaskRecord {
   startDate: Date;
   endDate: Date;
   actualStartDate: Date;
-  actualEndDate: Date;
+  actualEndDate?: Date;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -25,6 +25,14 @@ export class TaskInfraMapper {
     [TaskState.PENDING]: TaskStateRecord.PENDING,
     [TaskState.IN_PROGRESS]: TaskStateRecord.IN_PROGRESS,
     [TaskState.COMPLETE]: TaskStateRecord.COMPLETE,
+  };
+  private static readonly STATE_MAPPING_TO_DOMAIN: Record<
+    TaskStateRecord,
+    TaskState
+  > = {
+    [TaskStateRecord.PENDING]: TaskState.PENDING,
+    [TaskStateRecord.IN_PROGRESS]: TaskState.IN_PROGRESS,
+    [TaskStateRecord.COMPLETE]: TaskState.COMPLETE,
   };
 
   static toPersistence(entity: Task): TaskRecord {
@@ -50,5 +58,30 @@ export class TaskInfraMapper {
 
   static tasksToPersistence(entities: Task[]): TaskRecord[] {
     return entities.map(task => this.toPersistence(task));
+  }
+
+  static taskToDomain(record: TaskRecord): Task {
+    const mappedState = TaskInfraMapper.STATE_MAPPING[record.status];
+    if (mappedState) {
+      throw new Error(`Unknown state ${record.status}`);
+    }
+
+    return Task.reconstitute({
+      id: record.id,
+      title: record.title,
+      status: mappedState,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+      actualEndDate: record.actualEndDate,
+      actualStartDate: record.actualStartDate,
+      categoryId: record.categoryId,
+      startDate: record.startDate,
+      endDate: record.endDate,
+      check: record.check,
+    });
+  }
+
+  static tasksToDomain(tasks: TaskRecord[]): Task[] {
+    return tasks.map(task => this.taskToDomain(task));
   }
 }

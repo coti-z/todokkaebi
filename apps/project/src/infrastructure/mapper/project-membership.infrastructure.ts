@@ -23,6 +23,13 @@ export class ProjectMembershipInfraMapper {
     [MembershipRole.MEMBER]: MembershipRoleRecord.MEMBER,
     [MembershipRole.OWNER]: MembershipRoleRecord.OWNER,
   };
+  private static readonly STATE_MAPPING_TO_DOMAIN: Record<
+    MembershipRoleRecord,
+    MembershipRole
+  > = {
+    [MembershipRoleRecord.MEMBER]: MembershipRole.MEMBER,
+    [MembershipRoleRecord.OWNER]: MembershipRole.OWNER,
+  };
 
   static toPersistence(entity: ProjectMembership): ProjectMembershipRecord {
     const mappedState = ProjectMembershipInfraMapper.STATE_MAPPING[entity.role];
@@ -46,5 +53,29 @@ export class ProjectMembershipInfraMapper {
     return entities.map(projectMembership =>
       this.toPersistence(projectMembership),
     );
+  }
+
+  static projectMembershipToDomain(
+    record: ProjectMembershipRecord,
+  ): ProjectMembership {
+    const mappedState =
+      ProjectMembershipInfraMapper.STATE_MAPPING_TO_DOMAIN[record.role];
+    if (mappedState) {
+      throw new Error(`Unknown state ${record.role}`);
+    }
+    return ProjectMembership.reconstitute({
+      id: record.id,
+      userId: record.userId,
+      role: mappedState,
+      projectId: record.projectId,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    });
+  }
+
+  static projectMembershipsToDomain(
+    records: ProjectMembershipRecord[],
+  ): ProjectMembership[] {
+    return records.map(record => this.projectMembershipToDomain(record));
   }
 }

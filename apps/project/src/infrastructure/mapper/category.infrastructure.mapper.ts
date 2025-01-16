@@ -30,4 +30,20 @@ export class CategoryInfraMapper {
   static categoriesToPersistence(entities: Category[]): CategoryRecord[] {
     return entities.map(category => this.toPersistence(category));
   }
+
+  static categoryToDomain(record: CategoryRecord): Category {
+    const tasks = TaskInfraMapper.tasksToDomain(record.tasks);
+    return Category.reconstitute({
+      id: record.id,
+      name: record.name,
+      tasks: tasks,
+      projectId: record.projectId,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    });
+  }
+
+  static categoriesToDomain(records: CategoryRecord[]): Category[] {
+    return records.map(record => this.categoryToDomain(record));
+  }
 }

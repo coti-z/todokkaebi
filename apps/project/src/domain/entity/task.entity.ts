@@ -1,7 +1,12 @@
-import { TaskState } from '../value-objects/task-states.vo';
+import { TaskState } from '@project/domain/value-objects/task-states.vo';
 import { v4 as uuidv4 } from 'uuid';
 
-interface TaskProps {
+type TaskImmutableProps = {
+  readonly id: string;
+  readonly createdAt: Date;
+};
+
+type TaskMutableProps = {
   title: string;
   categoryId: string;
   check: boolean;
@@ -9,79 +14,95 @@ interface TaskProps {
   startDate: Date;
   endDate: Date;
   actualStartDate: Date;
-  actualEndDate: Date;
-  createdAt: Date;
+  actualEndDate?: Date;
   updatedAt: Date;
-}
+};
+type TaskProps = TaskMutableProps & TaskImmutableProps;
+
+type CreateTaskProps = Omit<
+  TaskProps,
+  'id' | 'createdAt' | 'updatedAt' | 'actualStartDate' | 'actualEndDate'
+>;
+
 export class Task {
-  private constructor(
-    public readonly id: string,
-    private _title: string,
-    private _categoryId: string,
-    private _check: boolean,
-    private _status: TaskState,
-    private _startDate: Date,
-    private _endDate: Date,
-    private _actualStartDate: Date,
-    private _actualEndDate: Date,
-    private _createdAt: Date,
-    private _updatedAt: Date,
-  ) {}
+  private constructor(private props: TaskProps) {}
 
-  get title() {
-    return this._title;
+  // Getter 예시
+  get id(): string {
+    return this.props.id;
   }
 
-  get categoryId() {
-    return this._categoryId;
+  get title(): string {
+    return this.props.title;
   }
 
-  get check() {
-    return this._check;
+  get categoryId(): string {
+    return this.props.categoryId;
   }
 
-  get status() {
-    return this._status;
+  get check(): boolean {
+    return this.props.check;
   }
 
-  get startDate() {
-    return this._startDate;
+  get status(): TaskState {
+    return this.props.status;
   }
 
-  get endDate() {
-    return this._endDate;
+  get startDate(): Date {
+    return this.props.startDate;
   }
 
-  get actualStartDate() {
-    return this._actualStartDate;
+  get endDate(): Date {
+    return this.props.endDate;
   }
 
-  get actualEndDate() {
-    return this._actualEndDate;
+  get actualStartDate(): Date {
+    return this.props.actualStartDate;
   }
 
-  get createdAt() {
-    return this._createdAt;
+  get actualEndDate(): Date | undefined {
+    return this.props.actualEndDate;
   }
 
-  get updatedAt() {
-    return this._updatedAt;
+  get updatedAt(): Date {
+    return this.props.updatedAt;
   }
 
-  static create(props: TaskProps): Task {
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  static create(props: CreateTaskProps) {
     const id = uuidv4();
-    return new Task(
-      id,
-      props.title,
-      props.categoryId,
-      props.check,
-      props.status,
-      props.startDate,
-      props.endDate,
-      props.actualStartDate,
-      props.actualEndDate,
-      props.updatedAt,
-      props.createdAt,
-    );
+    const now = new Date();
+
+    return new Task({
+      id: id,
+      title: props.title,
+      status: props.status,
+      actualStartDate: props.startDate,
+      createdAt: now,
+      endDate: props.endDate,
+      updatedAt: now,
+      check: false,
+      categoryId: props.categoryId,
+      startDate: now,
+    });
+  }
+
+  static reconstitute(props: TaskProps): Task {
+    return new Task({
+      id: props.id,
+      title: props.title,
+      status: props.status,
+      actualStartDate: props.actualStartDate,
+      actualEndDate: props.actualEndDate,
+      updatedAt: props.updatedAt,
+      createdAt: props.createdAt,
+      startDate: props.startDate,
+      endDate: props.endDate,
+      categoryId: props.categoryId,
+      check: props.check,
+    });
   }
 }

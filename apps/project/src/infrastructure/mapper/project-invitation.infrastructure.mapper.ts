@@ -25,6 +25,15 @@ export class ProjectInvitationInfraMapper {
     [InvitationStatus.PENDING]: InvitationStatusRecord.PENDING,
     [InvitationStatus.REJECTED]: InvitationStatusRecord.REJECTED,
   };
+
+  private static readonly STATE_MAPPING_TO_DOMAIN: Record<
+    InvitationStatusRecord,
+    InvitationStatus
+  > = {
+    [InvitationStatusRecord.ACCEPTED]: InvitationStatus.ACCEPTED,
+    [InvitationStatusRecord.PENDING]: InvitationStatus.PENDING,
+    [InvitationStatusRecord.REJECTED]: InvitationStatus.REJECTED,
+  };
   static toPersistence(entity: ProjectInvitation): ProjectInvitationRecord {
     const mappedState =
       ProjectInvitationInfraMapper.STATE_MAPPING[entity.status];
@@ -47,5 +56,29 @@ export class ProjectInvitationInfraMapper {
     return entities.map(projectInvitation =>
       this.toPersistence(projectInvitation),
     );
+  }
+  static projectInvitationToDomain(
+    record: ProjectInvitationRecord,
+  ): ProjectInvitation {
+    const mappedState =
+      ProjectInvitationInfraMapper.STATE_MAPPING_TO_DOMAIN[record.status];
+    if (!mappedState) {
+      throw new Error(`Unknown state ${record.status}`);
+    }
+    return ProjectInvitation.reconstitute({
+      id: record.id,
+      inviteeUserId: record.inviteeUserId,
+      inviterUserId: record.inviterUserId,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+      projectId: record.projectId,
+      status: mappedState,
+    });
+  }
+
+  static projectInvitationsToDomain(
+    records: ProjectInvitationRecord[],
+  ): ProjectInvitation[] {
+    return records.map(record => this.projectInvitationToDomain(record));
   }
 }

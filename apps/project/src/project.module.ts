@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProjectApplicationModule } from './application/project.application.module';
 import { ProjectPresentationModule } from './presentation/project.presentation.module';
-import { ProjectInfrastructureModule } from './infrastructure/project.infastructure.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
@@ -13,10 +12,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       playground: true,
     }),
     ProjectApplicationModule,
-    ProjectInfrastructureModule,
     ProjectPresentationModule,
   ],
-  controllers: [],
-  providers: [],
+  providers: [ ],
 })
 export class ProjectModule {}

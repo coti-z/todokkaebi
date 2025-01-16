@@ -126,7 +126,7 @@ update_user_schema() {
 
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
-    npx prisma migrate reset --schema=apps/user/src/infrastructure/prisma/schema.prisma
+    npx prisma migrate reset --schema=apps/user/src/infrastructure/prisma/schema.prisma --force
 
     echo -e "${GREEN}User database schema update completed!${NC}"
 }
@@ -145,7 +145,7 @@ update_auth_schema() {
 
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
-    npx prisma migrate reset --schema=apps/auth/src/infrastructure/prisma/schema.prisma
+    npx prisma migrate reset --schema=apps/auth/src/infrastructure/prisma/schema.prisma --force
 
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }
@@ -165,7 +165,7 @@ update_project_schema() {
 
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
-    npx prisma migrate reset --schema=apps/project/src/infrastructure/prisma/schema.prisma
+    npx prisma migrate reset --schema=apps/project/src/infrastructure/prisma/schema.prisma --force
 
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }

@@ -3,56 +3,81 @@ import { ProjectMembership } from '@project/domain/entity/project-membership.ent
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 
-interface ProjectProps {
-  name: string;
-  adminId: string;
-  memberships?: ProjectMembership[];
-  projectInvitations?: ProjectInvitation[];
-  categories?: Category[];
-}
-export class Project {
-  private constructor(
-    public readonly id: string,
-    private _adminId: string,
-    private _name: string,
-    private _createdAt: Date,
-    private _updatedAt: Date,
-    private _memberships?: ProjectMembership[],
-    private _categories?: Category[],
-    private _projectInvitations?: ProjectInvitation[],
-  ) {}
+type ProjectImmutableProps = {
+  readonly id: string;
+  readonly createdAt: Date;
+};
 
+type ProjectMutableProps = {
+  adminId: string;
+  name: string;
+  updatedAt: Date;
+  memberships?: ProjectMembership[];
+  categories?: Category[];
+  projectInvitations?: ProjectInvitation[];
+};
+
+type ProjectProps = ProjectImmutableProps & ProjectMutableProps;
+type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
+
+export class Project {
+  private constructor(private readonly props: ProjectProps) {}
+
+  get id(): string {
+    return this.props.id;
+  }
   get adminId(): string {
-    return this._adminId;
+    return this.props.adminId;
   }
 
   get name(): string {
-    return this._name;
+    return this.props.name;
   }
 
   get createdAt(): Date {
-    return this._createdAt;
+    return this.props.createdAt;
   }
 
   get updatedAt(): Date {
-    return this._updatedAt;
+    return this.props.updatedAt;
   }
 
   get memberships(): ProjectMembership[] {
-    return this._memberships ? this._memberships : [];
+    return this.props.memberships ? this.props.memberships : [];
   }
 
   get categories(): Category[] {
-    return this._categories ? this._categories : [];
+    return this.props.categories ? this.props.categories : [];
   }
 
   get projectInvitations(): ProjectInvitation[] {
-    return this._projectInvitations ? this._projectInvitations : [];
+    return this.props.projectInvitations ? this.props.projectInvitations : [];
   }
 
-  static create(props: ProjectProps): Project {
+  static create(props: CreateProjectProps): Project {
     const now = new Date();
     const id = uuidv4();
-    return new Project(id, props.adminId, props.name, now, now);
+    return new Project({
+      name: props.name,
+      id: id,
+      updatedAt: now,
+      createdAt: now,
+      projectInvitations: props.projectInvitations,
+      categories: props.categories,
+      memberships: props.memberships,
+      adminId: props.adminId,
+    });
+  }
+  static reconstitute(props: ProjectProps): Project {
+    return new Project({
+      name: props.name,
+      id: props.id,
+      updatedAt: props.updatedAt,
+      createdAt: props.createdAt,
+      projectInvitations: props.projectInvitations,
+      categories: props.categories,
+      memberships: props.memberships,
+      adminId: props.adminId,
+    });
   }
 }
