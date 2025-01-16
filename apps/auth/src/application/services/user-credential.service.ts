@@ -96,7 +96,9 @@ export class UserCredentialService {
    * @param params - 검증에 필요한 정보를 담은 파라미터
    * @throws {ErrorCode.UNAUTHORIZED} 자격정보가 존재하지 않거나 일치하지 않는 경우
    */
+
   async validatePassword(params: ValidateUserParams): Promise<UserCredential> {
+
     // 1. DB에서 유저 도메인을 가져오고
     const userCredential =
       await this.userCredentialRepository.findUserCredentialsByEmail({
