@@ -27,6 +27,21 @@ export class ProjectRepositoryImpl implements IProjectRepository {
 
     return ProjectInfraMapper.projectToDomain(project);
   }
+
+  async findProjectsByUserId(userId: string): Promise<Project[]> {
+    const projects = await this.prisma.project.findMany({
+      where: {
+        OR: [
+          { adminId: userId },
+          {
+            memberships: { some: { userId: userId } },
+          },
+        ],
+      },
+    });
+
+    return ProjectInfraMapper.projectsToDomain(projects);
+  }
   async deleteProject(entity: Project): Promise<void> {
     await this.prisma.project.delete({
       where: {

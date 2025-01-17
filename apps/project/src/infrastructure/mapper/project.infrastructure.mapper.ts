@@ -68,4 +68,8 @@ export class ProjectInfraMapper {
       memberships: memberships,
     });
   }
+
+  static projectsToDomain(records: ProjectRecord[]): Project[] {
+    return records.map(record => this.projectToDomain(record));
+  }
 }

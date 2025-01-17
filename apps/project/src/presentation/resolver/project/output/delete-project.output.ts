@@ -1,7 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType, PickType } from '@nestjs/graphql';
+import { ProjectType } from '@project/presentation/resolver/type/project.type';
 
 @ObjectType()
-export class DeleteProjectOutput {
-  @Field()
-  projectId: string;
-}
+export class DeleteProjectOutput extends PickType(ProjectType, [
+  'id',
+] as const) {}
