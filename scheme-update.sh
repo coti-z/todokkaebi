@@ -24,6 +24,7 @@ print_help() {
     echo "서비스:"
     echo "  user      사용자 서비스 및 데이터베이스"
     echo "  auth      인증 서비스 및 데이터베이스"
+    echo "  project   프로잭트 서비스 및 데이터베이스"
     echo "  all       모든 서비스"
     echo
     echo "옵션:"
@@ -74,10 +75,23 @@ docker_compose_operation() {
                 docker compose restart mysql-auth auth
             fi
             ;;
+        project)
+            if [ "$operation" = "setup" ]; then
+                echo -e "${YELLOW}Starting project database container...${NC}"
+                docker compose up $detach_opt mysql-project
+            elif [ "$operation" = "up" ]; then
+                echo -e "${YELLOW}Starting all project service containers...${NC}"
+                docker compose up $detach_opt mysql-project project
+            elif [ "$operation" = "down" ]; then
+                docker compose rm -sf mysql-project project
+            else
+                docker compose restart mysql-project project
+            fi
+            ;;
         all)
             if [ "$operation" = "setup" ]; then
                 echo -e "${YELLOW}Starting all database containers...${NC}"
-                docker compose up $detach_opt mysql-user mysql-auth
+                docker compose up $detach_opt mysql-user mysql-auth mysql-project
             elif [ "$operation" = "up" ]; then
                 echo -e "${YELLOW}Starting all service containers...${NC}"
                 docker compose up $detach_opt
@@ -102,7 +116,7 @@ docker_compose_operation() {
 update_user_schema() {
     echo -e "${GREEN}Updating user database schema...${NC}"
 
-    export DATABASE_URL=mysql://root:1234@localhost:6001/userdb
+    export DATABASE_USER_URL=mysql://root:1234@localhost:6001/userdb
 
     echo "Cleaning up previous migrations..."
     rm -rf apps/user/src/infrastructure/prisma/migrations
@@ -112,7 +126,7 @@ update_user_schema() {
 
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
-    npx prisma migrate dev --name init --schema=apps/user/src/infrastructure/prisma/schema.prisma --force
+    npx prisma migrate reset --schema=apps/user/src/infrastructure/prisma/schema.prisma --force
 
     echo -e "${GREEN}User database schema update completed!${NC}"
 }
@@ -121,20 +135,41 @@ update_user_schema() {
 update_auth_schema() {
     echo -e "${GREEN}Updating auth database schema...${NC}"
 
-    export DATABASE_URL=mysql://root:1234@localhost:6002/authdb
+    export DATABASE_AUTH_URL=mysql://root:1234@localhost:6002/authdb
 
-    echo "Cleaning up previous migrations..."
-    rm -rf apps/auth/src/infrastructure/prisma/migrations
+    #echo "Cleaning up previous migrations..."
+    #rm -rf apps/auth/src/infrastructure/prisma/migrations
 
     echo "Generating Prisma client..."
     npx prisma generate --schema=apps/auth/src/infrastructure/prisma/schema.prisma
 
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
-    npx prisma migrate dev --name init --schema=apps/auth/src/infrastructure/prisma/schema.prisma --force
+    npx prisma migrate reset --schema=apps/auth/src/infrastructure/prisma/schema.prisma --force
 
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }
+
+
+# Prisma 스키마 업데이트 함수 - 인증 DB
+update_project_schema() {
+    echo -e "${GREEN}Updating auth database schema...${NC}"
+
+    export DATABASE_PROJECT_URL=mysql://root:1234@localhost:6003/projectdb
+
+    echo "Cleaning up previous migrations..."
+    rm -rf apps/project/src/infrastructure/prisma/migrations
+
+    echo "Generating Prisma client..."
+    npx prisma generate --schema=apps/project/src/infrastructure/prisma/schema.prisma
+
+    echo "Creating and applying migrations..."
+    # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
+    npx prisma migrate reset --schema=apps/project/src/infrastructure/prisma/schema.prisma --force
+
+    echo -e "${GREEN}Auth database schema update completed!${NC}"
+}
+
 
 # 메인 실행 함수
 main() {
@@ -166,9 +201,13 @@ main() {
                 auth)
                     update_auth_schema
                     ;;
+                project)
+                    update_project_schema
+                    ;;
                 all)
                     update_user_schema
                     update_auth_schema
+                    update_project_schema
                     ;;
             esac
             ;;

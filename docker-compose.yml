@@ -1,23 +1,23 @@
 services:
   user:
+    container_name: user
     build:
       context: .
       dockerfile: ./apps/user/Dockerfile
       target: development
     ports:
       - "3001:3001"
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - ./proto:/usr/src/app/apps/user/src/infrastructure/proto
-      - ./apps/user/src/infrastructure/prisma:/usr/src/app/apps/user/src/infrastructure/prisma
 
-    environment:
-      DATABASE_USER_URL: "mysql://root:1234@mysql-user:3306/userdb"
     command: sh apps/scripts/start-user.sh
     depends_on:
       mysql-user:
         condition: service_healthy
+    volumes:
+      - ./apps/user:/usr/src/app/apps/user
+      - ./libs:/usr/src/app/libs
+    environment:
+      DATABASE_USER_URL: "mysql://root:1234@mysql-user:3306/userdb"
+
 
   mysql-user:
     image: mysql:latest
@@ -38,6 +38,7 @@ services:
       start_period: 30s
 
   auth:
+    container_name: auth
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
@@ -47,16 +48,16 @@ services:
     ports:
       - "3002:3002"
       - "50051:50051"    # gRPC 포트 추가
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules:/usr/src/app/node_modules
-      - ./apps/auth/src/infrastructure/prisma:/usr/src/app/apps/auth/src/infrastructure/prisma
-    environment:
-      DATABASE_AUTH_URL: "mysql://root:1234@mysql-auth:3306/authdb"
     command: sh apps/scripts/start-auth.sh
     depends_on:
       mysql-auth:
         condition: service_healthy
+    volumes:
+      - ./apps/auth:/usr/src/app/apps/auth
+      - ./libs:/usr/src/app/libs
+    environment:
+      DATABASE_AUTH_URL: "mysql://root:1234@mysql-auth:3306/authdb"
+
 
 
   mysql-auth:
@@ -77,6 +78,44 @@ services:
         retries: 5
         start_period: 30s
 
+  project:
+    build:
+      context: .
+      dockerfile: ./apps/project/Dockerfile
+      target: development
+    ports:
+      - "3003:3003"
+
+    command: sh apps/scripts/start-project.sh
+    depends_on:
+      mysql-project:
+        condition: service_healthy
+    volumes:
+      - ./apps/project:/usr/src/app/apps/project
+      - ./libs:/usr/src/app/libs
+    environment:
+      DATABASE_PROJECT_URL: "mysql://root:1234@mysql-project:3306/projectdb"
+
+
+  mysql-project:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: projectdb
+      MYSQL_USER: 'project'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '6003:3306'
+    volumes:
+      - 'mysql_project_data:/var/lib/mysql'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 volumes:
   mysql_user_data:
   mysql_auth_data:
+  mysql_project_data:

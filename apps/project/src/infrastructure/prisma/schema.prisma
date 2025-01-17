@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource projectDB {
+  provider = "mysql"
+  url      = env("DATABASE_PROJECT_URL")
+}
+
+model Project {
+  id                 String
+  name               String
+  adminId            String
+  memberships        ProjectMembership[]
+  categories         Category[]
+  projectInvitations ProjectInvitation[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@unique([id])
+}
+
+model ProjectMembership {
+  id        String         @id @default(uuid())
+  project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  userId    String
+  role      MembershipRole @default(MEMBER)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+enum MembershipRole {
+  OWNER
+  MEMBER
+}
+
+model ProjectInvitation {
+  id            String           @id @default(uuid())
+  project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+  inviterUserId String
+  inviteeUserId String
+  status        InvitationStatus @default(PENDING)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([projectId, inviteeUserId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id              String    @id @default(uuid())
+  title           String
+  status          TaskState @default(PENDING)
+  check           Boolean   @default(false)
+  Category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId      String
+  startDate       DateTime
+  endDate         DateTime
+  actualStartDate DateTime?
+  actualEndDate   DateTime?
+  updatedAt       DateTime  @default(now())
+  createdAt       DateTime  @updatedAt
+
+  @@index([categoryId])
+}
+
+enum TaskState {
+  PENDING
+  IN_PROGRESS
+  COMPLETE
+}

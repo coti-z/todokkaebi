@@ -30,6 +30,12 @@
       "@auth/*": [
         "apps/auth/src/*"
       ],
+      "@project": [
+        "apps/project/src",
+      ],
+      "@project/*": [
+        "apps/project/src/*"
+      ],
       "@libs/decorators": [
         "libs/decorators/src"
       ],
