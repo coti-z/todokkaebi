@@ -5,12 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 type CategoryMutableProps = {
   name: string;
   projectId: string;
-  createdAt: Date;
   updatedAt: Date;
   tasks?: Task[];
 };
 type CategoryImmutableProps = {
   readonly id: string;
+  readonly createdAt: Date;
 };
 
 type CategoryProps = CategoryImmutableProps & CategoryMutableProps;
@@ -41,7 +41,7 @@ export class Category {
   }
 
   get tasks(): Task[] {
-    return this.props.tasks ? this.props.tasks : [];
+    return this.props.tasks || [];
   }
 
   static create(props: CreateCategoryProps): Category {

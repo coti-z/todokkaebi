@@ -16,6 +16,6 @@ COPY proto ./proto
 
 RUN chmod +x ./apps/scripts/start-auth.sh
 
-CMD ["sh","apps/scripts/start-project.sh"]
+CMD ["sh","apps/scripts/start-auth.sh"]
 
 # TODO: production 환경 도커 파일 작성

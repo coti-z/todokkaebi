@@ -12,7 +12,7 @@ import {
 } from '@project/infrastructure/mapper/project-membership.infrastructure';
 import { Project } from '@project/domain/entity/project.entity';
 
-export interface ProjectRecord {
+interface ProjectRecord {
   id: string;
   name: string;
   adminId: string;
@@ -23,16 +23,26 @@ export interface ProjectRecord {
   memberships?: ProjectMembershipRecord[];
 }
 
-export interface CreateProjectRecord {
-  id: string;
-  name: string;
-  adminId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+type CreateProjectRecord = Omit<
+  ProjectRecord,
+  'categories' | 'projectInvitations' | 'memberships'
+>;
+
+type UpdateProjectRecord = Partial<CreateProjectRecord> &
+  Required<Pick<CreateProjectRecord, 'id'>>;
 
 export class ProjectInfraMapper {
   static createToPersistence(entity: Project): CreateProjectRecord {
+    return {
+      id: entity.id,
+      name: entity.name,
+      adminId: entity.adminId,
+      updatedAt: entity.updatedAt,
+      createdAt: entity.createdAt,
+    };
+  }
+
+  static updateToPersistence(entity: Project): UpdateProjectRecord {
     return {
       id: entity.id,
       name: entity.name,
@@ -67,5 +77,9 @@ export class ProjectInfraMapper {
       categories: categories,
       memberships: memberships,
     });
+  }
+
+  static projectsToDomain(records: ProjectRecord[]): Project[] {
+    return records.map(record => this.projectToDomain(record));
   }
 }
