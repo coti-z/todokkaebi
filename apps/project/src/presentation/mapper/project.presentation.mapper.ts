@@ -1,19 +1,26 @@
-import { CreateProjectInput } from '@project/presentation/resolver/project/input/create-project.input';
 import { CreateProjectCommand } from '@project/application/command/create-project.command';
 import { Project } from '@project/domain/entity/project.entity';
-import { CreateProjectOutput } from '@project/presentation/resolver/project/output/create-prioject.output';
-import { DeleteProjectInput } from '@project/presentation/resolver/project/input/delete-project.input';
 import { DeleteProjectCommand } from '@project/application/command/delete-project.command';
-import { DeleteProjectOutput } from '@project/presentation/resolver/project/output/delete-project.output';
-import { QueryProjectInput } from '@project/presentation/resolver/project/input/query-project.input';
 import { ProjectByIdQuery } from '@project/application/query/project-by-id.query';
 import { ProjectsByUserIdQuery } from '@project/application/query/projects-by-userid.query';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import { ProjectInvitationPresentationMapper } from '@project/presentation/mapper/project-invitation.presentation.mapper';
 import { ProjectMembershipPresentationMapper } from '@project/presentation/mapper/project-membership.presentation.mapper';
-import { QueryProjectOutput } from '@project/presentation/resolver/project/output/query-project.output';
-import { QueryProjectsOutput } from '@project/presentation/resolver/project/output/query-projects.output';
+import {
+  CreateProjectInput,
+  DeleteProjectInput,
+  QueryProjectInput,
+  UpdateProjectInput,
+} from '@project/presentation/resolver/project/input/project.input';
+import {
+  CreateProjectOutput,
+  DeleteProjectOutput,
+  QueryProjectOutput,
+  QueryProjectsOutput,
+  UpdateProjectOutput,
+} from '@project/presentation/resolver/project/output/project.output';
+import { UpdateProjectCommand } from '@project/application/command/update-project.command';
 
 export class ProjectPresentationMapper {
   static entityToObjectType(entity: Project): ProjectType {
@@ -56,6 +63,13 @@ export class ProjectPresentationMapper {
     return new DeleteProjectCommand(input.projectId, userId);
   }
 
+  static toUpdateProjectCommand(
+    input: UpdateProjectInput,
+    userId: string,
+  ): UpdateProjectCommand {
+    return new UpdateProjectCommand(userId, input.projectId, input.name);
+  }
+
   static toProjectQuery(
     input: QueryProjectInput,
     userId: string,
@@ -77,6 +91,13 @@ export class ProjectPresentationMapper {
 
   static deleteProjectToOutput(entity: Project): DeleteProjectOutput {
     return {
+      id: entity.id,
+    };
+  }
+  static updateProjectToOutput(entity: Project): UpdateProjectOutput {
+    return {
+      name: entity.name,
+      adminId: entity.adminId,
       id: entity.id,
     };
   }

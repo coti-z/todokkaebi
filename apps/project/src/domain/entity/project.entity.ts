@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
+import { ErrorCode, errorFactory } from '@libs/exception';
 
 type ProjectImmutableProps = {
   readonly id: string;
@@ -19,6 +20,7 @@ type ProjectMutableProps = {
 
 type ProjectProps = ProjectImmutableProps & ProjectMutableProps;
 type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
+type ChangeNameProps = Pick<ProjectMutableProps, 'name'>;
 
 export class Project {
   private constructor(private readonly props: ProjectProps) {}
@@ -26,6 +28,7 @@ export class Project {
   get id(): string {
     return this.props.id;
   }
+
   get adminId(): string {
     return this.props.adminId;
   }
@@ -47,11 +50,11 @@ export class Project {
   }
 
   get categories(): Category[] {
-    return this.props.categories ? this.props.categories : [];
+    return this.props.categories || [];
   }
 
   get projectInvitations(): ProjectInvitation[] {
-    return this.props.projectInvitations ? this.props.projectInvitations : [];
+    return this.props.projectInvitations || [];
   }
 
   static create(props: CreateProjectProps): Project {
@@ -68,6 +71,7 @@ export class Project {
       adminId: props.adminId,
     });
   }
+
   static reconstitute(props: ProjectProps): Project {
     return new Project({
       name: props.name,
@@ -79,5 +83,12 @@ export class Project {
       memberships: props.memberships,
       adminId: props.adminId,
     });
+  }
+
+  changeName(req: ChangeNameProps) {
+    if (!req.name) {
+      throw errorFactory(ErrorCode.BAD_REQUEST);
+    }
+    this.props.name = req.name;
   }
 }

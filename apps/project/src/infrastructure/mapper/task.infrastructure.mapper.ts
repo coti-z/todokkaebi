@@ -37,7 +37,7 @@ export class TaskInfraMapper {
 
   static toPersistence(entity: Task): TaskRecord {
     const mappedState = TaskInfraMapper.STATE_MAPPING[entity.status];
-    if (mappedState) {
+    if (!mappedState) {
       throw new Error(`Unknown state ${entity.status}`);
     }
 

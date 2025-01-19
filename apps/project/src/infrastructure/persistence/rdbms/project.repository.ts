@@ -49,4 +49,13 @@ export class ProjectRepositoryImpl implements IProjectRepository {
       },
     });
   }
+  async updateProject(entity: Project): Promise<void> {
+    const data = ProjectInfraMapper.updateToPersistence(entity);
+    await this.prisma.project.update({
+      where: {
+        id: entity.id,
+      },
+      data,
+    });
+  }
 }

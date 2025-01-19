@@ -41,7 +41,7 @@ export class Category {
   }
 
   get tasks(): Task[] {
-    return this.props.tasks ? this.props.tasks : [];
+    return this.props.tasks || [];
   }
 
   static create(props: CreateCategoryProps): Category {

@@ -1,5 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateProjectInput } from '@project/presentation/resolver/project/input/create-project.input';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ResponseManager } from '@libs/response';
 import {
@@ -7,11 +6,16 @@ import {
   DeleteProjectResponse,
   QueryProjectResponse,
   QueryProjectsResponse,
+  UpdateProjectResponse,
 } from '@project/presentation/resolver/project/project.response';
-import { DeleteProjectInput } from '@project/presentation/resolver/project/input/delete-project.input';
 import { ProjectPresentationMapper } from '@project/presentation/mapper/project.presentation.mapper';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
-import { QueryProjectInput } from '@project/presentation/resolver/project/input/query-project.input';
+import {
+  CreateProjectInput,
+  DeleteProjectInput,
+  QueryProjectInput,
+  UpdateProjectInput,
+} from '@project/presentation/resolver/project/input/project.input';
 
 @Resolver(() => ProjectType)
 export class ProjectResolver {
@@ -48,6 +52,20 @@ export class ProjectResolver {
     );
     const result = await this.commandBus.execute(command);
     const output = ProjectPresentationMapper.deleteProjectToOutput(result);
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => UpdateProjectResponse)
+  async updateProject(
+    @Args('input') input: UpdateProjectInput,
+  ): Promise<UpdateProjectResponse> {
+    const command = ProjectPresentationMapper.toUpdateProjectCommand(
+      input,
+      'test',
+    );
+
+    const result = await this.commandBus.execute(command);
+    const output = ProjectPresentationMapper.updateProjectToOutput(result);
     return ResponseManager.success(output);
   }
 
