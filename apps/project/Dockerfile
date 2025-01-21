@@ -1,7 +1,5 @@
 FROM node:18 AS development
 
-ENV DATABASE_PROJECT_URL "mysql://root:1234@mysql-project:3306/projectdb"
-
 # 작업 디렉토리
 WORKDIR /usr/src/app
 
@@ -15,11 +13,6 @@ COPY apps/scripts ./apps/scripts
 COPY apps/project/src/infrastructure/prisma ./apps/project/src/infrastructure/prisma
 
 COPY proto ./proto
-
-
-
-# 패키지 설치
-
 
 RUN chmod +x ./apps/scripts/start-project.sh
 
