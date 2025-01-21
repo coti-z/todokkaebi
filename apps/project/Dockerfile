@@ -1,6 +1,6 @@
 FROM node:18 AS development
 
-
+ENV DATABASE_PROJECT_URL "mysql://root:1234@mysql-project:3306/projectdb"
 
 # 작업 디렉토리
 WORKDIR /usr/src/app
@@ -12,7 +12,8 @@ RUN npm install
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 COPY apps/scripts ./apps/scripts
-COPY apps/project/src/infrastructure/prisma/schema.prisma ./apps/project/src/infrastructure/prisma/schema.prisma
+COPY apps/project/src/infrastructure/prisma ./apps/project/src/infrastructure/prisma
+
 COPY proto ./proto
 
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteProjectCommand } from '@project/application/command/delete-project.command';
+import { DeleteProjectCommand } from '@project/application/command/unit-project/delete-project.command';
 import { ProjectService } from '@project/application/service/project.service';
 import { Project } from '@project/domain/entity/project.entity';
 

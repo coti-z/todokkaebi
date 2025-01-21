@@ -1,6 +1,6 @@
-import { CreateProjectCommand } from '@project/application/command/create-project.command';
+import { CreateProjectCommand } from '@project/application/command/unit-project/create-project.command';
 import { Project } from '@project/domain/entity/project.entity';
-import { DeleteProjectCommand } from '@project/application/command/delete-project.command';
+import { DeleteProjectCommand } from '@project/application/command/unit-project/delete-project.command';
 import { ProjectByIdQuery } from '@project/application/query/project-by-id.query';
 import { ProjectsByUserIdQuery } from '@project/application/query/projects-by-userid.query';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
@@ -12,15 +12,15 @@ import {
   DeleteProjectInput,
   QueryProjectInput,
   UpdateProjectInput,
-} from '@project/presentation/resolver/project/input/project.input';
+} from '@project/presentation/resolver/input/project.input';
 import {
   CreateProjectOutput,
   DeleteProjectOutput,
   QueryProjectOutput,
   QueryProjectsOutput,
   UpdateProjectOutput,
-} from '@project/presentation/resolver/project/output/project.output';
-import { UpdateProjectCommand } from '@project/application/command/update-project.command';
+} from '@project/presentation/resolver/output/project.output';
+import { UpdateProjectCommand } from '@project/application/command/unit-project/update-project.command';
 
 export class ProjectPresentationMapper {
   static entityToObjectType(entity: Project): ProjectType {

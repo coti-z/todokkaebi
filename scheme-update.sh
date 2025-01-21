@@ -166,6 +166,7 @@ update_project_schema() {
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
     npx prisma migrate reset --schema=apps/project/src/infrastructure/prisma/schema.prisma --force
+    npx prisma migrate dev --schema=apps/project/src/infrastructure/prisma/schema.prisma
 
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }

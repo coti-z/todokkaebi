@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ProjectService } from '@project/application/service/project.service';
 import { Injectable } from '@nestjs/common';
 import { Project } from '@project/domain/entity/project.entity';
-import { CreateProjectCommand } from '@project/application/command/create-project.command';
+import { CreateProjectCommand } from '@project/application/command/unit-project/create-project.command';
 
 @Injectable()
 @CommandHandler(CreateProjectCommand)

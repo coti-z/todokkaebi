@@ -6,7 +6,7 @@ import {
   QueryProjectOutput,
   QueryProjectsOutput,
   UpdateProjectOutput,
-} from '@project/presentation/resolver/project/output/project.output';
+} from '@project/presentation/resolver/output/project.output';
 
 @ObjectType()
 export class CreateProjectResponse extends ApiResponseOf(CreateProjectOutput) {}
