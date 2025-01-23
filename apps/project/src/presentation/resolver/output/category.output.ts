@@ -6,3 +6,6 @@ export class CreateCategoryOutput extends OmitType(CategoryType, ['tasks']) {}
 
 @ObjectType()
 export class DeleteCategoryOutput extends PickType(CategoryType, ['id']) {}
+
+@ObjectType()
+export class UpdateCategoryOutput extends CategoryType {}

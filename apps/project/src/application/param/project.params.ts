@@ -12,5 +12,5 @@ export type QueryProjectsByUserIdParams = Pick<ProjectMembership, 'userId'>;
 export type QueryProjectParams = Pick<Project, 'id'> & { userId: string };
 
 export type QueryProjectByTaskIdParams = {
-  taskId: string;
+  categoryId: string;
 };

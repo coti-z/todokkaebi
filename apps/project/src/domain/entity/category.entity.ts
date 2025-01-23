@@ -1,19 +1,20 @@
 import { Task } from './task.entity';
 
 import { v4 as uuidv4 } from 'uuid';
+import { ErrorCode, errorFactory } from '@libs/exception';
 
-type CategoryMutableProps = {
+export type CategoryMutableProps = {
   name: string;
   projectId: string;
   updatedAt: Date;
   tasks?: Task[];
 };
-type CategoryImmutableProps = {
+export type CategoryImmutableProps = {
   readonly id: string;
   readonly createdAt: Date;
 };
 
-type CategoryProps = CategoryImmutableProps & CategoryMutableProps;
+export type CategoryProps = CategoryImmutableProps & CategoryMutableProps;
 type CreateCategoryProps = Omit<
   CategoryProps,
   'id' | 'createdAt' | 'updatedAt'
@@ -66,5 +67,12 @@ export class Category {
       updatedAt: props.updatedAt,
       name: props.name,
     });
+  }
+
+  changeName(name: string) {
+    if (!name) {
+      throw errorFactory(ErrorCode.BAD_REQUEST);
+    }
+    this.props.name = name;
   }
 }

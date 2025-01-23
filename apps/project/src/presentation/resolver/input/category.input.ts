@@ -10,9 +10,6 @@ export class CategoryInput {
 
   @Field()
   projectId: string;
-
-  @Field()
-  categoryId: string;
 }
 
 @InputType()
@@ -22,6 +19,11 @@ export class CreateCategoryInput extends PickType(CategoryInput, [
 ]) {}
 
 @InputType()
-export class DeleteCategoryInput extends PickType(CategoryInput, [
-  'categoryId',
+export class DeleteCategoryInput extends PickType(CategoryInput, ['id']) {}
+
+@InputType()
+export class UpdateCategoryInput extends PickType(CategoryInput, [
+  'projectId',
+  'id',
+  'name',
 ]) {}

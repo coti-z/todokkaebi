@@ -4,13 +4,16 @@ import { TaskPresentationMapper } from '@project/presentation/mapper/task.presen
 import {
   CreateCategoryInput,
   DeleteCategoryInput,
+  UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import { CreateCategoryCommand } from '@project/application/command/category/create-category.command';
 import {
   CreateCategoryOutput,
   DeleteCategoryOutput,
+  UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 import { DeleteCategoryCommand } from '@project/application/command/category/delete-category.command';
+import { UpdateCategoryCommand } from '@project/application/command/category/update-category.command';
 
 export class CategoryPresentationMapper {
   static entityToObjectType(entity: Category): CategoryType {
@@ -38,7 +41,19 @@ export class CategoryPresentationMapper {
     input: DeleteCategoryInput,
     userId: string,
   ): DeleteCategoryCommand {
-    return new DeleteCategoryCommand(input.categoryId, userId);
+    return new DeleteCategoryCommand(input.id, userId);
+  }
+
+  static updateCategoryInputToUpdateCategoryCommand(
+    input: UpdateCategoryInput,
+    userId: string,
+  ): UpdateCategoryCommand {
+    return new UpdateCategoryCommand(
+      userId,
+      input.name,
+      input.id,
+      input.projectId,
+    );
   }
 
   static entityToCreateCategoryOutput(entity: Category): CreateCategoryOutput {
@@ -53,6 +68,17 @@ export class CategoryPresentationMapper {
   static entityToDeleteCategoryOutput(entity: Category): DeleteCategoryOutput {
     return {
       id: entity.id,
+    };
+  }
+
+  static entityToUpdateCategoryOutput(entity: Category): UpdateCategoryOutput {
+    return {
+      id: entity.id,
+      updatedAt: entity.updatedAt,
+      tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
+      name: entity.name,
+      projectId: entity.projectId,
+      createdAt: entity.createdAt,
     };
   }
 }

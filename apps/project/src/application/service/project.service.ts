@@ -68,10 +68,12 @@ export class ProjectService {
     return await this.projectRepo.findProjectsByUserId(param.userId);
   }
 
-  async queryProjectByTaskId(
+  async queryProjectByCategoryId(
     params: QueryProjectByTaskIdParams,
   ): Promise<Project> {
-    const project = await this.projectRepo.findProjectByTaskId(params.taskId);
+    const project = await this.projectRepo.findProjectByCategoryId(
+      params.categoryId,
+    );
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }

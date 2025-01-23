@@ -5,6 +5,7 @@ import {
 import {
   CreateCategoryParams,
   DeleteCategoryParams,
+  UpdateCategoryParams,
 } from '@project/application/param/category.params';
 import { Category } from '@project/domain/entity/category.entity';
 import { Inject } from '@nestjs/common';
@@ -27,7 +28,7 @@ export class CategoryService {
   }
 
   async deleteCategory(params: DeleteCategoryParams): Promise<Category> {
-    CategoryPolicyLogic.canDeleteCategory(params.project, params.requestUserId);
+    CategoryPolicyLogic.canDeleteCategory(params.project, params.reqUserId);
 
     const category = await this.categoryRepo.findCategoryById(params.id);
 
@@ -35,6 +36,21 @@ export class CategoryService {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     await this.categoryRepo.deleteCategoryById(params.id);
+    return category;
+  }
+
+  async updateCategory(params: UpdateCategoryParams): Promise<Category> {
+    const category = await this.categoryRepo.findCategoryById(params.id);
+    if (!category) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    CategoryPolicyLogic.updateCategory(
+      params.project,
+      category,
+      params.reqUserId,
+      params.name,
+    );
+    await this.categoryRepo.updateCategory(category);
     return category;
   }
 }

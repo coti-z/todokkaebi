@@ -59,12 +59,11 @@ export class ProjectRepositoryImpl implements IProjectRepository {
     });
   }
 
-  async findProjectByTaskId(taskId: string): Promise<Project | null> {
-    console.log(taskId);
+  async findProjectByCategoryId(categoryId: string): Promise<Project | null> {
     const record = await this.prisma.project.findFirst({
       where: {
         categories: {
-          some: { id: taskId },
+          some: { id: categoryId },
         },
       },
     });

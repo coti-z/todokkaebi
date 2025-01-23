@@ -14,6 +14,7 @@ export interface CategoryRecord {
 }
 
 export type CreateCategoryRecord = Omit<CategoryRecord, 'tasks'>;
+export type UpdateCategoryRecord = Omit<CategoryRecord, 'tasks'>;
 
 export class CategoryInfraMapper {
   static toPersistence(entity: Category): CategoryRecord {
@@ -38,6 +39,16 @@ export class CategoryInfraMapper {
       updatedAt: entity.updatedAt,
     };
   }
+  static updateToPersistence(entity: Category): UpdateCategoryRecord {
+    return {
+      id: entity.id,
+      projectId: entity.projectId,
+      updatedAt: entity.updatedAt,
+      name: entity.name,
+      createdAt: entity.createdAt,
+    };
+  }
+
   static categoriesToPersistence(entities: Category[]): CategoryRecord[] {
     return entities.map(category => this.toPersistence(category));
   }

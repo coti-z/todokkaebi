@@ -5,4 +5,5 @@ export interface ICategoryRepository {
   storeCategory(entity: Category): Promise<void>;
   findCategoryById(entityId: string): Promise<Category | null>;
   deleteCategoryById(entityId: string): Promise<void>;
+  updateCategory(entity: Category): Promise<void>;
 }

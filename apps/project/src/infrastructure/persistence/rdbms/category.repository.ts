@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ICategoryRepository } from '@project/application/port/out/category-repository.port';
 import { PrismaService } from '@libs/database';
 import { Category } from '@project/domain/entity/category.entity';
-import { CategoryInfraMapper } from '@project/infrastructure/mapper/category.infrastructure.mapper';
+import {
+  CategoryInfraMapper,
+  CategoryRecord,
+} from '@project/infrastructure/mapper/category.infrastructure.mapper';
 
 @Injectable()
 export class CategoryRepositoryImpl implements ICategoryRepository {
@@ -19,8 +22,18 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
     });
   }
 
+  async updateCategory(entity: Category): Promise<void> {
+    const data = CategoryInfraMapper.updateToPersistence(entity);
+    await this.prisma.category.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    });
+  }
+
   async findCategoryById(entityId: string): Promise<Category | null> {
-    const data = await this.prisma.category.findUnique({
+    const data: CategoryRecord | null = await this.prisma.category.findUnique({
       where: { id: entityId },
       include: {
         tasks: true,

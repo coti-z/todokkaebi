@@ -13,11 +13,11 @@ export class DeleteCategoryHandler
     private readonly categoryService: CategoryService,
   ) {}
   async execute(command: DeleteCategoryCommand): Promise<Category> {
-    const project = await this.projectService.queryProjectByTaskId({
-      taskId: command.categoryId,
+    const project = await this.projectService.queryProjectByCategoryId({
+      categoryId: command.categoryId,
     });
     return await this.categoryService.deleteCategory({
-      requestUserId: command.userId,
+      reqUserId: command.userId,
       project,
       id: command.categoryId,
     });

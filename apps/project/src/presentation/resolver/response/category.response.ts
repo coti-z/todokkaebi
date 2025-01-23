@@ -3,6 +3,7 @@ import { ApiResponseOf } from '@libs/response/api-response-factory';
 import {
   CreateCategoryOutput,
   DeleteCategoryOutput,
+  UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 
 @ObjectType()
@@ -12,4 +13,9 @@ export class CreateCategoryResponse extends ApiResponseOf(
 @ObjectType()
 export class DeleteCategoryResponse extends ApiResponseOf(
   DeleteCategoryOutput,
+) {}
+
+@ObjectType()
+export class UpdateCategoryResponse extends ApiResponseOf(
+  UpdateCategoryOutput,
 ) {}

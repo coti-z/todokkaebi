@@ -8,7 +8,7 @@
   "arrowParens": "avoid",
   "endOfLine": "lf",
   "quoteProps": "as-needed",
-  "proseWrap": "preserve",
+  "proseWrap": "always",
   "htmlWhitespaceSensitivity": "css",
   "embeddedLanguageFormatting": "auto",
 
