@@ -58,4 +58,20 @@ export class ProjectRepositoryImpl implements IProjectRepository {
       data,
     });
   }
+
+  async findProjectByTaskId(taskId: string): Promise<Project | null> {
+    console.log(taskId);
+    const record = await this.prisma.project.findFirst({
+      where: {
+        categories: {
+          some: { id: taskId },
+        },
+      },
+    });
+    if (!record) {
+      return null;
+    }
+
+    return ProjectInfraMapper.projectToDomain(record);
+  }
 }

@@ -12,9 +12,9 @@ export class UpdateProjectHandler
   constructor(private readonly projectService: ProjectService) {}
   async execute(command: UpdateProjectCommand): Promise<Project> {
     return await this.projectService.updateProject({
-      projectId: command.projectId,
-      userId: command.userId,
       name: command.projectName,
+      id: command.projectId,
+      adminId: command.userId,
     });
   }
 }

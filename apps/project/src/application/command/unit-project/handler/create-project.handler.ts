@@ -14,7 +14,7 @@ export class CreateProjectHandler
     try {
       return await this.projectService.createProject({
         name: command.name,
-        userId: command.userId,
+        adminId: command.userId,
       });
     } catch (error) {
       throw error;

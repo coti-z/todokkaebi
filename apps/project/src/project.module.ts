@@ -14,6 +14,5 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     ProjectApplicationModule,
     ProjectPresentationModule,
   ],
-  providers: [ ],
 })
 export class ProjectModule {}

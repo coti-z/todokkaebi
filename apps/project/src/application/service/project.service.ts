@@ -6,11 +6,12 @@ import {
 import { Project } from '@project/domain/entity/project.entity';
 import { ErrorCode, errorFactory } from '@libs/exception';
 import {
-  CreateProjectParam,
-  DeleteProjectParam,
-  QueryProjectParam,
-  QueryProjectsParam,
-  UpdateProjectParam,
+  CreateProjectParams,
+  DeleteProjectParams,
+  QueryProjectByTaskIdParams,
+  QueryProjectParams,
+  QueryProjectsByUserIdParams,
+  UpdateProjectParams,
 } from '@project/application/param/project.params';
 import { ProjectPolicyLogic } from '@project/domain/logic/project-policy.logic';
 
@@ -21,21 +22,21 @@ export class ProjectService {
     private readonly projectRepo: IProjectRepository,
   ) {}
 
-  async createProject(param: CreateProjectParam): Promise<Project> {
+  async createProject(param: CreateProjectParams): Promise<Project> {
     const project = Project.create({
       name: param.name,
-      adminId: param.userId,
+      adminId: param.adminId,
     });
     await this.projectRepo.createProject(project);
     return project;
   }
 
-  async deleteProject(param: DeleteProjectParam): Promise<Project> {
-    const project = await this.projectRepo.findProjectById(param.projectId);
+  async deleteProject(param: DeleteProjectParams): Promise<Project> {
+    const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    if (project.adminId !== param.userId) {
+    if (project.adminId !== param.adminId) {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
     await this.projectRepo.deleteProject(project);
@@ -43,27 +44,37 @@ export class ProjectService {
     return project;
   }
 
-  async updateProject(param: UpdateProjectParam): Promise<Project> {
-    const project = await this.projectRepo.findProjectById(param.projectId);
+  async updateProject(param: UpdateProjectParams): Promise<Project> {
+    const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     if (param.name) {
-      ProjectPolicyLogic.changeProjectName(project, param.userId, param.name);
+      ProjectPolicyLogic.changeProjectName(project, param.adminId, param.name);
     }
 
     await this.projectRepo.updateProject(project);
     return project;
   }
 
-  async queryProject(param: QueryProjectParam): Promise<Project> {
-    const project = await this.projectRepo.findProjectById(param.projectId);
+  async queryProject(param: QueryProjectParams): Promise<Project> {
+    const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     return project;
   }
-  async queryProjects(param: QueryProjectsParam): Promise<Project[]> {
+  async queryProjects(param: QueryProjectsByUserIdParams): Promise<Project[]> {
     return await this.projectRepo.findProjectsByUserId(param.userId);
+  }
+
+  async queryProjectByTaskId(
+    params: QueryProjectByTaskIdParams,
+  ): Promise<Project> {
+    const project = await this.projectRepo.findProjectByTaskId(params.taskId);
+    if (!project) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    return project;
   }
 }

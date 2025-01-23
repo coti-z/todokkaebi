@@ -9,6 +9,7 @@ import { CreateCategoryHandler } from '@project/application/command/category/han
 import { ProjectByIdQueryHandler } from '@project/application/query/handler/project-by-id-query.handler';
 import { projectsByUserIdQueryHandler } from '@project/application/query/handler/projects-by-userid-query.handler';
 import { CategoryService } from '@project/application/service/category.service';
+import { DeleteCategoryHandler } from '@project/application/command/category/handler/delete-category.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -18,6 +19,7 @@ import { CategoryService } from '@project/application/service/category.service';
     UpdateProjectHandler,
     ProjectByIdQueryHandler,
     projectsByUserIdQueryHandler,
+    DeleteCategoryHandler,
     CreateCategoryHandler,
     ProjectService,
     CategoryService,

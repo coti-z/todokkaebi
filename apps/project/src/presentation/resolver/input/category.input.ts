@@ -10,10 +10,18 @@ export class CategoryInput {
 
   @Field()
   projectId: string;
+
+  @Field()
+  categoryId: string;
 }
 
 @InputType()
 export class CreateCategoryInput extends PickType(CategoryInput, [
   'projectId',
   'name',
+]) {}
+
+@InputType()
+export class DeleteCategoryInput extends PickType(CategoryInput, [
+  'categoryId',
 ]) {}

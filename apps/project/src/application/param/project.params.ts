@@ -1,17 +1,16 @@
-export interface ProjectParams {
-  userId: string;
-  projectId: string;
-  name: string;
-}
-export type CreateProjectParam = Pick<ProjectParams, 'userId' | 'name'>;
+import { Project } from '@project/domain/entity/project.entity';
+import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 
-export type DeleteProjectParam = Pick<ProjectParams, 'userId' | 'projectId'>;
+export type CreateProjectParams = Pick<Project, 'adminId' | 'name'>;
 
-export type UpdateProjectParam = Pick<
-  ProjectParams,
-  'userId' | 'name' | 'projectId'
->;
+export type DeleteProjectParams = Pick<Project, 'adminId' | 'id'>;
 
-export type QueryProjectsParam = Pick<ProjectParams, 'userId'>;
+export type UpdateProjectParams = Pick<Project, 'adminId' | 'name' | 'id'>;
 
-export type QueryProjectParam = Pick<ProjectParams, 'projectId'>;
+export type QueryProjectsByUserIdParams = Pick<ProjectMembership, 'userId'>;
+
+export type QueryProjectParams = Pick<Project, 'id'> & { userId: string };
+
+export type QueryProjectByTaskIdParams = {
+  taskId: string;
+};

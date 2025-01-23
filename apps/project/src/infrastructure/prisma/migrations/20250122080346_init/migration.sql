@@ -55,7 +55,7 @@ CREATE TABLE `Task` (
     `categoryId` VARCHAR(191) NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
-    `actualStartDate` DATETIME(3) NULL,
+    `actualStartDate` DATETIME(3) NOT NULL,
     `actualEndDate` DATETIME(3) NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdAt` DATETIME(3) NOT NULL,

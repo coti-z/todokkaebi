@@ -72,7 +72,7 @@ model Task {
   categoryId      String
   startDate       DateTime
   endDate         DateTime
-  actualStartDate DateTime?
+  actualStartDate DateTime
   actualEndDate   DateTime?
   updatedAt       DateTime  @default(now())
   createdAt       DateTime  @updatedAt

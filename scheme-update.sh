@@ -9,6 +9,11 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+export DATABASE_AUTH_URL=mysql://root:1234@localhost:6002/authdb
+export DATABASE_USER_URL=mysql://root:1234@localhost:6001/userdb
+export DATABASE_PROJECT_URL=mysql://root:1234@localhost:6003/projectdb
+
+
 # 도움말 정보 출력 함수
 print_help() {
     echo "데이터베이스 설정 스크립트"
@@ -116,7 +121,6 @@ docker_compose_operation() {
 update_user_schema() {
     echo -e "${GREEN}Updating user database schema...${NC}"
 
-    export DATABASE_USER_URL=mysql://root:1234@localhost:6001/userdb
 
     echo "Cleaning up previous migrations..."
     rm -rf apps/user/src/infrastructure/prisma/migrations
@@ -135,7 +139,7 @@ update_user_schema() {
 update_auth_schema() {
     echo -e "${GREEN}Updating auth database schema...${NC}"
 
-    export DATABASE_AUTH_URL=mysql://root:1234@localhost:6002/authdb
+
 
     #echo "Cleaning up previous migrations..."
     #rm -rf apps/auth/src/infrastructure/prisma/migrations
@@ -155,7 +159,6 @@ update_auth_schema() {
 update_project_schema() {
     echo -e "${GREEN}Updating auth database schema...${NC}"
 
-    export DATABASE_PROJECT_URL=mysql://root:1234@localhost:6003/projectdb
 
     echo "Cleaning up previous migrations..."
     rm -rf apps/project/src/infrastructure/prisma/migrations
@@ -166,6 +169,7 @@ update_project_schema() {
     echo "Creating and applying migrations..."
     # --force 플래그를 추가하여 확인 프롬프트 건너뛰기
     npx prisma migrate reset --schema=apps/project/src/infrastructure/prisma/schema.prisma --force
+    npx prisma migrate dev --schema=apps/project/src/infrastructure/prisma/schema.prisma --name init
 
     echo -e "${GREEN}Auth database schema update completed!${NC}"
 }
