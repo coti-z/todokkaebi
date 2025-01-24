@@ -6,11 +6,14 @@ import {
 } from '@nestjs/common';
 import { GqlExceptionFilter, GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
-import { ErrorCode, errorFactory } from '@libs/exception';
+import {
+  ApplicationException,
+  DomainException,
+  ErrorCode,
+  errorFactory,
+} from '@libs/exception';
 //import { SlackNotificationService } from '@libs/slack';
 import { LoggerService } from '@libs/logger';
-import { ApplicationException } from '../../exception/src/application.exception';
-import { DomainException } from '../../exception/src/domain.exception';
 
 interface ErrorInfo {
   status?: number;

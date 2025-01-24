@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 import { TokenInfo } from '@libs/decorators';
 import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
-import { ResponseManager } from '@libs/response';
+import { ApiResponseOf, ResponseManager } from '@libs/response';
 import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
 import { UseGuards } from '@nestjs/common';
 import {
@@ -13,7 +13,6 @@ import {
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
-import { ApiResponseOf } from '@libs/response/api-response-factory';
 
 @Resolver()
 export class UserResolver {

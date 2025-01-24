@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { ApiResponseOf } from '@libs/response/api-response-factory';
+import { ApiResponseOf } from '@libs/response';
 
 @ObjectType()
 export class ReissueTokenOutput {

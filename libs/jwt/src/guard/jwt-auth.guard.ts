@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { JwtTokenService } from '@libs/jwt/jwt.service';
+import { JwtTokenService } from '@libs/jwt';
 import { ErrorCode, errorFactory } from '@libs/exception';
 
 @Injectable()

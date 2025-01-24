@@ -12,8 +12,8 @@ export class DeleteProjectHandler
   constructor(private readonly projectService: ProjectService) {}
   async execute(command: DeleteProjectCommand): Promise<Project> {
     return await this.projectService.deleteProject({
-      adminId: command.projectId,
-      id: command.adminId,
+      adminId: command.adminId,
+      id: command.projectId,
     });
   }
 }
