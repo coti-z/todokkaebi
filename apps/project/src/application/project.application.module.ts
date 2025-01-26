@@ -11,6 +11,7 @@ import { CategoryService } from '@project/application/service/category.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
 import { UpdateCategoryHandler } from './command/category/handler/update-category.handler';
+import { CategoryByIdHandler } from './query/handler/category-by-id.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -23,6 +24,7 @@ import { UpdateCategoryHandler } from './command/category/handler/update-categor
     DeleteCategoryHandler,
     CreateCategoryHandler,
     UpdateCategoryHandler,
+    CategoryByIdHandler,
     ProjectService,
     CategoryService,
   ],

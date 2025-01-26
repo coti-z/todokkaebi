@@ -7,7 +7,7 @@ import { ProjectService } from '@project/application/service/project.service';
 
 @QueryHandler(CategoryByIdQuery)
 @Injectable()
-export class CategoryById implements IQueryHandler<CategoryByIdQuery> {
+export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
   constructor(
     private readonly projectService: ProjectService,
     private readonly categoryService: CategoryService,

@@ -3,10 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '../src/project.module';
 import {
   CategoryMutations,
+  CategoryQueries,
   CreateCategoryVariables,
   CreateProjectVariables,
   DeleteCategoryVariables,
   ProjectMutations,
+  ProjectQueries,
+  QueryCategoryByIdVariables,
   UpdateCategoryVariables,
 } from './helpers/graphql-resolver.enum';
 import { GraphQLTestHelper } from './helpers/graphql.helper';
@@ -133,6 +136,34 @@ describe('Category Resolver (e2e)', () => {
           },
         ),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('query category', () => {
+    it('should query category', async () => {
+      // Given: create category
+      const { createCategory } = await graphqlHelper.mutation<
+        any,
+        CreateCategoryVariables
+      >(CategoryMutations.CREATE_CATEGORY, {
+        input: {
+          projectId: projectId,
+          name: 'create category name',
+        },
+      });
+
+      // When: query category
+      const { queryCategoryById } = await graphqlHelper.query<
+        any,
+        QueryCategoryByIdVariables
+      >(CategoryQueries.QUERY_CATEGORY, {
+        input: {
+          id: createCategory.data.id,
+        },
+      });
+      // Then: Verify query was successful
+
+      expect(queryCategoryById.success).toBe(true);
     });
   });
 });

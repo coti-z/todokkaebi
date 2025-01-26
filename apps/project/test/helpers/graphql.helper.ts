@@ -4,6 +4,7 @@ import {
   ProjectMutations,
   ProjectQueries,
   CategoryMutations,
+  CategoryQueries,
 } from './graphql-resolver.enum';
 import * as request from 'supertest';
 
@@ -11,7 +12,7 @@ export class GraphQLTestHelper {
   constructor(private readonly app: INestApplication) {}
 
   async query<TResult = any, TInput = Record<string, any>>(
-    operation: ProjectQueries,
+    operation: ProjectQueries | CategoryQueries,
     variables?: TInput,
   ): Promise<TResult> {
     const response = await request(this.app.getHttpServer())

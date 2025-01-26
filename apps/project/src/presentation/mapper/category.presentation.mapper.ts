@@ -43,7 +43,7 @@ export class CategoryPresentationMapper {
     );
   }
 
-  static queryCategoryByIdInputToQueryCategoryCommand(
+  static queryCategoryByIdInputToQueryCategory(
     input: QueryCategoryByIdInput,
     userId: string,
   ): CategoryByIdQuery {

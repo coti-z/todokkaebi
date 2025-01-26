@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   CreateCategoryInput,
   DeleteCategoryInput,
@@ -14,11 +14,13 @@ import {
 } from '@project/presentation/resolver/response/category.response';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import { ResponseManager } from '@libs/response';
-import { Category } from '@prisma/client';
 
 @Resolver('category')
 export class CategoryResolver {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Mutation(() => CreateCategoryResponse)
   async createCategory(
@@ -68,12 +70,12 @@ export class CategoryResolver {
   async queryCategoryById(
     @Args('input') input: QueryCategoryByIdInput,
   ): Promise<QueryCategoryByIdResponse> {
-    const command =
-      CategoryPresentationMapper.queryCategoryByIdInputToQueryCategoryCommand(
+    const query =
+      CategoryPresentationMapper.queryCategoryByIdInputToQueryCategory(
         input,
         'test',
       );
-    const result = await this.commandBus.execute(command);
+    const result = await this.queryBus.execute(query);
     const output =
       CategoryPresentationMapper.entityToQueryCategoryByIdOutput(result);
     return ResponseManager.success(output);

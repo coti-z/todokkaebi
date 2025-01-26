@@ -1,4 +1,4 @@
-import { Field, InputType, InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType, PickType } from '@nestjs/graphql';
 
 @InputType()
 export class CategoryInput {

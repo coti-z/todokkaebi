@@ -1,3 +1,5 @@
+import gql from 'graphql-tag';
+
 export enum ProjectQueries {
   HEALTH_CHECK = 'HEALTH_CHECK',
   QUERY_PROJECT = 'QUERY_PROJECT',
@@ -14,6 +16,10 @@ export enum CategoryMutations {
   CREATE_CATEGORY = 'CREATE_CATEGORY',
   UPDATE_CATEGORY = 'UPDATE_CATEGORY',
   DELETE_CATEGORY = 'DELETE_CATEGORY',
+}
+
+export enum CategoryQueries {
+  QUERY_CATEGORY = 'QUERY_CATEGORY',
 }
 
 export const GraphQLOperations = {
@@ -142,6 +148,23 @@ export const GraphQLOperations = {
       }
     }
   `,
+
+  [CategoryQueries.QUERY_CATEGORY]: `
+    query QueryCategoryById($input: QueryCategoryByIdInput!) {
+      queryCategoryById(input: $input) {
+        status
+        success
+        message
+        data {
+          id
+          name
+          projectId
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  `,
 };
 
 interface ProjectInputBase {
@@ -184,6 +207,12 @@ export interface UpdateCategoryVariables {
 }
 
 export interface DeleteCategoryVariables {
+  input: {
+    id: string;
+  };
+}
+
+export interface QueryCategoryByIdVariables {
   input: {
     id: string;
   };

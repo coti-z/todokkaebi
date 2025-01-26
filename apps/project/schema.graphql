@@ -167,6 +167,15 @@ type UpdateCategoryOutput {
   tasks: [TaskType!]!
 }
 
+type QueryCategoryByIdOutput {
+  id: String!
+  name: String!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tasks: [TaskType!]!
+}
+
 type CreateCategoryResponse {
   status: Int!
   success: Boolean!
@@ -188,14 +197,26 @@ type UpdateCategoryResponse {
   data: UpdateCategoryOutput
 }
 
+type QueryCategoryByIdResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: QueryCategoryByIdOutput
+}
+
 type Query {
   healthCheck: String!
   queryProject(input: QueryProjectInput!): QueryProjectResponse!
   queryProjects: QueryProjectsResponse!
+  queryCategoryById(input: QueryCategoryByIdInput!): QueryCategoryByIdResponse!
 }
 
 input QueryProjectInput {
   projectId: String!
+}
+
+input QueryCategoryByIdInput {
+  id: String!
 }
 
 type Mutation {

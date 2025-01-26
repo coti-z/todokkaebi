@@ -8,7 +8,6 @@ import {
   QueryProjectsByUserIdParams,
   UpdateProjectParams,
   ValidateOwnerByCategoryIdParams,
-  ValidateOwnerByTaskIdParams,
 } from '@project/application/param/project.params';
 import {
   IProjectRepository,

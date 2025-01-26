@@ -13,6 +13,7 @@ import { Category } from '@project/domain/entity/category.entity';
 import { Inject } from '@nestjs/common';
 import { CategoryPolicyLogic } from '@project/domain/logic/category-policy.logic';
 import { ErrorCode, errorFactory } from '@libs/exception';
+import { QueryProjectByTaskIdParams } from '../param/project.params';
 
 export class CategoryService {
   constructor(
@@ -56,5 +57,16 @@ export class CategoryService {
     return category;
   }
 
-  async queryCategoryById(params: QueryCategoryParams): Promise<Category> {}
+  async queryCategoryById(
+    params: QueryProjectByTaskIdParams,
+  ): Promise<Category> {
+    const category = await this.categoryRepo.findCategoryById(
+      params.categoryId,
+    );
+    if (!category) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+
+    return category;
+  }
 }
