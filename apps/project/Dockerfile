@@ -1,7 +1,5 @@
 FROM node:18 AS development
 
-
-
 # 작업 디렉토리
 WORKDIR /usr/src/app
 
@@ -12,13 +10,9 @@ RUN npm install
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 COPY apps/scripts ./apps/scripts
-COPY apps/project/src/infrastructure/prisma/schema.prisma ./apps/project/src/infrastructure/prisma/schema.prisma
+COPY apps/project/src/infrastructure/prisma ./apps/project/src/infrastructure/prisma
+
 COPY proto ./proto
-
-
-
-# 패키지 설치
-
 
 RUN chmod +x ./apps/scripts/start-project.sh
 

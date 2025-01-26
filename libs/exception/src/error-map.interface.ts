@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { ErrorCode } from '@libs/exception/error-code.enum';
+import { ErrorCode } from '@libs/exception';
 
 export interface ErrorResponse {
   statusCode: HttpStatus;

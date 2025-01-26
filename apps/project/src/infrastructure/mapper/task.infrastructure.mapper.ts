@@ -1,38 +1,35 @@
 import { Task } from '@project/domain/entity/task.entity';
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
 
-export enum TaskStateRecord {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETE = 'COMPLETE',
-}
+export type TaskStateRecord = 'PENDING' | 'IN_PROGRESS' | 'COMPLETE';
+
 export interface TaskRecord {
   id: string;
   title: string;
-  status: TaskStateRecord;
+  status: any;
   check: boolean;
   categoryId: string;
   startDate: Date;
   endDate: Date;
   actualStartDate: Date;
-  actualEndDate?: Date;
+  actualEndDate: Date | null;
   updatedAt: Date;
   createdAt: Date;
 }
 
 export class TaskInfraMapper {
   private static readonly STATE_MAPPING: Record<TaskState, TaskStateRecord> = {
-    [TaskState.PENDING]: TaskStateRecord.PENDING,
-    [TaskState.IN_PROGRESS]: TaskStateRecord.IN_PROGRESS,
-    [TaskState.COMPLETE]: TaskStateRecord.COMPLETE,
+    [TaskState.PENDING]: 'PENDING',
+    [TaskState.IN_PROGRESS]: 'IN_PROGRESS',
+    [TaskState.COMPLETE]: 'COMPLETE',
   };
   private static readonly STATE_MAPPING_TO_DOMAIN: Record<
     TaskStateRecord,
     TaskState
   > = {
-    [TaskStateRecord.PENDING]: TaskState.PENDING,
-    [TaskStateRecord.IN_PROGRESS]: TaskState.IN_PROGRESS,
-    [TaskStateRecord.COMPLETE]: TaskState.COMPLETE,
+    PENDING: TaskState.PENDING,
+    IN_PROGRESS: TaskState.IN_PROGRESS,
+    COMPLETE: TaskState.COMPLETE,
   };
 
   static toPersistence(entity: Task): TaskRecord {
@@ -50,7 +47,7 @@ export class TaskInfraMapper {
       startDate: entity.startDate,
       endDate: entity.endDate,
       actualStartDate: entity.actualStartDate,
-      actualEndDate: entity.actualEndDate,
+      actualEndDate: entity.actualEndDate || null,
       updatedAt: entity.updatedAt,
       createdAt: entity.createdAt,
     };
@@ -61,8 +58,9 @@ export class TaskInfraMapper {
   }
 
   static taskToDomain(record: TaskRecord): Task {
-    const mappedState = TaskInfraMapper.STATE_MAPPING[record.status];
-    if (mappedState) {
+    const getStatus = record.status as unknown as TaskState;
+    const mappedState = TaskInfraMapper.STATE_MAPPING_TO_DOMAIN[getStatus];
+    if (!mappedState) {
       throw new Error(`Unknown state ${record.status}`);
     }
 
@@ -72,7 +70,7 @@ export class TaskInfraMapper {
       status: mappedState,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
-      actualEndDate: record.actualEndDate,
+      actualEndDate: record.actualEndDate || undefined,
       actualStartDate: record.actualStartDate,
       categoryId: record.categoryId,
       startDate: record.startDate,

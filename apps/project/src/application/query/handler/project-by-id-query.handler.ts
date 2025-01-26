@@ -13,7 +13,8 @@ export class ProjectByIdQueryHandler
 
   async execute(query: ProjectByIdQuery): Promise<Project> {
     return await this.projectService.queryProject({
-      projectId: query.projectId,
+      id: query.projectId,
+      userId: query.userId,
     });
   }
 }

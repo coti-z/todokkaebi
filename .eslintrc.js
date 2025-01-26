@@ -21,5 +21,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'graphql/template-strings': 'off', // GraphQL 템플릿 문자열 검사 비활성화
   },
 };

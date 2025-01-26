@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteProjectCommand } from '@project/application/command/delete-project.command';
+import { DeleteProjectCommand } from '@project/application/command/unit-project/delete-project.command';
 import { ProjectService } from '@project/application/service/project.service';
 import { Project } from '@project/domain/entity/project.entity';
 
@@ -12,8 +12,8 @@ export class DeleteProjectHandler
   constructor(private readonly projectService: ProjectService) {}
   async execute(command: DeleteProjectCommand): Promise<Project> {
     return await this.projectService.deleteProject({
-      projectId: command.projectId,
-      userId: command.adminId,
+      adminId: command.adminId,
+      id: command.projectId,
     });
   }
 }

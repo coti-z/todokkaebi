@@ -7,7 +7,7 @@ import {
   QueryProjectResponse,
   QueryProjectsResponse,
   UpdateProjectResponse,
-} from '@project/presentation/resolver/project/project.response';
+} from '@project/presentation/resolver/response/project.response';
 import { ProjectPresentationMapper } from '@project/presentation/mapper/project.presentation.mapper';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
 import {
@@ -15,7 +15,7 @@ import {
   DeleteProjectInput,
   QueryProjectInput,
   UpdateProjectInput,
-} from '@project/presentation/resolver/project/input/project.input';
+} from '@project/presentation/resolver/input/project.input';
 
 @Resolver(() => ProjectType)
 export class ProjectResolver {

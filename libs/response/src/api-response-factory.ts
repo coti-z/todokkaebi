@@ -2,7 +2,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { HttpStatus } from '@nestjs/common';
 import { ClassType } from 'type-graphql';
-import { ApiResponse } from '@libs/response/reponose.object';
+import { ApiResponse } from '@libs/response';
 
 export function ApiResponseOf<T extends object>(classRef: ClassType<T>) {
   @ObjectType({ isAbstract: true })

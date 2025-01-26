@@ -1,10 +1,10 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import {
-  WinstonModule,
   utilities as nestWinstonModuleUtilities,
+  WinstonModule,
 } from 'nest-winston';
 import * as winston from 'winston';
-import { LoggerService } from '@libs/logger/logger.service';
+import { LoggerService } from '@libs/logger';
 
 @Global()
 @Module({

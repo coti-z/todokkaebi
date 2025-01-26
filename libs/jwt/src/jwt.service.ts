@@ -6,7 +6,7 @@ import {
   JwtPayload,
   TokenPair,
 } from '@libs/jwt/jwt-token.interface';
-import { TokenEnum, TokenTimeEnum } from '@libs/jwt/token.enum';
+import { TokenEnum, TokenTimeEnum } from '@libs/jwt';
 import { ErrorCode, errorFactory } from '@libs/exception';
 
 @Injectable()

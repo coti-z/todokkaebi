@@ -1,0 +1,257 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TaskType {
+  id: String!
+  title: String!
+  categoryId: String!
+  check: Boolean!
+  status: Status!
+  startDate: DateTime!
+  endDate: DateTime!
+  actualStartDate: DateTime!
+  actualEndDate: DateTime!
+  createdAt: DateTime!
+  updateAt: DateTime!
+}
+
+"""The status of the task"""
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CategoryType {
+  id: String!
+  name: String!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tasks: [TaskType!]!
+}
+
+type ProjectMembershipType {
+  id: String!
+  userId: String!
+  projectId: String!
+  role: MembershipRole!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""The member of the role"""
+enum MembershipRole {
+  OWNER
+  MEMBER
+}
+
+type ProjectInvitationType {
+  id: String!
+  projectId: String!
+  inviterUserId: String!
+  inviteeUserId: String!
+  status: InvitationStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Invitation status"""
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+type ProjectType {
+  id: String!
+  adminId: String!
+  name: String!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  memberships: [ProjectMembershipType!]!
+  categories: [CategoryType!]!
+  projectInvitations: [ProjectInvitationType!]!
+}
+
+type CreateProjectOutput {
+  id: String!
+  adminId: String!
+  name: String!
+}
+
+type DeleteProjectOutput {
+  id: String!
+}
+
+type UpdateProjectOutput {
+  id: String!
+  adminId: String!
+  name: String!
+}
+
+type QueryProjectOutput {
+  id: String!
+  adminId: String!
+  name: String!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  memberships: [ProjectMembershipType!]!
+  categories: [CategoryType!]!
+  projectInvitations: [ProjectInvitationType!]!
+}
+
+type QueryProjectsOutput {
+  projects: [ProjectType!]!
+}
+
+type CreateProjectResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: CreateProjectOutput
+}
+
+type DeleteProjectResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: DeleteProjectOutput
+}
+
+type UpdateProjectResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: UpdateProjectOutput
+}
+
+type QueryProjectResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: QueryProjectOutput
+}
+
+type QueryProjectsResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: QueryProjectsOutput
+}
+
+type CreateCategoryOutput {
+  id: String!
+  name: String!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type DeleteCategoryOutput {
+  id: String!
+}
+
+type UpdateCategoryOutput {
+  id: String!
+  name: String!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tasks: [TaskType!]!
+}
+
+type QueryCategoryByIdOutput {
+  id: String!
+  name: String!
+  projectId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tasks: [TaskType!]!
+}
+
+type CreateCategoryResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: CreateCategoryOutput
+}
+
+type DeleteCategoryResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: DeleteCategoryOutput
+}
+
+type UpdateCategoryResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: UpdateCategoryOutput
+}
+
+type QueryCategoryByIdResponse {
+  status: Int!
+  success: Boolean!
+  message: String
+  data: QueryCategoryByIdOutput
+}
+
+type Query {
+  healthCheck: String!
+  queryProject(input: QueryProjectInput!): QueryProjectResponse!
+  queryProjects: QueryProjectsResponse!
+  queryCategoryById(input: QueryCategoryByIdInput!): QueryCategoryByIdResponse!
+}
+
+input QueryProjectInput {
+  projectId: String!
+}
+
+input QueryCategoryByIdInput {
+  id: String!
+}
+
+type Mutation {
+  createProject(input: CreateProjectInput!): CreateProjectResponse!
+  deleteProject(input: DeleteProjectInput!): DeleteProjectResponse!
+  updateProject(input: UpdateProjectInput!): UpdateProjectResponse!
+  createCategory(input: CreateCategoryInput!): CreateCategoryResponse!
+  deleteCategory(input: DeleteCategoryInput!): DeleteCategoryResponse!
+  updateCategory(input: UpdateCategoryInput!): UpdateCategoryResponse!
+}
+
+input CreateProjectInput {
+  name: String!
+}
+
+input DeleteProjectInput {
+  projectId: String!
+}
+
+input UpdateProjectInput {
+  projectId: String!
+  name: String!
+}
+
+input CreateCategoryInput {
+  name: String!
+  projectId: String!
+}
+
+input DeleteCategoryInput {
+  id: String!
+}
+
+input UpdateCategoryInput {
+  id: String!
+  name: String!
+  projectId: String!
+}

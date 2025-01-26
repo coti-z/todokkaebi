@@ -1,4 +1,7 @@
 {
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 80,
@@ -8,7 +11,7 @@
   "arrowParens": "avoid",
   "endOfLine": "lf",
   "quoteProps": "as-needed",
-  "proseWrap": "preserve",
+  "proseWrap": "always",
   "htmlWhitespaceSensitivity": "css",
   "embeddedLanguageFormatting": "auto",
 

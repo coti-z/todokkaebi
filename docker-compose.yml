@@ -16,7 +16,7 @@ services:
       - ./apps/user:/usr/src/app/apps/user
       - ./libs:/usr/src/app/libs
     environment:
-      DATABASE_USER_URL: "mysql://root:1234@mysql-user:3306/userdb"
+      DATABASE_USER_URL: ${DATABASE_USER_URL}
 
 
   mysql-user:
@@ -56,9 +56,7 @@ services:
       - ./apps/auth:/usr/src/app/apps/auth
       - ./libs:/usr/src/app/libs
     environment:
-      DATABASE_AUTH_URL: "mysql://root:1234@mysql-auth:3306/authdb"
-
-
+      DATABASE_AUTH_URL: ${DATABASE_AUTH_URL}
 
   mysql-auth:
     image: mysql:latest
@@ -94,7 +92,7 @@ services:
       - ./apps/project:/usr/src/app/apps/project
       - ./libs:/usr/src/app/libs
     environment:
-      DATABASE_PROJECT_URL: "mysql://root:1234@mysql-project:3306/projectdb"
+      DATABASE_PROJECT_URL: ${DATABASE_PROJECT_URL}
 
 
   mysql-project:
