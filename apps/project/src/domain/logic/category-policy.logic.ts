@@ -8,6 +8,7 @@ export class CategoryPolicyLogic {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
   }
+
   static updateCategory(
     project: Project,
     category: Category,

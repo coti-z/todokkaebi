@@ -6,12 +6,14 @@ import { CreateProjectHandler } from '@project/application/command/unit-project/
 import { DeleteProjectHandler } from '@project/application/command/unit-project/handler/delete-project.handler';
 import { UpdateProjectHandler } from '@project/application/command/unit-project/handler/update-project.handler';
 import { ProjectByIdQueryHandler } from '@project/application/query/handler/project-by-id-query.handler';
-import { projectsByUserIdQueryHandler } from '@project/application/query/handler/projects-by-userid-query.handler';
 import { CategoryService } from '@project/application/service/category.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
 import { UpdateCategoryHandler } from './command/category/handler/update-category.handler';
+import { CreateTaskHandler } from './command/task/handler/create-task.handler';
 import { CategoryByIdHandler } from './query/handler/category-by-id.handler';
+import { ProjectsByUserIdQueryHandler } from './query/handler/projects-by-userid-query.handler';
+import { TaskService } from './service/task.service';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -20,14 +22,16 @@ import { CategoryByIdHandler } from './query/handler/category-by-id.handler';
     DeleteProjectHandler,
     UpdateProjectHandler,
     ProjectByIdQueryHandler,
-    projectsByUserIdQueryHandler,
+    ProjectsByUserIdQueryHandler,
     DeleteCategoryHandler,
     CreateCategoryHandler,
     UpdateCategoryHandler,
     CategoryByIdHandler,
+    CreateTaskHandler,
     ProjectService,
     CategoryService,
+    TaskService,
   ],
-  exports: [ProjectService],
+  exports: [],
 })
 export class ProjectApplicationModule {}

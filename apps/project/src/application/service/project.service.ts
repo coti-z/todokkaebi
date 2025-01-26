@@ -81,7 +81,7 @@ export class ProjectService {
     return project;
   }
 
-  async isProjectOwnerByTaskId(
+  async isProjectOwnerByCategoryId(
     params: ValidateOwnerByCategoryIdParams,
   ): Promise<void> {
     const project = await this.projectRepo.findProjectByCategoryId(params.id);

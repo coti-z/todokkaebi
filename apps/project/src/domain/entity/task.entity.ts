@@ -21,7 +21,13 @@ type TaskProps = TaskMutableProps & TaskImmutableProps;
 
 type CreateTaskProps = Omit<
   TaskProps,
-  'id' | 'createdAt' | 'updatedAt' | 'actualStartDate' | 'actualEndDate'
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'actualStartDate'
+  | 'actualEndDate'
+  | 'status'
+  | 'check'
 >;
 
 export class Task {
@@ -75,16 +81,18 @@ export class Task {
   static create(props: CreateTaskProps) {
     const id = uuidv4();
     const now = new Date();
+    const basicStatus = TaskState.PENDING;
+    const basicCheck = false;
 
     return new Task({
       id: id,
       title: props.title,
-      status: props.status,
+      status: basicStatus,
       actualStartDate: props.startDate,
       createdAt: now,
       endDate: props.endDate,
       updatedAt: now,
-      check: false,
+      check: basicCheck,
       categoryId: props.categoryId,
       startDate: now,
     });
