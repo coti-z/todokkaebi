@@ -51,6 +51,7 @@
     "lib": "^5.1.0",
     "luxon": "^3.5.0",
     "nest-winston": "^1.9.7",
+    "prettier-plugin-sort-imports": "^1.8.6",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "type-graphql": "^2.0.0-rc.2",

@@ -1,4 +1,4 @@
-import { Field, InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType, InputType, PickType } from '@nestjs/graphql';
 
 @InputType()
 export class CategoryInput {
@@ -27,3 +27,6 @@ export class UpdateCategoryInput extends PickType(CategoryInput, [
   'id',
   'name',
 ]) {}
+
+@InputType()
+export class QueryCategoryByIdInput extends PickType(CategoryInput, ['id']) {}

@@ -4,34 +4,21 @@ import { TaskPresentationMapper } from '@project/presentation/mapper/task.presen
 import {
   CreateCategoryInput,
   DeleteCategoryInput,
+  QueryCategoryByIdInput,
   UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import { CreateCategoryCommand } from '@project/application/command/category/create-category.command';
 import {
   CreateCategoryOutput,
   DeleteCategoryOutput,
+  QueryCategoryByIdOutput,
   UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 import { DeleteCategoryCommand } from '@project/application/command/category/delete-category.command';
 import { UpdateCategoryCommand } from '@project/application/command/category/update-category.command';
+import { CategoryByIdQuery } from '@project/application/query/category-by-id.query';
 
 export class CategoryPresentationMapper {
-  static entityToObjectType(entity: Category): CategoryType {
-    const tasksType = TaskPresentationMapper.entitiesToObjectType(entity.tasks);
-    return {
-      createdAt: entity.createdAt,
-      name: entity.name,
-      tasks: tasksType,
-      projectId: entity.projectId,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
-    };
-  }
-
-  static entitiesToObjectType(entities: Category[]): CategoryType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
-  }
-
   static createCategoryInputToCreateCategoryCommand(
     input: CreateCategoryInput,
   ): CreateCategoryCommand {
@@ -56,6 +43,29 @@ export class CategoryPresentationMapper {
     );
   }
 
+  static queryCategoryByIdInputToQueryCategoryCommand(
+    input: QueryCategoryByIdInput,
+    userId: string,
+  ): CategoryByIdQuery {
+    return new CategoryByIdQuery(userId, input.id);
+  }
+
+  // entity to ObjectType
+  static entityToObjectType(entity: Category): CategoryType {
+    const tasksType = TaskPresentationMapper.entitiesToObjectType(entity.tasks);
+    return {
+      createdAt: entity.createdAt,
+      name: entity.name,
+      tasks: tasksType,
+      projectId: entity.projectId,
+      updatedAt: entity.updatedAt,
+      id: entity.id,
+    };
+  }
+
+  static entitiesToObjectType(entities: Category[]): CategoryType[] {
+    return entities.map(entity => this.entityToObjectType(entity));
+  }
   static entityToCreateCategoryOutput(entity: Category): CreateCategoryOutput {
     return {
       name: entity.name,
@@ -79,6 +89,19 @@ export class CategoryPresentationMapper {
       name: entity.name,
       projectId: entity.projectId,
       createdAt: entity.createdAt,
+    };
+  }
+
+  static entityToQueryCategoryByIdOutput(
+    entity: Category,
+  ): QueryCategoryByIdOutput {
+    return {
+      createdAt: entity.createdAt,
+      id: entity.id,
+      name: entity.name,
+      projectId: entity.id,
+      tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
+      updatedAt: entity.updatedAt,
     };
   }
 }

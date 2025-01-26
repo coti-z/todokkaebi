@@ -1,17 +1,20 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommandBus } from '@nestjs/cqrs';
 import {
   CreateCategoryInput,
   DeleteCategoryInput,
+  QueryCategoryByIdInput,
   UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import {
   CreateCategoryResponse,
   DeleteCategoryResponse,
+  QueryCategoryByIdResponse,
   UpdateCategoryResponse,
 } from '@project/presentation/resolver/response/category.response';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import { ResponseManager } from '@libs/response';
+import { Category } from '@prisma/client';
 
 @Resolver('category')
 export class CategoryResolver {
@@ -58,6 +61,21 @@ export class CategoryResolver {
     const result = await this.commandBus.execute(command);
     const output =
       CategoryPresentationMapper.entityToUpdateCategoryOutput(result);
+    return ResponseManager.success(output);
+  }
+
+  @Query(() => QueryCategoryByIdResponse)
+  async queryCategoryById(
+    @Args('input') input: QueryCategoryByIdInput,
+  ): Promise<QueryCategoryByIdResponse> {
+    const command =
+      CategoryPresentationMapper.queryCategoryByIdInputToQueryCategoryCommand(
+        input,
+        'test',
+      );
+    const result = await this.commandBus.execute(command);
+    const output =
+      CategoryPresentationMapper.entityToQueryCategoryByIdOutput(result);
     return ResponseManager.success(output);
   }
 }

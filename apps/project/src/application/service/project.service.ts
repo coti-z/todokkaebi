@@ -1,10 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {
-  IProjectRepository,
-  ProjectRepositorySymbol,
-} from '@project/application/port/out/project-repository.port';
-import { Project } from '@project/domain/entity/project.entity';
 import { ErrorCode, errorFactory } from '@libs/exception';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateProjectParams,
   DeleteProjectParams,
@@ -12,7 +7,14 @@ import {
   QueryProjectParams,
   QueryProjectsByUserIdParams,
   UpdateProjectParams,
+  ValidateOwnerByCategoryIdParams,
+  ValidateOwnerByTaskIdParams,
 } from '@project/application/param/project.params';
+import {
+  IProjectRepository,
+  ProjectRepositorySymbol,
+} from '@project/application/port/out/project-repository.port';
+import { Project } from '@project/domain/entity/project.entity';
 import { ProjectPolicyLogic } from '@project/domain/logic/project-policy.logic';
 
 @Injectable()
@@ -78,5 +80,17 @@ export class ProjectService {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
     return project;
+  }
+
+  async isProjectOwnerByTaskId(
+    params: ValidateOwnerByCategoryIdParams,
+  ): Promise<void> {
+    const project = await this.projectRepo.findProjectByCategoryId(params.id);
+    if (!project) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    if (project.adminId !== params.reqUserId) {
+      throw errorFactory(ErrorCode.UNAUTHORIZED);
+    }
   }
 }

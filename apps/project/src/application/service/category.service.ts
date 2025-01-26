@@ -3,10 +3,12 @@ import {
   ICategoryRepository,
 } from '@project/application/port/out/category-repository.port';
 import {
-  CreateCategoryParams,
   DeleteCategoryParams,
+  QueryCategoryParams,
   UpdateCategoryParams,
+  CreateCategoryParams,
 } from '@project/application/param/category.params';
+
 import { Category } from '@project/domain/entity/category.entity';
 import { Inject } from '@nestjs/common';
 import { CategoryPolicyLogic } from '@project/domain/logic/category-policy.logic';
@@ -53,4 +55,6 @@ export class CategoryService {
     await this.categoryRepo.updateCategory(category);
     return category;
   }
+
+  async queryCategoryById(params: QueryCategoryParams): Promise<Category> {}
 }

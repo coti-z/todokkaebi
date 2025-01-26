@@ -1,5 +1,5 @@
-import { Project } from '@project/domain/entity/project.entity';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
+import { Project } from '@project/domain/entity/project.entity';
 
 export type CreateProjectParams = Pick<Project, 'adminId' | 'name'>;
 
@@ -14,4 +14,8 @@ export type QueryProjectParams = Pick<Project, 'id'> & { userId: string };
 
 export type QueryProjectByTaskIdParams = {
   categoryId: string;
+};
+
+export type ValidateOwnerByCategoryIdParams = Pick<Project, 'id'> & {
+  reqUserId: string;
 };

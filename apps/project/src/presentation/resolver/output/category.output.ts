@@ -9,3 +9,6 @@ export class DeleteCategoryOutput extends PickType(CategoryType, ['id']) {}
 
 @ObjectType()
 export class UpdateCategoryOutput extends CategoryType {}
+
+@ObjectType()
+export class QueryCategoryByIdOutput extends CategoryType {}
