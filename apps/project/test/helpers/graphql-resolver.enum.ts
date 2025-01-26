@@ -10,6 +10,12 @@ export enum ProjectMutations {
   DELETE_PROJECT = 'DELETE_PROJECT',
 }
 
+export enum CategoryMutations {
+  CREATE_CATEGORY = 'CREATE_CATEGORY',
+  UPDATE_CATEGORY = 'UPDATE_CATEGORY',
+  DELETE_CATEGORY = 'DELETE_CATEGORY',
+}
+
 export const GraphQLOperations = {
   [ProjectQueries.HEALTH_CHECK]: `
     query {
@@ -90,6 +96,52 @@ export const GraphQLOperations = {
       }
     }
   `,
+
+  [CategoryMutations.CREATE_CATEGORY]: `
+    mutation CreateCategory($input: CreateCategoryInput!) {
+      createCategory(input: $input) {
+        success
+        data {
+          id
+          name
+          projectId
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  `,
+
+  [CategoryMutations.UPDATE_CATEGORY]: `
+    mutation UpdateCategory($input: UpdateCategoryInput!) {
+      updateCategory(input: $input) {
+        success
+        data {
+          id
+          name
+          projectId
+          createdAt
+          updatedAt
+          tasks {
+            id
+            title
+            status
+          }
+        }
+      }
+    }
+  `,
+
+  [CategoryMutations.DELETE_CATEGORY]: `
+    mutation DeleteCategory($input: DeleteCategoryInput!) {
+      deleteCategory(input: $input) {
+        success
+        data {
+          id
+        }
+      }
+    }
+  `,
 };
 
 interface ProjectInputBase {
@@ -115,3 +167,24 @@ export interface QueryProjectVariables {
 }
 
 export interface QueryProjectVariables {}
+
+export interface CreateCategoryVariables {
+  input: {
+    name: string;
+    projectId: string;
+  };
+}
+
+export interface UpdateCategoryVariables {
+  input: {
+    id: string;
+    name: string;
+    projectId: string;
+  };
+}
+
+export interface DeleteCategoryVariables {
+  input: {
+    id: string;
+  };
+}

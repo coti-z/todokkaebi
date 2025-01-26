@@ -3,6 +3,7 @@ import {
   GraphQLOperations,
   ProjectMutations,
   ProjectQueries,
+  CategoryMutations,
 } from './graphql-resolver.enum';
 import * as request from 'supertest';
 
@@ -25,14 +26,14 @@ export class GraphQLTestHelper {
     return response.body.data;
   }
 
-  async mutation<TResult = any, TVariables = Record<string, any>>(
-    operation: ProjectMutations,
-    variables: TVariables,
-  ): Promise<TResult> {
+  async mutation<T = any, V = Record<string, any>>(
+    mutation: ProjectMutations | CategoryMutations,
+    variables?: V,
+  ): Promise<T> {
     const response = await request(this.app.getHttpServer())
       .post('/graphql')
       .send({
-        query: GraphQLOperations[operation],
+        query: GraphQLOperations[mutation],
         variables,
       });
     if (response.body.errors) {
