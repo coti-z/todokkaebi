@@ -14,16 +14,20 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   ) {}
 
   async execute(command: CreateTaskCommand): Promise<Task> {
-    const project = await this.projectService.queryProjectByCategoryId({
-      categoryId: command.categoryId,
-    });
-    return await this.taskService.storeTask({
-      categoryId: command.categoryId,
-      endDate: command.endDate,
-      project: project,
-      startDate: command.startDate,
-      title: command.title,
-      reqUserId: command.userId,
-    });
+    try {
+      const project = await this.projectService.queryProjectByCategoryId({
+        categoryId: command.categoryId,
+      });
+      return await this.taskService.storeTask({
+        categoryId: command.categoryId,
+        endDate: command.endDate,
+        project: project,
+        startDate: command.startDate,
+        title: command.title,
+        reqUserId: command.userId,
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }

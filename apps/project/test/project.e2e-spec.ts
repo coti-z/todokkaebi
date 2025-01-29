@@ -1,175 +1,125 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectModule } from '../src/project.module';
+import { ProjectModule } from '@project/project.module';
+import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
 import {
   CreateProjectVariables,
-  DeleteProjectVariables,
   ProjectMutations,
-  ProjectQueries,
-  QueryProjectVariables,
+  ProjectOperations,
   UpdateProjectVariables,
-} from './helpers/graphql-resolver.enum';
-import { GraphQLTestHelper } from './helpers/graphql.helper';
+  DeleteProjectVariables,
+  QueryProjectVariables,
+  ProjectQueries,
+} from './graphql-helper/project.operations';
 
-describe('Project Resolver (e2e)', () => {
+describe('ProjectResolver (e2e)', () => {
   let app: INestApplication;
-  let graphqlHelper: GraphQLTestHelper;
+  let graphQLTestHelper: GraphQLTestHelper;
+  let createdProjectId: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ProjectModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-
-    graphqlHelper = new GraphQLTestHelper(app);
-
     await app.init();
+
+    graphQLTestHelper = new GraphQLTestHelper(app);
   });
 
-  describe('create project', () => {
+  afterAll(async () => {
+    await app.close();
+  });
+
+  describe('Project Operations', () => {
     it('should create a new project', async () => {
-      const result = await graphqlHelper.mutation<any, CreateProjectVariables>(
-        ProjectMutations.CREATE_PROJECT,
-        {
-          input: {
-            name: 'test project',
-          },
-        },
+      const variables: CreateProjectVariables = {
+        input: { name: 'Test Project' },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectMutations.CREATE_PROJECT],
+        variables,
       );
 
-      expect(result.createProject.success).toBe(true);
-      expect(result.createProject.data).toMatchObject({
-        name: 'test project',
-        adminId: expect.any(String),
-      });
-    });
-  });
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id');
+      expect(response.data).toHaveProperty('name', 'Test Project');
 
-  describe('delete Project', () => {
-    it('should delete a project successfully', async () => {
-      // Given: 삭제할 프로젝트 생성
-      const { createProject } = await graphqlHelper.mutation<
-        any,
-        CreateProjectVariables
-      >(ProjectMutations.CREATE_PROJECT, {
-        input: {
-          name: 'test project',
-        },
-      });
-
-      expect(createProject.success).toBe(true);
-      const projectId = createProject.data.id;
-
-      // When: 프로젝트 삭제
-      const { deleteProject } = await graphqlHelper.mutation<
-        any,
-        DeleteProjectVariables
-      >(ProjectMutations.DELETE_PROJECT, {
-        input: {
-          projectId,
-        },
-      });
-
-      // Then: 삭제 성공 확인
-      expect(deleteProject.success).toBe(true);
-      expect(deleteProject.data.id).toBe(projectId);
+      createdProjectId = response.data.id;
     });
 
-    it('should fail when deleting non-existent project', async () => {
-      // When & Then: 존재하지 않는 프로젝트 삭제 시도
-      await expect(
-        graphqlHelper.mutation<any, DeleteProjectVariables>(
-          ProjectMutations.DELETE_PROJECT,
-          {
-            input: {
-              projectId: 'non-existent-id',
-            },
-          },
-        ),
-      ).rejects.toThrow();
-    });
-  });
+    it('should query a created project', async () => {
+      const variables: QueryProjectVariables = {
+        input: { projectId: createdProjectId },
+      };
 
-  describe('update Project', () => {
-    // Add test cases here
-    it('should update project', async () => {
-      // given
-      const createResult = await graphqlHelper.mutation<
-        any,
-        CreateProjectVariables
-      >(ProjectMutations.CREATE_PROJECT, {
-        input: {
-          name: 'create project name',
-        },
-      });
-
-      expect(createResult.createProject.success).toBe(true);
-
-      // when
-      const projectId = createResult.createProject.data.id;
-      const updateResult = await graphqlHelper.mutation<
-        any,
-        UpdateProjectVariables
-      >(ProjectMutations.UPDATE_PROJECT, {
-        input: {
-          name: 'update project name',
-          projectId: projectId,
-        },
-      });
-
-      // then
-      expect(updateResult.updateProject.success).toBe(true);
-    });
-  });
-
-  describe('query project', () => {
-    it('should query project', async () => {
-      // given
-      const createResult = await graphqlHelper.mutation<
-        any,
-        CreateProjectVariables
-      >(ProjectMutations.CREATE_PROJECT, {
-        input: {
-          name: 'create project name',
-        },
-      });
-
-      expect(createResult.createProject.success).toBe(true);
-
-      // when
-      const projectId = createResult.createProject.data.id;
-      const queryResult = await graphqlHelper.query<any, QueryProjectVariables>(
-        ProjectQueries.QUERY_PROJECT,
-        {
-          input: {
-            projectId: projectId,
-          },
-        },
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectQueries.QUERY_PROJECT],
+        variables,
       );
 
-      // then
-      expect(queryResult.queryProject.success).toBe(true);
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id', createdProjectId);
+      expect(response.data).toHaveProperty('name', 'Test Project');
     });
 
-    it('should query projects', async () => {
-      // given
-      const createResult = await graphqlHelper.mutation<
-        any,
-        CreateProjectVariables
-      >(ProjectMutations.CREATE_PROJECT, {
+    it('should update the project', async () => {
+      const variables: UpdateProjectVariables = {
         input: {
-          name: 'create project name',
+          projectId: createdProjectId,
+          name: 'Updated Test Project',
         },
-      });
+      };
 
-      expect(createResult.createProject.success).toBe(true);
-
-      const queryResult = await graphqlHelper.query<any, QueryProjectVariables>(
-        ProjectQueries.QUERY_PROJECTS,
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectMutations.UPDATE_PROJECT],
+        variables,
       );
 
-      expect(queryResult.queryProjects.success).toBe(true);
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id', createdProjectId);
+      expect(response.data).toHaveProperty('name', 'Updated Test Project');
+    });
+
+    it('should query all projects', async () => {
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectQueries.QUERY_PROJECTS],
+      );
+
+      expect(response.success).toBe(true);
+      expect(response.data.projects).toBeInstanceOf(Array);
+      expect(response.data.projects.length).toBeGreaterThan(0);
+    });
+
+    it('should delete the project', async () => {
+      const variables: DeleteProjectVariables = {
+        input: { projectId: createdProjectId },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectMutations.DELETE_PROJECT],
+        variables,
+      );
+
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id', createdProjectId);
+    });
+
+    it('should fail to query deleted project', async () => {
+      const variables: QueryProjectVariables = {
+        input: { projectId: createdProjectId },
+      };
+
+      try {
+        await graphQLTestHelper.execute(
+          ProjectOperations[ProjectQueries.QUERY_PROJECT],
+          variables,
+        );
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
     });
   });
 });

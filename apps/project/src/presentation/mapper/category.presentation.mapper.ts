@@ -67,13 +67,7 @@ export class CategoryPresentationMapper {
     return entities.map(entity => this.entityToObjectType(entity));
   }
   static entityToCreateCategoryOutput(entity: Category): CreateCategoryOutput {
-    return {
-      name: entity.name,
-      projectId: entity.projectId,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
-      createdAt: entity.createdAt,
-    };
+    return this.entityToObjectType(entity);
   }
   static entityToDeleteCategoryOutput(entity: Category): DeleteCategoryOutput {
     return {
@@ -99,7 +93,7 @@ export class CategoryPresentationMapper {
       createdAt: entity.createdAt,
       id: entity.id,
       name: entity.name,
-      projectId: entity.id,
+      projectId: entity.projectId,
       tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
       updatedAt: entity.updatedAt,
     };

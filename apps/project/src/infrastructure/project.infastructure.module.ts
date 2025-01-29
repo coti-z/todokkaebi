@@ -24,6 +24,10 @@ import { TaskRepositorySymbol } from '@project/application/port/out/task-reposit
     },
   ],
 
-  exports: [ProjectRepositorySymbol, CategoryRepositorySymbol],
+  exports: [
+    ProjectRepositorySymbol,
+    CategoryRepositorySymbol,
+    TaskRepositorySymbol,
+  ],
 })
 export class ProjectInfrastructureModule {}

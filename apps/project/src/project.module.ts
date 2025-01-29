@@ -1,14 +1,13 @@
-import { Module } from '@nestjs/common';
-import { ProjectPresentationModule } from './presentation/project.presentation.module';
-import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ProjectPresentationModule } from './presentation/project.presentation.module';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'apps/project/schema.graphql'),
+      autoSchemaFile: true,
       playground: true,
     }),
     ProjectPresentationModule,

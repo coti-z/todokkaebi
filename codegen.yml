@@ -1,13 +1,8 @@
-overwrite: true
-schema: "./apps/project/schema.graphql"
-documents: "apps/project/*.graphql"
+schema: 'http://localhost:3003/graphql'
 generates:
-  apps/project/test/generated/graphql.ts:
+  apps/project/generated.ts:
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-graphql-request"
-      # 아래 플러그인을 추가하면 SDK 스타일의 함수들이 자동 생성됩니다
-      - "typescript-generic-sdk"
-    config:
-      rawRequest: true
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-graphql-request'
+      # or apollo, etc. 원하는 클라이언트 방식에 따라

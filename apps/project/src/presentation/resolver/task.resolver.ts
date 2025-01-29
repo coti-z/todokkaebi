@@ -4,8 +4,9 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { TaskPresentationMapper } from '../mapper/task.presentation.mapper';
 import { CreateTaskInput } from './input/task.input';
 import { CreateTaskResponse } from './response/task.response';
+import { TaskType } from './type/task.type';
 
-@Resolver()
+@Resolver(() => TaskType)
 export class TaskResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
