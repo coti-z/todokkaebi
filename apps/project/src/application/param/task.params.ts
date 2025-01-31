@@ -25,3 +25,8 @@ export type UpdateTaskParams = Partial<Task> &
     project: Project;
     reqUserId: string;
   };
+
+export type DeleteTaskParams = Pick<Task, 'id'> & {
+  project: Project;
+  reqUserId: string;
+};

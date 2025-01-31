@@ -4,18 +4,21 @@ import { Task } from '@project/domain/entity/task.entity';
 import { TaskType } from '@project/presentation/resolver/type/task.type';
 import {
   CreateTaskInput,
+  DeleteTaskInput,
   QueryTaskByIdInput,
   QueryTasksByCategoryIdInput,
   UpdateTaskInput,
 } from '../resolver/input/task.input';
 import {
   CreateTaskOutput,
+  DeleteTaskOutput,
   QueryTaskByCategoryIdOutput,
   QueryTaskByIdOutput,
   UpdateTaskOutput,
 } from '../resolver/output/task.output';
 import { TasksByCategoryIdQuery } from '@project/application/query/task-by-categoryid.query';
 import { UpdateTaskCommand } from '@project/application/command/task/update-task.command';
+import { DeleteTaskCommand } from '@project/application/command/delete-task.command';
 
 export class TaskPresentationMapper {
   static entityToObjectType(entity: Task): TaskType {
@@ -66,6 +69,13 @@ export class TaskPresentationMapper {
       input.endDate,
     );
   }
+
+  static deleteInputToDeleteTaskCommand(
+    input: DeleteTaskInput,
+    reqUserId: string,
+  ): DeleteTaskCommand {
+    return new DeleteTaskCommand(input.id, reqUserId);
+  }
   static queryTaskByIdInputToTaskByIdQuery(
     input: QueryTaskByIdInput,
     reqUserId: string,
@@ -88,6 +98,10 @@ export class TaskPresentationMapper {
   }
 
   static entityToQueryTaskByIdOutput(entity: Task): QueryTaskByIdOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entityToDeleteTaskOutput(entity: Task): DeleteTaskOutput {
     return this.entityToObjectType(entity);
   }
 

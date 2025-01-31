@@ -23,6 +23,10 @@ export class TaskPolicyLogic {
     this.assertCheckAdmin(project, reqUserId);
   }
 
+  static canDeleteTask(project: Project, reqUserId: string): void {
+    this.assertCheckAdmin(project, reqUserId);
+  }
+
   static updateTask(req: updateReq): void {
     req.task.partialUpdate({
       title: req.title,

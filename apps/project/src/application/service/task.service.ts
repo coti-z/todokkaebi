@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Task } from '@project/domain/entity/task.entity';
 import { TaskPolicyLogic } from '@project/domain/logic/task-policy.logic';
 import {
+  DeleteTaskParams,
   QueryTaskByIdParams,
   QueryTasksByCategoryIdParams,
   StoreTaskParams,
@@ -53,6 +54,15 @@ export class TaskService {
       updatedAt: params.updatedAt,
     });
 
+    return task;
+  }
+  async deleteTask(params: DeleteTaskParams): Promise<Task> {
+    const task = await this.taskRepo.queryTaskByTaskId(params.id);
+    if (!task) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    TaskPolicyLogic.canDeleteTask(params.project, params.reqUserId);
+    await this.taskRepo.deleteTaskById(params.id);
     return task;
   }
 

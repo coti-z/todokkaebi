@@ -66,6 +66,13 @@ export class ProjectRepositoryImpl implements IProjectRepository {
           some: { id: categoryId },
         },
       },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
     });
     if (!record) {
       return null;
@@ -84,6 +91,13 @@ export class ProjectRepositoryImpl implements IProjectRepository {
                 id: taskId,
               },
             },
+          },
+        },
+      },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
           },
         },
       },

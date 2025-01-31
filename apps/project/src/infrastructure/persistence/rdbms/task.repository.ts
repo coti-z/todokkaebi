@@ -23,6 +23,13 @@ export class TaskRepositoryImpl implements ITaskRepository {
       data,
     });
   }
+  async deleteTaskById(taskId: string): Promise<void> {
+    await this.prisma.task.delete({
+      where: {
+        id: taskId,
+      },
+    });
+  }
 
   async queryTaskByCategoryId(categoryId: string): Promise<Task[]> {
     const records = await this.prisma.task.findMany({

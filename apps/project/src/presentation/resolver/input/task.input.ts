@@ -38,6 +38,9 @@ export class UpdateTaskInput extends PartialType(TaskBaseInput) {
 }
 
 @InputType()
+export class DeleteTaskInput extends PickType(TaskBaseInput, ['id']) {}
+
+@InputType()
 export class QueryTaskByIdInput extends PickType(TaskBaseInput, ['id']) {}
 
 @InputType()

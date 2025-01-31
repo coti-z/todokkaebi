@@ -4,12 +4,14 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TaskPresentationMapper } from '../mapper/task.presentation.mapper';
 import {
   CreateTaskInput,
+  DeleteTaskInput,
   QueryTaskByIdInput,
   QueryTasksByCategoryIdInput,
   UpdateTaskInput,
 } from './input/task.input';
 import {
   CreateTaskResponse,
+  DeleteTaskResponse,
   QueryTaskByCategoryIdResponse,
   QueryTaskByIdResponse,
   UpdateTaskResponse,
@@ -46,6 +48,19 @@ export class TaskResolver {
     );
     const result = await this.commandBus.execute(command);
     const output = TaskPresentationMapper.entityToUpdateTaskOutput(result);
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => DeleteTaskResponse)
+  async deleteTask(
+    @Args('input') input: DeleteTaskInput,
+  ): Promise<DeleteTaskResponse> {
+    const command = TaskPresentationMapper.deleteInputToDeleteTaskCommand(
+      input,
+      'test',
+    );
+    const result = await this.commandBus.execute(command);
+    const output = TaskPresentationMapper.entityToDeleteTaskOutput(result);
     return ResponseManager.success(output);
   }
 
