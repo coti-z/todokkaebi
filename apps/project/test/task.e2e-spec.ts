@@ -1,6 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '@project/project.module';
+import {
+  CategoryMutations,
+  CategoryOperations,
+  CreateCategoryVariables,
+} from './graphql-helper/category.operations';
 import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
 import {
   CreateProjectVariables,
@@ -8,19 +13,14 @@ import {
   ProjectOperations,
 } from './graphql-helper/project.operations';
 import {
-  CategoryMutations,
-  CategoryOperations,
-  CreateCategoryVariables,
-} from './graphql-helper/category.operations';
-import {
   CreateTaskVariables,
   QueryTasksVariables,
   QueryTaskVariables,
   TaskMutations,
   TaskOperations,
   TaskQueries,
+  UpdateTaskVariables,
 } from './graphql-helper/task.operations';
-import { QueryTasksByCategoryId } from '@project/application/param/task.params';
 describe('TaskResolver (e2e)', () => {
   let app: INestApplication;
   let graphQLTestHelper: GraphQLTestHelper;
@@ -120,6 +120,22 @@ describe('TaskResolver (e2e)', () => {
         variables,
       );
       expect(response.success).toBe(true);
+    });
+
+    it('should update task', async () => {
+      const variables: UpdateTaskVariables = {
+        input: {
+          id: createdTaskId,
+          check: true,
+        },
+      };
+      const response = await graphQLTestHelper.execute(
+        TaskOperations[TaskMutations.UPDATE_TASK],
+        variables,
+      );
+      console.log(response);
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('check', true);
     });
   });
 });

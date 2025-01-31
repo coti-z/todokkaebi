@@ -46,7 +46,6 @@ export class TaskResolver {
     );
     const result = await this.commandBus.execute(command);
     const output = TaskPresentationMapper.entityToUpdateTaskOutput(result);
-
     return ResponseManager.success(output);
   }
 

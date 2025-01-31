@@ -16,6 +16,7 @@ import { ProjectsByUserIdQueryHandler } from './query/handler/projects-by-userid
 import { TaskService } from './service/task.service';
 import { TaskByIdQueryHadnler } from './query/handler/task-by-id-query.handler';
 import { TasksByCategoryIdQueryHandler } from './query/handler/task-by-categoryid-query.handler';
+import { UpdateTaskCommandHandler } from './command/task/handler/update-task-command.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -30,6 +31,7 @@ import { TasksByCategoryIdQueryHandler } from './query/handler/task-by-categoryi
     UpdateCategoryHandler,
     CategoryByIdHandler,
     CreateTaskHandler,
+    UpdateTaskCommandHandler,
     TaskByIdQueryHadnler,
     TasksByCategoryIdQueryHandler,
     ProjectService,
