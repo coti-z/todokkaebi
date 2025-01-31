@@ -11,9 +11,12 @@ export type UpdateProjectParams = Pick<Project, 'adminId' | 'name' | 'id'>;
 export type QueryProjectsByUserIdParams = Pick<ProjectMembership, 'userId'>;
 
 export type QueryProjectParams = Pick<Project, 'id'> & { userId: string };
+export type QueryProjectByCategoryIdParams = {
+  categoryId: string;
+};
 
 export type QueryProjectByTaskIdParams = {
-  categoryId: string;
+  taskId: string;
 };
 
 export type ValidateOwnerByCategoryIdParams = Pick<Project, 'id'> & {

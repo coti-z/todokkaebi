@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateProjectParams,
   DeleteProjectParams,
+  QueryProjectByCategoryIdParams,
   QueryProjectByTaskIdParams,
   QueryProjectParams,
   QueryProjectsByUserIdParams,
@@ -70,7 +71,7 @@ export class ProjectService {
   }
 
   async queryProjectByCategoryId(
-    params: QueryProjectByTaskIdParams,
+    params: QueryProjectByCategoryIdParams,
   ): Promise<Project> {
     const project = await this.projectRepo.findProjectByCategoryId(
       params.categoryId,
@@ -78,6 +79,17 @@ export class ProjectService {
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
+    return project;
+  }
+
+  async queryProjectByTaskId(
+    params: QueryProjectByTaskIdParams,
+  ): Promise<Project> {
+    const project = await this.projectRepo.findProjectByTaskId(params.taskId);
+    if (!project) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+
     return project;
   }
 

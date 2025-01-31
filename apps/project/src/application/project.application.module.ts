@@ -11,9 +11,11 @@ import { ProjectService } from '@project/application/service/project.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
 import { UpdateCategoryHandler } from './command/category/handler/update-category.handler';
 import { CreateTaskHandler } from './command/task/handler/create-task.handler';
-import { CategoryByIdHandler } from './query/handler/category-by-id.handler';
+import { CategoryByIdHandler } from './query/handler/category-by-id-query.handler';
 import { ProjectsByUserIdQueryHandler } from './query/handler/projects-by-userid-query.handler';
 import { TaskService } from './service/task.service';
+import { TaskByIdQueryHadnler } from './query/handler/task-by-id-query.handler';
+import { TasksByCategoryIdQueryHandler } from './query/handler/task-by-categoryid-query.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -28,6 +30,8 @@ import { TaskService } from './service/task.service';
     UpdateCategoryHandler,
     CategoryByIdHandler,
     CreateTaskHandler,
+    TaskByIdQueryHadnler,
+    TasksByCategoryIdQueryHandler,
     ProjectService,
     CategoryService,
     TaskService,

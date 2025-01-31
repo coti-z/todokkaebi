@@ -1,8 +1,21 @@
+import { CreateTaskCommand } from '@project/application/command/task/create-task.command';
+import { TaskByIdQuery } from '@project/application/query/task-by-id.query';
 import { Task } from '@project/domain/entity/task.entity';
 import { TaskType } from '@project/presentation/resolver/type/task.type';
-import { CreateTaskInput } from '../resolver/input/task.input';
-import { CreateTaskCommand } from '@project/application/command/task/create-task.command';
-import { CreateTaskOutput } from '../resolver/output/task.output';
+import {
+  CreateTaskInput,
+  QueryTaskByIdInput,
+  QueryTasksByCategoryIdInput,
+  UpdateTaskInput,
+} from '../resolver/input/task.input';
+import {
+  CreateTaskOutput,
+  QueryTaskByCategoryIdOutput,
+  QueryTaskByIdOutput,
+  UpdateTaskOutput,
+} from '../resolver/output/task.output';
+import { TasksByCategoryIdQuery } from '@project/application/query/task-by-categoryid.query';
+import { UpdateTaskCommand } from '@project/application/command/task/update-task.command';
 
 export class TaskPresentationMapper {
   static entityToObjectType(entity: Task): TaskType {
@@ -38,7 +51,51 @@ export class TaskPresentationMapper {
     );
   }
 
+  static updateInputToUpdateTaskCommand(
+    input: UpdateTaskInput,
+    reqUserId: string,
+  ): UpdateTaskInput {
+    return new UpdateTaskCommand(
+      input.id,
+      reqUserId,
+      input.title,
+      input.categoryId,
+      input.status,
+      input.check,
+      input.startDate,
+      input.endDate,
+    );
+  }
+  static queryTaskByIdInputToTaskByIdQuery(
+    input: QueryTaskByIdInput,
+    reqUserId: string,
+  ): TaskByIdQuery {
+    return new TaskByIdQuery(reqUserId, input.id);
+  }
+
+  static queryTasksByCategoryIdToTaskByCategoryIdQuery(
+    input: QueryTasksByCategoryIdInput,
+    reqUserId: string,
+  ): TasksByCategoryIdQuery {
+    return new TasksByCategoryIdQuery(input.categoryId, reqUserId);
+  }
+
   static entityToCreateTaskOutput(entity: Task): CreateTaskOutput {
     return this.entityToObjectType(entity);
+  }
+  static entityToUpdateTaskOutput(entity: Task): UpdateTaskOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entityToQueryTaskByIdOutput(entity: Task): QueryTaskByIdOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entitiesToQueryTasksByCategoryIdOutput(
+    entities: Task[],
+  ): QueryTaskByCategoryIdOutput {
+    return {
+      tasks: this.entitiesToObjectType(entities),
+    };
   }
 }

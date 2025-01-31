@@ -17,6 +17,6 @@ export type UpdateCategoryParams = Partial<Pick<CategoryProps, 'name'>> &
     reqUserId: string;
   };
 
-export type QueryCategoryParams = Pick<Category, 'id'> & {
+export type QueryCategoryByIdParams = Pick<Category, 'id'> & {
   reqUserId: string;
 };

@@ -1,14 +1,27 @@
 import { ResponseManager } from '@libs/response';
-import { CommandBus } from '@nestjs/cqrs';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TaskPresentationMapper } from '../mapper/task.presentation.mapper';
-import { CreateTaskInput } from './input/task.input';
-import { CreateTaskResponse } from './response/task.response';
+import {
+  CreateTaskInput,
+  QueryTaskByIdInput,
+  QueryTasksByCategoryIdInput,
+  UpdateTaskInput,
+} from './input/task.input';
+import {
+  CreateTaskResponse,
+  QueryTaskByCategoryIdResponse,
+  QueryTaskByIdResponse,
+  UpdateTaskResponse,
+} from './response/task.response';
 import { TaskType } from './type/task.type';
 
 @Resolver(() => TaskType)
 export class TaskResolver {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Mutation(() => CreateTaskResponse)
   async createTask(
@@ -19,8 +32,49 @@ export class TaskResolver {
       'test',
     );
     const result = await this.commandBus.execute(command);
+    const output = TaskPresentationMapper.entityToCreateTaskOutput(result);
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => UpdateTaskResponse)
+  async updateTask(
+    @Args('input') input: UpdateTaskInput,
+  ): Promise<UpdateTaskResponse> {
+    const command = TaskPresentationMapper.updateInputToUpdateTaskCommand(
+      input,
+      'test',
+    );
+    const result = await this.commandBus.execute(command);
+    const output = TaskPresentationMapper.entityToUpdateTaskOutput(result);
+
+    return ResponseManager.success(output);
+  }
+
+  @Query(() => QueryTaskByIdResponse)
+  async queryTaskById(
+    @Args('input') input: QueryTaskByIdInput,
+  ): Promise<QueryTaskByIdResponse> {
+    const query = TaskPresentationMapper.queryTaskByIdInputToTaskByIdQuery(
+      input,
+      'test',
+    );
+    const result = await this.queryBus.execute(query);
+    const output = TaskPresentationMapper.entityToQueryTaskByIdOutput(result);
+    return ResponseManager.success(output);
+  }
+
+  @Query(() => QueryTaskByCategoryIdResponse)
+  async queryTasksByCategoryId(
+    @Args('input') input: QueryTasksByCategoryIdInput,
+  ): Promise<QueryTaskByCategoryIdResponse> {
+    const query =
+      TaskPresentationMapper.queryTasksByCategoryIdToTaskByCategoryIdQuery(
+        input,
+        'test',
+      );
+    const result = await this.queryBus.execute(query);
     const output =
-      await TaskPresentationMapper.entityToCreateTaskOutput(result);
+      TaskPresentationMapper.entitiesToQueryTasksByCategoryIdOutput(result);
     return ResponseManager.success(output);
   }
 }

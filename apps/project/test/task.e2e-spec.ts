@@ -14,9 +14,13 @@ import {
 } from './graphql-helper/category.operations';
 import {
   CreateTaskVariables,
+  QueryTasksVariables,
+  QueryTaskVariables,
   TaskMutations,
   TaskOperations,
+  TaskQueries,
 } from './graphql-helper/task.operations';
+import { QueryTasksByCategoryId } from '@project/application/param/task.params';
 describe('TaskResolver (e2e)', () => {
   let app: INestApplication;
   let graphQLTestHelper: GraphQLTestHelper;
@@ -86,6 +90,36 @@ describe('TaskResolver (e2e)', () => {
       expect(response.data).toHaveProperty('categoryId', createdCategoryId);
 
       createdTaskId = response.data.id;
+    });
+
+    it('query task by taskId', async () => {
+      const variables: QueryTaskVariables = {
+        input: {
+          id: createdTaskId,
+        },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        TaskOperations[TaskQueries.QUERY_TASK],
+        variables,
+      );
+
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('title', 'Test Task');
+    });
+
+    it('query task by categoryId', async () => {
+      const variables: QueryTasksVariables = {
+        input: {
+          categoryId: createdCategoryId,
+        },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        TaskOperations[TaskQueries.QUERY_TASKS],
+        variables,
+      );
+      expect(response.success).toBe(true);
     });
   });
 });

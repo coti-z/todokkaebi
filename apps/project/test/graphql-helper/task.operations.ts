@@ -13,8 +13,8 @@ export enum TaskMutations {
 
 export const TaskOperations = {
   [TaskQueries.QUERY_TASK]: gql`
-    query QueryTask($input: QueryTaskInput!) {
-      queryTask(input: $input) {
+    query QueryTask($input: QueryTaskByIdInput!) {
+      queryTaskById(input: $input) {
         status
         success
         message
@@ -36,8 +36,8 @@ export const TaskOperations = {
   `,
 
   [TaskQueries.QUERY_TASKS]: gql`
-    query QueryTasks($input: QueryTasksInput!) {
-      queryTasks(input: $input) {
+    query QueryTasks($input: QueryTasksByCategoryIdInput!) {
+      queryTasksByCategoryId(input: $input) {
         status
         success
         message

@@ -1,6 +1,7 @@
 import { PrismaService } from '@libs/database';
 import { Injectable } from '@nestjs/common';
 import { ITaskRepository } from '@project/application/port/out/task-repository.port';
+import { Category } from '@project/domain/entity/category.entity';
 import { Task } from '@project/domain/entity/task.entity';
 import { TaskInfraMapper } from '@project/infrastructure/mapper/task.infrastructure.mapper';
 
@@ -11,5 +12,37 @@ export class TaskRepositoryImpl implements ITaskRepository {
   async storeTask(entity: Task): Promise<void> {
     const data = TaskInfraMapper.toPersistence(entity);
     await this.prisma.task.create({ data });
+  }
+
+  async updateTask(entity: Task): Promise<void> {
+    const data = TaskInfraMapper.toPersistence(entity);
+    await this.prisma.task.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    });
+  }
+
+  async queryTaskByCategoryId(categoryId: string): Promise<Task[]> {
+    const records = await this.prisma.task.findMany({
+      where: {
+        categoryId,
+      },
+    });
+    return TaskInfraMapper.tasksToDomain(records);
+  }
+
+  async queryTaskByTaskId(taskId: string): Promise<Task | null> {
+    const record = await this.prisma.task.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
+    if (!record) {
+      return null;
+    }
+
+    return TaskInfraMapper.taskToDomain(record);
   }
 }

@@ -20,7 +20,8 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
     });
 
     return await this.categoryService.queryCategoryById({
-      categoryId: query.categoryId,
+      id: query.categoryId,
+      reqUserId: query.userId,
     });
   }
 }
