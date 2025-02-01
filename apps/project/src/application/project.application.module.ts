@@ -17,26 +17,40 @@ import { TaskService } from './service/task.service';
 import { TaskByIdQueryHadnler } from './query/handler/task-by-id-query.handler';
 import { TasksByCategoryIdQueryHandler } from './query/handler/task-by-categoryid-query.handler';
 import { UpdateTaskCommandHandler } from './command/task/handler/update-task-command.handler';
+import { DeleteTaskCommandHandler } from './command/task/handler/delete-task-command.hanler';
+import { CreateProjectInvitationCommandHandler } from './command/project-invitation/handlers/create-project-invitation-command.handler';
+import { ProjectInvitationService } from './service/project-invitation.service';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
   providers: [
+    // c
     CreateProjectHandler,
-    DeleteProjectHandler,
-    UpdateProjectHandler,
-    ProjectByIdQueryHandler,
-    ProjectsByUserIdQueryHandler,
-    DeleteCategoryHandler,
     CreateCategoryHandler,
-    UpdateCategoryHandler,
-    CategoryByIdHandler,
     CreateTaskHandler,
+    CreateProjectInvitationCommandHandler,
+
+    // u
+    UpdateProjectHandler,
     UpdateTaskCommandHandler,
+    UpdateCategoryHandler,
+    // d
+
+    DeleteCategoryHandler,
+    DeleteTaskCommandHandler,
+    DeleteProjectHandler,
+
+    // q
+    CategoryByIdHandler,
+    ProjectByIdQueryHandler,
     TaskByIdQueryHadnler,
+    ProjectsByUserIdQueryHandler,
     TasksByCategoryIdQueryHandler,
+    // service
     ProjectService,
     CategoryService,
     TaskService,
+    ProjectInvitationService,
   ],
   exports: [],
 })

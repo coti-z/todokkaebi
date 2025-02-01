@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteTaskCommand } from '../../delete-task.command';
+import { DeleteTaskCommand } from '../delete-task.command';
 import { Task } from '@project/domain/entity/task.entity';
 import { ProjectService } from '@project/application/service/project.service';
 import { CategoryService } from '@project/application/service/category.service';

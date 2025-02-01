@@ -6,6 +6,8 @@ import { CategoryRepositorySymbol } from '@project/application/port/out/category
 import { DatabaseModule } from '@libs/database';
 import { TaskRepositoryImpl } from './persistence/rdbms/task.repository';
 import { TaskRepositorySymbol } from '@project/application/port/out/task-repository.port';
+import { ProjectInvitationRepositorySymbol } from '@project/application/port/project-invitation-repository.port';
+import { ProjectInvitationRepositoryImpl } from './persistence/rdbms/project-invitation.repository';
 
 @Module({
   imports: [DatabaseModule],
@@ -22,12 +24,17 @@ import { TaskRepositorySymbol } from '@project/application/port/out/task-reposit
       provide: TaskRepositorySymbol,
       useClass: TaskRepositoryImpl,
     },
+    {
+      provide: ProjectInvitationRepositorySymbol,
+      useClass: ProjectInvitationRepositoryImpl,
+    },
   ],
 
   exports: [
     ProjectRepositorySymbol,
     CategoryRepositorySymbol,
     TaskRepositorySymbol,
+    ProjectInvitationRepositorySymbol,
   ],
 })
 export class ProjectInfrastructureModule {}

@@ -17,9 +17,9 @@ type ProjectInvitationMutableProps = {
 type ProjectInvitationProps = ProjectInvitationImmutableProps &
   ProjectInvitationMutableProps;
 
-type CreateProjectInvitationProps = Omit<
+export type CreateProjectInvitationProps = Omit<
   ProjectInvitationProps,
-  'createdAt' | 'updatedAt' | 'id'
+  'createdAt' | 'updatedAt' | 'id' | 'status'
 >;
 
 export class ProjectInvitation {
@@ -55,12 +55,13 @@ export class ProjectInvitation {
   static create(props: CreateProjectInvitationProps): ProjectInvitation {
     const id = uuidv4();
     const now = new Date();
+    const newStatus = InvitationStatus.PENDING;
     return new ProjectInvitation({
       id: id,
       createdAt: now,
       updatedAt: now,
       projectId: props.projectId,
-      status: props.status,
+      status: newStatus,
       inviteeUserId: props.inviteeUserId,
       inviterUserId: props.inviterUserId,
     });

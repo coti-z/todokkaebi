@@ -112,6 +112,15 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+  
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOO_ENABLE_AUTH=no
+      - ALLOW_ANONYMOUS_LOGIN=yes
 
 volumes:
   mysql_user_data:

@@ -89,7 +89,6 @@ export class ProjectService {
     if (!project) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-
     return project;
   }
 

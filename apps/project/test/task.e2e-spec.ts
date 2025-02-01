@@ -14,6 +14,7 @@ import {
 } from './graphql-helper/project.operations';
 import {
   CreateTaskVariables,
+  DeleteTaskVariables,
   QueryTasksVariables,
   QueryTaskVariables,
   TaskMutations,
@@ -21,6 +22,7 @@ import {
   TaskQueries,
   UpdateTaskVariables,
 } from './graphql-helper/task.operations';
+
 describe('TaskResolver (e2e)', () => {
   let app: INestApplication;
   let graphQLTestHelper: GraphQLTestHelper;
@@ -133,9 +135,24 @@ describe('TaskResolver (e2e)', () => {
         TaskOperations[TaskMutations.UPDATE_TASK],
         variables,
       );
-      console.log(response);
       expect(response.success).toBe(true);
       expect(response.data).toHaveProperty('check', true);
+    });
+
+    it('should delete task', async () => {
+      const variables: DeleteTaskVariables = {
+        input: {
+          id: createdTaskId,
+        },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        TaskOperations[TaskMutations.DELETE_TASK],
+        variables,
+      );
+
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id', createdTaskId);
     });
   });
 });

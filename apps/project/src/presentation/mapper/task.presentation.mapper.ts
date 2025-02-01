@@ -18,7 +18,7 @@ import {
 } from '../resolver/output/task.output';
 import { TasksByCategoryIdQuery } from '@project/application/query/task-by-categoryid.query';
 import { UpdateTaskCommand } from '@project/application/command/task/update-task.command';
-import { DeleteTaskCommand } from '@project/application/command/delete-task.command';
+import { DeleteTaskCommand } from '@project/application/command/task/delete-task.command';
 
 export class TaskPresentationMapper {
   static entityToObjectType(entity: Task): TaskType {
