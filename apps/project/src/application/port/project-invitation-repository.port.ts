@@ -3,6 +3,7 @@ import { ProjectInvitation } from '@project/domain/entity/project-invitation.ent
 export const ProjectInvitationRepositorySymbol = Symbol.for(
   'ProjectInvitationRespository',
 );
+
 export interface IProjectInvitationRepository {
   storeProjectInvitation(entity: ProjectInvitation): Promise<void>;
 }

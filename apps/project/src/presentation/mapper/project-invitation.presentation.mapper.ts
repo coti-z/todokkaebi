@@ -37,6 +37,6 @@ export class ProjectInvitationPresentationMapper {
   static entityToCreateProjectInvitationOutput(
     entity: ProjectInvitation,
   ): CreateaProjectInvitationOutput {
-    return this.entityToCreateProjectInvitationOutput(entity);
+    return this.entityToObjectType(entity);
   }
 }
