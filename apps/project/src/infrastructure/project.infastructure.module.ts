@@ -29,7 +29,6 @@ import { ProjectInvitationRepositoryImpl } from './persistence/rdbms/project-inv
       useClass: ProjectInvitationRepositoryImpl,
     },
   ],
-
   exports: [
     ProjectRepositorySymbol,
     CategoryRepositorySymbol,

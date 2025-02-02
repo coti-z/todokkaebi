@@ -12,7 +12,32 @@ export class ProjectInvitationRepositoryImpl
   async storeProjectInvitation(entity: ProjectInvitation): Promise<void> {
     const data = ProjectInvitationInfraMapper.toPersistence(entity);
     await this.prisma.projectInvitation.create({
+      data: data,
+    });
+  }
+
+  async updateProjectInvitation(entity: ProjectInvitation): Promise<void> {
+    const data = ProjectInvitationInfraMapper.toPersistence(entity);
+    await this.prisma.projectInvitation.update({
+      where: {
+        id: data.id,
+      },
       data,
     });
+  }
+
+  async findProjectInvitationById(
+    projectInvitationId: string,
+  ): Promise<ProjectInvitation | null> {
+    const record = await this.prisma.projectInvitation.findUnique({
+      where: {
+        id: projectInvitationId,
+      },
+    });
+
+    if (!record) {
+      return null;
+    }
+    return ProjectInvitationInfraMapper.projectInvitationToDomain(record);
   }
 }

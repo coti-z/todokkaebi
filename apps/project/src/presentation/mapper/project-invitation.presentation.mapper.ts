@@ -1,8 +1,15 @@
+import { CreateProjectInvitationCommand } from '@project/application/command/project-invitation/create-project-invitation.command';
+import { UpdateProjectInvitationCommand } from '@project/application/command/project-invitation/update-project-invitation.command';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
-import { CreateProjectInvitationInput } from '../resolver/input/project-invitation.input';
-import { CreateProjectInvitationCommand } from '@project/application/command/project-invitation/create-project-invitation.command';
-import { CreateaProjectInvitationOutput } from '../resolver/output/project-invitation.output';
+import {
+  CreateProjectInvitationInput,
+  type UpdateProjectInvitationInput,
+} from '../resolver/input/project-invitation.input';
+import {
+  CreateaProjectInvitationOutput,
+  type UpdateProjectInvitationOutput,
+} from '../resolver/output/project-invitation.output';
 
 export class ProjectInvitationPresentationMapper {
   static entityToObjectType(entity: ProjectInvitation): ProjectInvitationType {
@@ -34,9 +41,26 @@ export class ProjectInvitationPresentationMapper {
     );
   }
 
+  static updateProjectInvitationInputToCommand(
+    input: UpdateProjectInvitationInput,
+    reqUserId: string,
+  ): UpdateProjectInvitationCommand {
+    return new UpdateProjectInvitationCommand(
+      input.projectId,
+      reqUserId,
+      input.status,
+    );
+  }
+
   static entityToCreateProjectInvitationOutput(
     entity: ProjectInvitation,
   ): CreateaProjectInvitationOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entityToUpdateProjectInvitationOutput(
+    entity: ProjectInvitation,
+  ): UpdateProjectInvitationOutput {
     return this.entityToObjectType(entity);
   }
 }

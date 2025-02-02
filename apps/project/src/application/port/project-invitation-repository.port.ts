@@ -6,4 +6,7 @@ export const ProjectInvitationRepositorySymbol = Symbol.for(
 
 export interface IProjectInvitationRepository {
   storeProjectInvitation(entity: ProjectInvitation): Promise<void>;
+  findProjectInvitationById(
+    projectInvitationId: string,
+  ): Promise<ProjectInvitation | null>;
 }

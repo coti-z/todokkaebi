@@ -78,4 +78,12 @@ export class ProjectInvitation {
       inviterUserId: props.inviterUserId,
     });
   }
+
+  update(props: Pick<ProjectInvitationMutableProps, 'status'>) {
+    this.props.status = props.status;
+    this.updateTimeStamp();
+  }
+  private updateTimeStamp() {
+    this.props.updatedAt = new Date();
+  }
 }

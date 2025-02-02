@@ -20,33 +20,29 @@ import { UpdateTaskCommandHandler } from './command/task/handler/update-task-com
 import { DeleteTaskCommandHandler } from './command/task/handler/delete-task-command.hanler';
 import { CreateProjectInvitationCommandHandler } from './command/project-invitation/handlers/create-project-invitation-command.handler';
 import { ProjectInvitationService } from './service/project-invitation.service';
+import { UpdateProjectInvitationCommandHandler } from './command/project-invitation/handlers/update-project-invitation-command.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
   providers: [
-    // c
     CreateProjectHandler,
     CreateCategoryHandler,
     CreateTaskHandler,
     CreateProjectInvitationCommandHandler,
 
-    // u
     UpdateProjectHandler,
     UpdateTaskCommandHandler,
     UpdateCategoryHandler,
-    // d
 
     DeleteCategoryHandler,
     DeleteTaskCommandHandler,
     DeleteProjectHandler,
 
-    // q
     CategoryByIdHandler,
     ProjectByIdQueryHandler,
     TaskByIdQueryHadnler,
     ProjectsByUserIdQueryHandler,
     TasksByCategoryIdQueryHandler,
-    // service
     ProjectService,
     CategoryService,
     TaskService,
