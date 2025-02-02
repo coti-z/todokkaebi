@@ -45,7 +45,7 @@ export class ProjectInvitationService {
       params.status,
       params.reqUserId,
     );
-    await this.projectInvitationRepo.storeProjectInvitation(projectInvitation);
+    await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
 
     return projectInvitation;
   }

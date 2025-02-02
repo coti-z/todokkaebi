@@ -40,7 +40,7 @@ export class ProjectInvitationResolver {
     const command =
       ProjectInvitationPresentationMapper.updateProjectInvitationInputToCommand(
         input,
-        'test',
+        'test2',
       );
     const result = await this.commandBus.execute(command);
     const output =

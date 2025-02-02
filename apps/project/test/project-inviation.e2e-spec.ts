@@ -1,7 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '@project/project.module';
-import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
+import {
+  BaseResponse,
+  GraphQLTestHelper,
+} from './graphql-helper/graphql.helper';
 import {
   CreateProjectVariables,
   ProjectMutations,
@@ -11,6 +14,7 @@ import {
   CreateProjectInvitationVariables,
   ProjectInvitationMutations,
   ProjectInvitationOperations,
+  UpdateProjectInvitationVariables,
 } from './graphql-helper/project-invitation.operations';
 
 describe('ProjectInviationResolver (e2e)', () => {
@@ -34,7 +38,7 @@ describe('ProjectInviationResolver (e2e)', () => {
     await app.close();
   });
 
-  describe('Project Invitation Operations', () => {
+  describe('Create project invitation operations', () => {
     beforeAll(async () => {
       // Create a test project first
       const variables: CreateProjectVariables = {
@@ -113,6 +117,58 @@ describe('ProjectInviationResolver (e2e)', () => {
       } catch (error) {
         expect(error).toBeDefined();
       }
+    });
+  });
+
+  describe('Update project invitation operations', () => {
+    let projectInvitation: BaseResponse<any>;
+
+    beforeAll(async () => {
+      // Create a test project first
+      const createProjectVariables: CreateProjectVariables = {
+        input: {
+          name: 'Test Project for Invitation2',
+        },
+      };
+
+      const response = await graphQLTestHelper.execute(
+        ProjectOperations[ProjectMutations.CREATE_PROJECT],
+        createProjectVariables,
+      );
+      createdProjectId = response.data.id;
+      const createdProjectInvitationVariables: CreateProjectInvitationVariables =
+        {
+          input: {
+            inviteeUserId: 'test2',
+            projectId: createdProjectId,
+          },
+        };
+
+      projectInvitation = await graphQLTestHelper.execute(
+        ProjectInvitationOperations[
+          ProjectInvitationMutations.CREATE_PROJECT_INVITATION
+        ],
+        createdProjectInvitationVariables,
+      );
+    });
+
+    it('should update project invitation operations', async () => {
+      const variables: UpdateProjectInvitationVariables = {
+        input: {
+          id: projectInvitation.data.id,
+          status: 'ACCEPTED',
+        },
+      };
+
+      const updateProjectInvitation = await graphQLTestHelper.execute(
+        ProjectInvitationOperations[
+          ProjectInvitationMutations.UPDATE_PROJECT_INVITATION
+        ],
+        variables,
+      );
+      console.log(updateProjectInvitation);
+
+      expect(updateProjectInvitation.success).toBe(true);
     });
   });
 });

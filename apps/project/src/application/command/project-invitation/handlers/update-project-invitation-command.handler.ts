@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, type ICommandHandler } from '@nestjs/cqrs';
 import { UpdateProjectInvitationCommand } from '../update-project-invitation.command';
-import type { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
-import type { ProjectInvitationService } from '@project/application/service/project-invitation.service';
+import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
+import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
 
 @Injectable()
 @CommandHandler(UpdateProjectInvitationCommand)

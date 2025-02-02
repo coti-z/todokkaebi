@@ -46,7 +46,7 @@ export class ProjectInvitationPresentationMapper {
     reqUserId: string,
   ): UpdateProjectInvitationCommand {
     return new UpdateProjectInvitationCommand(
-      input.projectId,
+      input.id,
       reqUserId,
       input.status,
     );

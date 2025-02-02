@@ -3,7 +3,7 @@ import { DocumentNode, print } from 'graphql';
 import * as request from 'supertest';
 
 // 기본 응답 타입을 제네릭으로 정의
-interface BaseResponse<T> {
+export interface BaseResponse<T> {
   status: string;
   success: boolean;
   message: string;

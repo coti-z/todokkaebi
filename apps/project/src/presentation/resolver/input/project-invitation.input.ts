@@ -4,6 +4,9 @@ import type { InvitationStatus } from '../type/project-invitation.type';
 @InputType()
 export class ProjectInvitationBaseInput {
   @Field()
+  id: string;
+
+  @Field()
   projectId: string;
 
   @Field()
@@ -25,5 +28,5 @@ export class CreateProjectInvitationInput extends PickType(
 @InputType()
 export class UpdateProjectInvitationInput extends PickType(
   ProjectInvitationBaseInput,
-  ['projectId', 'status'],
+  ['id', 'status'],
 ) {}

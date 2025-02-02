@@ -33,6 +33,7 @@ import { UpdateProjectInvitationCommandHandler } from './command/project-invitat
     UpdateProjectHandler,
     UpdateTaskCommandHandler,
     UpdateCategoryHandler,
+    UpdateProjectInvitationCommandHandler,
 
     DeleteCategoryHandler,
     DeleteTaskCommandHandler,
@@ -43,10 +44,10 @@ import { UpdateProjectInvitationCommandHandler } from './command/project-invitat
     TaskByIdQueryHadnler,
     ProjectsByUserIdQueryHandler,
     TasksByCategoryIdQueryHandler,
+    ProjectInvitationService,
     ProjectService,
     CategoryService,
     TaskService,
-    ProjectInvitationService,
   ],
   exports: [],
 })
