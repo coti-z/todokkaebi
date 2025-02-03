@@ -3,11 +3,15 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { ProjectInvitationPresentationMapper } from '../mapper/project-invitation.presentation.mapper';
 import {
+  AcceptProjectInvitationInput,
   CreateProjectInvitationInput,
+  RejectProjectInvitationInput,
   UpdateProjectInvitationInput,
 } from './input/project-invitation.input';
 import {
+  AcceptProjectInvitationResponse,
   CreateProjectInvitationResponse,
+  RejectProjectInvitationResponse,
   UpdateProjectInvitationResponse,
 } from './response/project-invitation.response';
 import { ProjectInvitationType } from './type/project-invitation.type';
@@ -48,6 +52,40 @@ export class ProjectInvitationResolver {
         result,
       );
 
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => AcceptProjectInvitationResponse)
+  async acceptProjectInvitation(
+    @Args('input') input: AcceptProjectInvitationInput,
+  ): Promise<AcceptProjectInvitationResponse> {
+    const command =
+      ProjectInvitationPresentationMapper.acceptProjectInvitationInputToCommand(
+        input,
+        'test',
+      );
+    const result = await this.commandBus.execute(command);
+    const output =
+      ProjectInvitationPresentationMapper.entityToAcceptProjectInvitationOutput(
+        result,
+      );
+    return ResponseManager.success(output);
+  }
+
+  @Mutation(() => RejectProjectInvitationResponse)
+  async rejectProjectInvitation(
+    @Args('input') input: RejectProjectInvitationInput,
+  ): Promise<RejectProjectInvitationResponse> {
+    const command =
+      ProjectInvitationPresentationMapper.rejectProjectInvitationInputToCommand(
+        input,
+        'test',
+      );
+    const result = await this.commandBus.execute(command);
+    const output =
+      ProjectInvitationPresentationMapper.entityToRejectProjectInvitationOutput(
+        result,
+      );
     return ResponseManager.success(output);
   }
 }

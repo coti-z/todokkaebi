@@ -3,13 +3,19 @@ import { UpdateProjectInvitationCommand } from '@project/application/command/pro
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 import {
+  AcceptProjectInvitationInput,
   CreateProjectInvitationInput,
+  RejectProjectInvitationInput,
   type UpdateProjectInvitationInput,
 } from '../resolver/input/project-invitation.input';
 import {
+  AcceptProjectInvitationOutput,
   CreateaProjectInvitationOutput,
+  RejectProjectInvitationOutput,
   type UpdateProjectInvitationOutput,
 } from '../resolver/output/project-invitation.output';
+import { AcceptProjectInvitationCommand } from '@project/application/command/project-invitation/accept-project-invitation.command';
+import { RejectProjectInvitationCommand } from '@project/application/command/project-invitation/reject-project-invitation.command';
 
 export class ProjectInvitationPresentationMapper {
   static entityToObjectType(entity: ProjectInvitation): ProjectInvitationType {
@@ -29,6 +35,10 @@ export class ProjectInvitationPresentationMapper {
   ): ProjectInvitationType[] {
     return entities.map(entity => this.entityToObjectType(entity));
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                           input to commnet, query                          */
+  /* -------------------------------------------------------------------------- */
 
   static createProjectInvitationInputToCommand(
     input: CreateProjectInvitationInput,
@@ -52,6 +62,24 @@ export class ProjectInvitationPresentationMapper {
     );
   }
 
+  static acceptProjectInvitationInputToCommand(
+    input: AcceptProjectInvitationInput,
+    reqUserId: string,
+  ): AcceptProjectInvitationCommand {
+    return new AcceptProjectInvitationCommand(input.id, reqUserId);
+  }
+
+  static rejectProjectInvitationInputToCommand(
+    input: RejectProjectInvitationInput,
+    reqUserId: string,
+  ): RejectProjectInvitationCommand {
+    return new RejectProjectInvitationCommand(input.id, reqUserId);
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                               entity To Ouput                              */
+  /* -------------------------------------------------------------------------- */
+
   static entityToCreateProjectInvitationOutput(
     entity: ProjectInvitation,
   ): CreateaProjectInvitationOutput {
@@ -61,6 +89,18 @@ export class ProjectInvitationPresentationMapper {
   static entityToUpdateProjectInvitationOutput(
     entity: ProjectInvitation,
   ): UpdateProjectInvitationOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entityToRejectProjectInvitationOutput(
+    entity: ProjectInvitation,
+  ): RejectProjectInvitationOutput {
+    return this.entityToObjectType(entity);
+  }
+
+  static entityToAcceptProjectInvitationOutput(
+    entity: ProjectInvitation,
+  ): AcceptProjectInvitationOutput {
     return this.entityToObjectType(entity);
   }
 }

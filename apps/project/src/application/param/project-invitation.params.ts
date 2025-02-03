@@ -14,3 +14,11 @@ export type UpdateProjectInvitationParams = Pick<
 > & {
   reqUserId: string;
 };
+
+export type AcceptProjectInvitationParams = Pick<ProjectInvitation, 'id'> & {
+  reqUserId: string;
+};
+
+export type RejectProjectInvitationParams = Pick<ProjectInvitation, 'id'> & {
+  reqUserId: string;
+};

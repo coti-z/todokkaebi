@@ -30,3 +30,15 @@ export class UpdateProjectInvitationInput extends PickType(
   ProjectInvitationBaseInput,
   ['id', 'status'],
 ) {}
+
+@InputType()
+export class AcceptProjectInvitationInput extends PickType(
+  ProjectInvitationBaseInput,
+  ['id'],
+) {}
+
+@InputType()
+export class RejectProjectInvitationInput extends PickType(
+  ProjectInvitationBaseInput,
+  ['id'],
+) {}

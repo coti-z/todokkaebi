@@ -166,7 +166,6 @@ describe('ProjectInviationResolver (e2e)', () => {
         ],
         variables,
       );
-      console.log(updateProjectInvitation);
 
       expect(updateProjectInvitation.success).toBe(true);
     });

@@ -21,6 +21,8 @@ import { DeleteTaskCommandHandler } from './command/task/handler/delete-task-com
 import { CreateProjectInvitationCommandHandler } from './command/project-invitation/handlers/create-project-invitation-command.handler';
 import { ProjectInvitationService } from './service/project-invitation.service';
 import { UpdateProjectInvitationCommandHandler } from './command/project-invitation/handlers/update-project-invitation-command.handler';
+import { RejectProjectInvitationCommandHandler } from './command/project-invitation/handlers/reject-project-invitation-command.handler';
+import { AcceptProjectInvitationCommandHandler } from './command/project-invitation/handlers/accept-project-invitation-command.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -38,6 +40,9 @@ import { UpdateProjectInvitationCommandHandler } from './command/project-invitat
     DeleteCategoryHandler,
     DeleteTaskCommandHandler,
     DeleteProjectHandler,
+
+    RejectProjectInvitationCommandHandler,
+    AcceptProjectInvitationCommandHandler,
 
     CategoryByIdHandler,
     ProjectByIdQueryHandler,

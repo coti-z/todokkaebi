@@ -1,5 +1,8 @@
+import { ErrorCode, errorFactory } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import {
+  AcceptProjectInvitationParams,
+  RejectProjectInvitationParams,
   type CreateProjectInvitationParams,
   type UpdateProjectInvitationParams,
 } from '@project/application/param/project-invitation.params';
@@ -9,7 +12,6 @@ import {
   IProjectInvitationRepository,
   ProjectInvitationRepositorySymbol,
 } from '../port/project-invitation-repository.port';
-import { ErrorCode, errorFactory } from '@libs/exception';
 
 @Injectable()
 export class ProjectInvitationService {
@@ -45,6 +47,35 @@ export class ProjectInvitationService {
       params.status,
       params.reqUserId,
     );
+    await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
+
+    return projectInvitation;
+  }
+
+  async acceptProjectInvitation(
+    params: AcceptProjectInvitationParams,
+  ): Promise<ProjectInvitation> {
+    const projectInvitation =
+      await this.projectInvitationRepo.findProjectInvitationById(params.id);
+
+    if (!projectInvitation) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+    await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
+
+    return projectInvitation;
+  }
+
+  async rejectProjectInvitation(
+    params: RejectProjectInvitationParams,
+  ): Promise<ProjectInvitation> {
+    const projectInvitation =
+      await this.projectInvitationRepo.findProjectInvitationById(params.id);
+
+    if (!projectInvitation) {
+      throw errorFactory(ErrorCode.NOT_FOUND);
+    }
+
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
 
     return projectInvitation;
