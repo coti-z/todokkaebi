@@ -1,10 +1,9 @@
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
 import { v4 as uuidv4 } from 'uuid';
-
-type TaskImmutableProps = {
-  readonly id: string;
-  readonly createdAt: Date;
-};
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 export type TaskMutableProps = {
   title: string;
@@ -22,7 +21,7 @@ export type TaskMutableProps = {
  * 영속화할 모든 Task 필드.
  * Immutable + Mutable
  */
-type TaskProps = TaskMutableProps & TaskImmutableProps;
+type TaskProps = BaseEntityProps & TaskMutableProps;
 
 /**
  * 새 Task를 만들 때 필요한 필드. 기본값으로 처리되는 것은 제외.
@@ -38,13 +37,8 @@ type CreateTaskProps = Omit<
   | 'check'
 >;
 
-export class Task {
-  private constructor(private props: TaskProps) {}
-
+export class Task extends BaseEntity<TaskProps> {
   // ----- GETTERS -----
-  get id(): string {
-    return this.props.id;
-  }
 
   get title(): string {
     return this.props.title;
@@ -76,14 +70,6 @@ export class Task {
 
   get actualEndDate(): Date | undefined {
     return this.props.actualEndDate;
-  }
-
-  get updatedAt(): Date {
-    return this.props.updatedAt;
-  }
-
-  get createdAt(): Date {
-    return this.props.createdAt;
   }
 
   // ----- FACTORY METHODS -----
@@ -129,82 +115,13 @@ export class Task {
   }
 
   // ----- UPDATE METHODS -----
-  changeTitle(title: string) {
-    if (!title) return; // 필요한 만큼 Validation 처리
-    this.props.title = title;
-  }
 
-  changeStatus(status: TaskState) {
-    this.props.status = status;
-  }
-
-  changeCheck(check: boolean) {
-    this.props.check = check;
-  }
-
-  changeStartDate(date: Date) {
-    this.props.startDate = date;
-  }
-
-  changeEndDate(date: Date) {
-    this.props.endDate = date;
-  }
-
-  changeActualStartDate(date: Date) {
-    this.props.actualStartDate = date;
-  }
-
-  changeActualEndDate(date: Date) {
-    this.props.actualEndDate = date;
-  }
-
-  changeCategoryId(categoryId: string) {
-    this.props.categoryId = categoryId;
-  }
-
-  partialUpdate(partial: Partial<TaskMutableProps>) {
-    if (partial.title) {
-      this.changeTitle(partial.title);
-    }
-
-    if (partial.categoryId) {
-      this.changeCategoryId(partial.categoryId);
-    }
-
-    if (partial.check) {
-      this.changeCheck(partial.check);
-    }
-
-    if (partial.status) {
-      this.changeStatus(partial.status);
-    }
-
-    if (partial.startDate) {
-      this.changeStartDate(partial.startDate);
-    }
-
-    if (partial.endDate) {
-      this.changeEndDate(partial.endDate);
-    }
-
-    if (partial.actualStartDate) {
-      this.changeActualStartDate(partial.actualStartDate);
-    }
-
-    if (partial.actualEndDate) {
-      this.changeActualEndDate(partial.actualEndDate);
-    }
+  update(partial: Partial<TaskMutableProps>) {
+    Object.assign(this.props, partial);
     this.updateTimestamp();
   }
 
   // ----- PRIVATE METHODS -----
-  /**
-   * Task를 업데이트할 때마다 updatedAt을 갱신한다.
-   */
-  private updateTimestamp() {
-    this.props.updatedAt = new Date();
-  }
-
   /**
    * 간단한 예시 검증 로직
    * - 실제로 필요한 도메인 규칙과 예외 처리를 자유롭게 확장 가능

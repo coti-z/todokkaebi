@@ -2,27 +2,25 @@ import { Task } from './task.entity';
 
 import { v4 as uuidv4 } from 'uuid';
 import { ErrorCode, errorFactory } from '@libs/exception';
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 export type CategoryMutableProps = {
   name: string;
   projectId: string;
-  updatedAt: Date;
   tasks?: Task[];
 };
-export type CategoryImmutableProps = {
-  readonly id: string;
-  readonly createdAt: Date;
-};
 
-export type CategoryProps = CategoryImmutableProps & CategoryMutableProps;
+export type CategoryProps = CategoryMutableProps & BaseEntityProps;
+
 type CreateCategoryProps = Omit<
   CategoryProps,
   'id' | 'createdAt' | 'updatedAt'
 >;
 
-export class Category {
-  private constructor(private readonly props: CategoryProps) {}
-
+export class Category extends BaseEntity<CategoryProps> {
   get id(): string {
     return this.props.id;
   }
@@ -69,10 +67,8 @@ export class Category {
     });
   }
 
-  changeName(name: string) {
-    if (!name) {
-      throw errorFactory(ErrorCode.BAD_REQUEST);
-    }
-    this.props.name = name;
+  update(partialProps: Partial<CategoryMutableProps>): void {
+    Object.assign(this.props, partialProps);
+    this.updateTimestamp();
   }
 }

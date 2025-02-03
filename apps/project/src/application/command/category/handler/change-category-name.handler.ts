@@ -1,24 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateCategoryCommand } from '@project/application/command/category/update-category.command';
 import { Injectable } from '@nestjs/common';
 import { ProjectService } from '@project/application/service/project.service';
 import { Category } from '@project/domain/entity/category.entity';
 import { CategoryService } from '@project/application/service/category.service';
+import { ChangeCategoryNameCommand } from '../change-category-name.command';
 
-@CommandHandler(UpdateCategoryCommand)
+@CommandHandler(ChangeCategoryNameCommand)
 @Injectable()
-export class UpdateCategoryHandler
-  implements ICommandHandler<UpdateCategoryCommand>
+export class ChangeCategoryNameHandler
+  implements ICommandHandler<ChangeCategoryNameCommand>
 {
   constructor(
     private readonly projectService: ProjectService,
     private readonly categoryService: CategoryService,
   ) {}
-  async execute(command: UpdateCategoryCommand): Promise<Category> {
+  async execute(command: ChangeCategoryNameCommand): Promise<Category> {
     const project = await this.projectService.queryProjectByCategoryId({
       categoryId: command.categoryId,
     });
-    return await this.categoryService.updateCategory({
+    return await this.categoryService.changeName({
       project: project,
       id: command.categoryId,
       name: command.name,

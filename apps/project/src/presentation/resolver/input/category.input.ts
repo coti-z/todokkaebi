@@ -22,7 +22,7 @@ export class CreateCategoryInput extends PickType(CategoryInput, [
 export class DeleteCategoryInput extends PickType(CategoryInput, ['id']) {}
 
 @InputType()
-export class UpdateCategoryInput extends PickType(CategoryInput, [
+export class ChangeCategoryNameInput extends PickType(CategoryInput, [
   'projectId',
   'id',
   'name',

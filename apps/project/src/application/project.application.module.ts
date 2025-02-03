@@ -9,7 +9,6 @@ import { ProjectByIdQueryHandler } from '@project/application/query/handler/proj
 import { CategoryService } from '@project/application/service/category.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
-import { UpdateCategoryHandler } from './command/category/handler/update-category.handler';
 import { CreateTaskHandler } from './command/task/handler/create-task.handler';
 import { CategoryByIdHandler } from './query/handler/category-by-id-query.handler';
 import { ProjectsByUserIdQueryHandler } from './query/handler/projects-by-userid-query.handler';
@@ -23,6 +22,7 @@ import { ProjectInvitationService } from './service/project-invitation.service';
 import { UpdateProjectInvitationCommandHandler } from './command/project-invitation/handlers/update-project-invitation-command.handler';
 import { RejectProjectInvitationCommandHandler } from './command/project-invitation/handlers/reject-project-invitation-command.handler';
 import { AcceptProjectInvitationCommandHandler } from './command/project-invitation/handlers/accept-project-invitation-command.handler';
+import { ChangeCategoryNameHandler } from './command/category/handler/change-category-name.handler';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -34,7 +34,7 @@ import { AcceptProjectInvitationCommandHandler } from './command/project-invitat
 
     UpdateProjectHandler,
     UpdateTaskCommandHandler,
-    UpdateCategoryHandler,
+    ChangeCategoryNameHandler,
     UpdateProjectInvitationCommandHandler,
 
     DeleteCategoryHandler,

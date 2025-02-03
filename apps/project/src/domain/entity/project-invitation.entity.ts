@@ -1,30 +1,30 @@
 import { InvitationStatus } from '../value-objects/invation-status.vo';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 type ProjectInvitationImmutableProps = {
-  readonly id: string;
   readonly projectId: string;
   readonly inviterUserId: string;
   readonly inviteeUserId: string;
-  readonly createdAt: Date;
 };
 
 type ProjectInvitationMutableProps = {
   status: InvitationStatus;
-  updatedAt: Date;
 };
 
 type ProjectInvitationProps = ProjectInvitationImmutableProps &
-  ProjectInvitationMutableProps;
+  ProjectInvitationMutableProps &
+  BaseEntityProps;
 
 export type CreateProjectInvitationProps = Omit<
   ProjectInvitationProps,
   'createdAt' | 'updatedAt' | 'id' | 'status'
 >;
 
-export class ProjectInvitation {
-  private constructor(private readonly props: ProjectInvitationProps) {}
-
+export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
   get id(): string {
     return this.props.id;
   }
@@ -81,9 +81,6 @@ export class ProjectInvitation {
 
   update(props: Pick<ProjectInvitationMutableProps, 'status'>) {
     this.props.status = props.status;
-    this.updateTimeStamp();
-  }
-  private updateTimeStamp() {
-    this.props.updatedAt = new Date();
+    this.updateTimestamp();
   }
 }

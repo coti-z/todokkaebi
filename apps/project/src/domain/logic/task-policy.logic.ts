@@ -28,7 +28,7 @@ export class TaskPolicyLogic {
   }
 
   static updateTask(req: updateReq): void {
-    req.task.partialUpdate({
+    req.task.update({
       title: req.title,
       categoryId: req.categoryId,
       check: req.check,

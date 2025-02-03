@@ -1,19 +1,19 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ResponseManager } from '@libs/response';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import {
+  ChangeCategoryNameInput,
   CreateCategoryInput,
   DeleteCategoryInput,
   QueryCategoryByIdInput,
-  UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import {
+  ChangeCategoryNameResponse,
   CreateCategoryResponse,
   DeleteCategoryResponse,
   QueryCategoryByIdResponse,
-  UpdateCategoryResponse,
 } from '@project/presentation/resolver/response/category.response';
-import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
-import { ResponseManager } from '@libs/response';
 
 @Resolver('category')
 export class CategoryResolver {
@@ -51,12 +51,12 @@ export class CategoryResolver {
     return ResponseManager.success(output);
   }
 
-  @Mutation(() => UpdateCategoryResponse)
-  async updateCategory(
-    @Args('input') input: UpdateCategoryInput,
-  ): Promise<UpdateCategoryResponse> {
+  @Mutation(() => ChangeCategoryNameResponse)
+  async changeCategoryName(
+    @Args('input') input: ChangeCategoryNameInput,
+  ): Promise<ChangeCategoryNameResponse> {
     const command =
-      CategoryPresentationMapper.updateCategoryInputToUpdateCategoryCommand(
+      CategoryPresentationMapper.changeCategoryNameInputToUpdateCategoryCommand(
         input,
         'test',
       );

@@ -1,32 +1,29 @@
 import { v4 as uuidv4 } from 'uuid';
 import { MembershipRole } from '../value-objects/membership-role.vo';
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 type ProjectMembershipImmutableProps = {
-  readonly id: string;
-  readonly projectId: string;
+  projectId: string;
 };
 
 type ProjectMembershipMutableProps = {
   userId: string;
   role: MembershipRole;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
-type ProjectMembershipProps = ProjectMembershipMutableProps &
-  ProjectMembershipImmutableProps;
+type ProjectMembershipProps = ProjectMembershipImmutableProps &
+  ProjectMembershipMutableProps &
+  BaseEntityProps;
 
 type CreateProjectMembershipProps = Omit<
   ProjectMembershipProps,
   'id' | 'updatedAt' | 'createdAt'
 >;
 
-export class ProjectMembership {
-  constructor(private readonly props: ProjectMembershipProps) {}
-
-  get id(): string {
-    return this.props.id;
-  }
+export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
   get projectId() {
     return this.props.projectId;
   }
@@ -37,14 +34,6 @@ export class ProjectMembership {
 
   get role() {
     return this.props.role;
-  }
-
-  get createdAt() {
-    return this.props.createdAt;
-  }
-
-  get updatedAt() {
-    return this.props.updatedAt;
   }
 
   static create(props: CreateProjectMembershipProps): ProjectMembership {
@@ -70,5 +59,9 @@ export class ProjectMembership {
       updatedAt: props.updatedAt,
       projectId: props.projectId,
     });
+  }
+  update(partialProps: Partial<ProjectMembershipMutableProps>): void {
+    Object.assign(this.props, partialProps);
+    this.updateTimestamp();
   }
 }

@@ -2,21 +2,21 @@ import { Category } from '@project/domain/entity/category.entity';
 import { CategoryType } from '@project/presentation/resolver/type/category.type';
 import { TaskPresentationMapper } from '@project/presentation/mapper/task.presentation.mapper';
 import {
+  ChangeCategoryNameInput,
   CreateCategoryInput,
   DeleteCategoryInput,
   QueryCategoryByIdInput,
-  UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import { CreateCategoryCommand } from '@project/application/command/category/create-category.command';
 import {
+  ChangeCategoryNameOutput,
   CreateCategoryOutput,
   DeleteCategoryOutput,
   QueryCategoryByIdOutput,
-  UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 import { DeleteCategoryCommand } from '@project/application/command/category/delete-category.command';
-import { UpdateCategoryCommand } from '@project/application/command/category/update-category.command';
 import { CategoryByIdQuery } from '@project/application/query/category-by-id.query';
+import { ChangeCategoryNameCommand } from '@project/application/command/category/change-category-name.command';
 
 export class CategoryPresentationMapper {
   static createCategoryInputToCreateCategoryCommand(
@@ -31,11 +31,11 @@ export class CategoryPresentationMapper {
     return new DeleteCategoryCommand(input.id, userId);
   }
 
-  static updateCategoryInputToUpdateCategoryCommand(
-    input: UpdateCategoryInput,
+  static changeCategoryNameInputToUpdateCategoryCommand(
+    input: ChangeCategoryNameInput,
     userId: string,
-  ): UpdateCategoryCommand {
-    return new UpdateCategoryCommand(
+  ): ChangeCategoryNameCommand {
+    return new ChangeCategoryNameCommand(
       userId,
       input.name,
       input.id,
@@ -75,7 +75,9 @@ export class CategoryPresentationMapper {
     };
   }
 
-  static entityToUpdateCategoryOutput(entity: Category): UpdateCategoryOutput {
+  static entityToUpdateCategoryOutput(
+    entity: Category,
+  ): ChangeCategoryNameOutput {
     return {
       id: entity.id,
       updatedAt: entity.updatedAt,

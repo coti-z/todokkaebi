@@ -9,17 +9,17 @@ export class CategoryPolicyLogic {
     }
   }
 
-  static updateCategory(
+  static changeName(
     project: Project,
     category: Category,
     reqUserId: string,
-    name?: string,
+    name: string,
   ) {
     if (project.adminId !== reqUserId) {
       throw errorFactory(ErrorCode.UNAUTHORIZED);
     }
-    if (name) {
-      category.changeName(name);
-    }
+    category.update({
+      name: name,
+    });
   }
 }

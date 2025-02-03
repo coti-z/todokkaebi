@@ -1,8 +1,8 @@
 import {
+  ChangeCategoryNameParams,
   CreateCategoryParams,
   DeleteCategoryParams,
   QueryCategoryByIdParams,
-  UpdateCategoryParams,
 } from '@project/application/param/category.params';
 import {
   CategoryRepositorySymbol,
@@ -41,12 +41,12 @@ export class CategoryService {
     return category;
   }
 
-  async updateCategory(params: UpdateCategoryParams): Promise<Category> {
+  async changeName(params: ChangeCategoryNameParams): Promise<Category> {
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    CategoryPolicyLogic.updateCategory(
+    CategoryPolicyLogic.changeName(
       params.project,
       category,
       params.reqUserId,

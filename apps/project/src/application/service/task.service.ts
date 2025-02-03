@@ -51,7 +51,6 @@ export class TaskService {
       startDate: params.startDate,
       status: params.status,
       title: params.title,
-      updatedAt: params.updatedAt,
     });
 
     return task;
