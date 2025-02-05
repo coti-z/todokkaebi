@@ -1,10 +1,7 @@
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 
-export enum MembershipRoleRecord {
-  OWNER = 'OWNER',
-  MEMBER = 'MEMBER',
-}
+export type MembershipRoleRecord = 'OWNER' | 'MEMBER';
 
 export interface ProjectMembershipRecord {
   id: string;
@@ -20,21 +17,21 @@ export class ProjectMembershipInfraMapper {
     MembershipRole,
     MembershipRoleRecord
   > = {
-    [MembershipRole.MEMBER]: MembershipRoleRecord.MEMBER,
-    [MembershipRole.OWNER]: MembershipRoleRecord.OWNER,
+    [MembershipRole.MEMBER]: 'MEMBER',
+    [MembershipRole.OWNER]: 'OWNER',
   };
   private static readonly STATE_MAPPING_TO_DOMAIN: Record<
     MembershipRoleRecord,
     MembershipRole
   > = {
-    [MembershipRoleRecord.MEMBER]: MembershipRole.MEMBER,
-    [MembershipRoleRecord.OWNER]: MembershipRole.OWNER,
+    MEMBER: MembershipRole.MEMBER,
+    OWNER: MembershipRole.OWNER,
   };
 
   static toPersistence(entity: ProjectMembership): ProjectMembershipRecord {
     const mappedState = ProjectMembershipInfraMapper.STATE_MAPPING[entity.role];
 
-    if (mappedState) {
+    if (!mappedState) {
       throw new Error(`Unknown state ${entity.role}`);
     }
     return {

@@ -19,6 +19,15 @@ export class ProjectRepositoryImpl implements IProjectRepository {
       where: {
         id: id,
       },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+        memberships: true,
+        projectInvitations: true,
+      },
     });
 
     if (!project) {
@@ -66,7 +75,43 @@ export class ProjectRepositoryImpl implements IProjectRepository {
           some: { id: categoryId },
         },
       },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
     });
+    if (!record) {
+      return null;
+    }
+
+    return ProjectInfraMapper.projectToDomain(record);
+  }
+
+  async findProjectByTaskId(taskId: string): Promise<Project | null> {
+    const record = await this.prisma.project.findFirst({
+      where: {
+        categories: {
+          some: {
+            tasks: {
+              some: {
+                id: taskId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
+    });
+
     if (!record) {
       return null;
     }

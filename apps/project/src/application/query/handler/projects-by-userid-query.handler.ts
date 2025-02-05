@@ -6,7 +6,7 @@ import { Project } from '@project/domain/entity/project.entity';
 
 @Injectable()
 @QueryHandler(ProjectsByUserIdQuery)
-export class projectsByUserIdQueryHandler
+export class ProjectsByUserIdQueryHandler
   implements IQueryHandler<ProjectsByUserIdQuery>
 {
   constructor(private readonly projectService: ProjectService) {}

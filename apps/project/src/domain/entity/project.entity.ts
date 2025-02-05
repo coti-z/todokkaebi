@@ -3,46 +3,30 @@ import { ProjectMembership } from '@project/domain/entity/project-membership.ent
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ErrorCode, errorFactory } from '@libs/exception';
-
-type ProjectImmutableProps = {
-  readonly id: string;
-  readonly createdAt: Date;
-};
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 type ProjectMutableProps = {
   adminId: string;
   name: string;
-  updatedAt: Date;
   memberships?: ProjectMembership[];
   categories?: Category[];
   projectInvitations?: ProjectInvitation[];
 };
 
-type ProjectProps = ProjectImmutableProps & ProjectMutableProps;
+type ProjectProps = BaseEntityProps & ProjectMutableProps;
 type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
 type ChangeNameProps = Pick<ProjectMutableProps, 'name'>;
 
-export class Project {
-  private constructor(private readonly props: ProjectProps) {}
-
-  get id(): string {
-    return this.props.id;
-  }
-
+export class Project extends BaseEntity<ProjectProps> {
   get adminId(): string {
     return this.props.adminId;
   }
 
   get name(): string {
     return this.props.name;
-  }
-
-  get createdAt(): Date {
-    return this.props.createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this.props.updatedAt;
   }
 
   get memberships(): ProjectMembership[] {
@@ -90,5 +74,11 @@ export class Project {
       throw errorFactory(ErrorCode.BAD_REQUEST);
     }
     this.props.name = req.name;
+    this.updateTimestamp();
+  }
+
+  update(partialProps: Partial<ProjectMutableProps>): void {
+    Object.assign(this.props, partialProps);
+    this.updateTimestamp();
   }
 }

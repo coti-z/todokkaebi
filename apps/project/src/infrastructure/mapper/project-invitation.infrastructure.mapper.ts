@@ -1,11 +1,7 @@
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
 
-export enum InvitationStatusRecord {
-  PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-}
+export type InvitationStatusRecord = 'PENDING' | 'ACCEPTED' | 'REJECTED';
 export interface ProjectInvitationRecord {
   id: string;
   projectId: string;
@@ -21,18 +17,18 @@ export class ProjectInvitationInfraMapper {
     InvitationStatus,
     InvitationStatusRecord
   > = {
-    [InvitationStatus.ACCEPTED]: InvitationStatusRecord.ACCEPTED,
-    [InvitationStatus.PENDING]: InvitationStatusRecord.PENDING,
-    [InvitationStatus.REJECTED]: InvitationStatusRecord.REJECTED,
+    [InvitationStatus.ACCEPTED]: 'ACCEPTED',
+    [InvitationStatus.PENDING]: 'PENDING',
+    [InvitationStatus.REJECTED]: 'REJECTED',
   };
 
   private static readonly STATE_MAPPING_TO_DOMAIN: Record<
     InvitationStatusRecord,
     InvitationStatus
   > = {
-    [InvitationStatusRecord.ACCEPTED]: InvitationStatus.ACCEPTED,
-    [InvitationStatusRecord.PENDING]: InvitationStatus.PENDING,
-    [InvitationStatusRecord.REJECTED]: InvitationStatus.REJECTED,
+    ACCEPTED: InvitationStatus.ACCEPTED,
+    PENDING: InvitationStatus.PENDING,
+    REJECTED: InvitationStatus.REJECTED,
   };
   static toPersistence(entity: ProjectInvitation): ProjectInvitationRecord {
     const mappedState =

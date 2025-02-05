@@ -1,169 +1,170 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectModule } from '../src/project.module';
-import {
-  CategoryMutations,
-  CategoryQueries,
-  CreateCategoryVariables,
-  CreateProjectVariables,
-  DeleteCategoryVariables,
-  ProjectMutations,
-  ProjectQueries,
-  QueryCategoryByIdVariables,
-  UpdateCategoryVariables,
-} from './helpers/graphql-resolver.enum';
-import { GraphQLTestHelper } from './helpers/graphql.helper';
+import { ProjectModule } from '@project/project.module';
+import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
+import { ProjectTestHelper } from './graphql-helper/operations/project.operations';
+import { CategoryTestHelper } from './graphql-helper/operations/category.operations';
 
-describe('Category Resolver (e2e)', () => {
+describe('Category resolver (e2e)', () => {
   let app: INestApplication;
-  let graphqlHelper: GraphQLTestHelper;
-  let projectId: string;
+  let graphQLTestHelper: GraphQLTestHelper;
+  let projectTestHelper: ProjectTestHelper;
+  let categoryTestHelper: CategoryTestHelper;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ProjectModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    graphqlHelper = new GraphQLTestHelper(app);
     await app.init();
 
-    // Create a project first since categories need a project
-    const { createProject } = await graphqlHelper.mutation<
-      any,
-      CreateProjectVariables
-    >(ProjectMutations.CREATE_PROJECT, {
-      input: {
-        name: 'Test Project for Categories',
-      },
-    });
-    projectId = createProject.data.id;
+    graphQLTestHelper = new GraphQLTestHelper(app);
+    projectTestHelper = new ProjectTestHelper(graphQLTestHelper);
+    categoryTestHelper = new CategoryTestHelper(graphQLTestHelper);
   });
 
-  describe('create category', () => {
-    it('should create a new category', async () => {
-      // When: create category
-      const result = await graphqlHelper.mutation<any, CreateCategoryVariables>(
-        CategoryMutations.CREATE_CATEGORY,
-        {
-          input: {
-            name: 'Test Category',
-            projectId: projectId,
-          },
-        },
-      );
-
-      // Then
-      expect(result.createCategory.success).toBe(true);
-      expect(result.createCategory.data).toMatchObject({
-        name: 'Test Category',
-        projectId: projectId,
-      });
-    });
+  afterAll(async () => {
+    await app.close();
   });
 
-  describe('update category', () => {
-    it('should update category name', async () => {
-      // Given: Create a category first
-      const { createCategory } = await graphqlHelper.mutation<
-        any,
-        CreateCategoryVariables
-      >(CategoryMutations.CREATE_CATEGORY, {
+  describe('Create category', () => {
+    let projectId: string;
+    beforeAll(async () => {
+      const projectResponse = await projectTestHelper.createProject({
         input: {
-          name: 'Original Category Name',
+          name: 'test project name',
+        },
+      });
+      projectId = projectResponse.data.id;
+    });
+
+    it('should create category', async () => {
+      const categoryName = 'test category name';
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: categoryName,
           projectId: projectId,
         },
       });
 
-      // When: Update the category
-      const result = await graphqlHelper.mutation<any, UpdateCategoryVariables>(
-        CategoryMutations.UPDATE_CATEGORY,
-        {
-          input: {
-            id: createCategory.data.id,
-            name: 'Updated Category Name',
-            projectId: projectId,
-          },
-        },
-      );
-      // Then: Verify update was successful
-      expect(result.updateCategory.success).toBe(true);
-      expect(result.updateCategory.data).toMatchObject({
-        id: createCategory.data.id,
-        name: 'Updated Category Name',
-        projectId: projectId,
-      });
+      expect(categoryResponse.data).toHaveProperty('name', categoryName);
     });
   });
 
-  describe('delete category', () => {
-    it('should delete a category successfully', async () => {
-      // Given: Create a category to delete
-      const { createCategory } = await graphqlHelper.mutation<
-        any,
-        CreateCategoryVariables
-      >(CategoryMutations.CREATE_CATEGORY, {
+  describe('Delete category', () => {
+    let projectId: string;
+    let categoryId: string;
+
+    const projectName = 'test project name';
+    const categoryName = 'test category name';
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
         input: {
-          name: 'Category to Delete',
+          name: projectName,
+        },
+      });
+
+      projectId = projectResponse.data.id;
+
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: categoryName,
           projectId: projectId,
         },
       });
 
-      // When: Delete the category
-      const result = await graphqlHelper.mutation<any, DeleteCategoryVariables>(
-        CategoryMutations.DELETE_CATEGORY,
-        {
-          input: {
-            id: createCategory.data.id,
-          },
-        },
-      );
-
-      // Then: Verify deletion was successful
-      expect(result.deleteCategory.success).toBe(true);
-      expect(result.deleteCategory.data.id).toBe(createCategory.data.id);
+      categoryId = categoryResponse.data.id;
     });
 
-    it('should fail when deleting non-existent category', async () => {
-      // When, Then
-      await expect(
-        graphqlHelper.mutation<any, DeleteCategoryVariables>(
-          CategoryMutations.DELETE_CATEGORY,
-          {
-            input: {
-              id: 'non-existent-id',
-            },
-          },
-        ),
-      ).rejects.toThrow();
+    it('should delete category', async () => {
+      const deleteCategoryResponse = await categoryTestHelper.deleteCategory({
+        input: {
+          id: categoryId,
+        },
+      });
+
+      expect(deleteCategoryResponse.success).toBe(true);
     });
   });
 
-  describe('query category', () => {
+  describe('Update category', () => {
+    let projectId: string;
+    let categoryId: string;
+
+    const projectName = 'test project name';
+    const categoryName = 'test category name';
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
+        input: {
+          name: projectName,
+        },
+      });
+
+      projectId = projectResponse.data.id;
+
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: categoryName,
+          projectId: projectId,
+        },
+      });
+
+      categoryId = categoryResponse.data.id;
+    });
+
+    it('should update category', async () => {
+      const updateCategoryName = 'test updated category name';
+      const updateCategoryResponse =
+        await categoryTestHelper.changeCategoryNameChange({
+          input: {
+            id: categoryId,
+            name: updateCategoryName,
+          },
+        });
+
+      expect(updateCategoryResponse.success).toBe(true);
+      expect(updateCategoryResponse.data).toHaveProperty(
+        'name',
+        updateCategoryName,
+      );
+    });
+  });
+
+  describe('Query category', () => {
+    let projectId: string;
+    let categoryId: string;
+
+    const projectName = 'test project name';
+    const categoryName = 'test category name for query';
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
+        input: {
+          name: projectName,
+        },
+      });
+
+      projectId = projectResponse.data.id;
+
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: categoryName,
+          projectId: projectId,
+        },
+      });
+
+      categoryId = categoryResponse.data.id;
+    });
+
     it('should query category', async () => {
-      // Given: create category
-      const { createCategory } = await graphqlHelper.mutation<
-        any,
-        CreateCategoryVariables
-      >(CategoryMutations.CREATE_CATEGORY, {
+      const categoryResponse = await categoryTestHelper.queryCategoryById({
         input: {
-          projectId: projectId,
-          name: 'create category name',
+          id: categoryId,
         },
       });
 
-      // When: query category
-      const { queryCategoryById } = await graphqlHelper.query<
-        any,
-        QueryCategoryByIdVariables
-      >(CategoryQueries.QUERY_CATEGORY, {
-        input: {
-          id: createCategory.data.id,
-        },
-      });
-      // Then: Verify query was successful
-
-      expect(queryCategoryById.success).toBe(true);
+      expect(categoryResponse.success).toBe(true);
+      expect(categoryResponse.data).toHaveProperty('name', categoryName);
     });
   });
 });

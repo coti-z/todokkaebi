@@ -1,10 +1,10 @@
 import { ApiResponseOf } from '@libs/response';
 import { ObjectType } from '@nestjs/graphql';
 import {
+  ChangeCategoryNameOutput,
   CreateCategoryOutput,
   DeleteCategoryOutput,
   QueryCategoryByIdOutput,
-  UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 
 @ObjectType()
@@ -17,8 +17,8 @@ export class DeleteCategoryResponse extends ApiResponseOf(
 ) {}
 
 @ObjectType()
-export class UpdateCategoryResponse extends ApiResponseOf(
-  UpdateCategoryOutput,
+export class ChangeCategoryNameResponse extends ApiResponseOf(
+  ChangeCategoryNameOutput,
 ) {}
 
 @ObjectType()

@@ -1,19 +1,18 @@
 import {
+  ChangeCategoryNameParams,
+  CreateCategoryParams,
+  DeleteCategoryParams,
+  QueryCategoryByIdParams,
+} from '@project/application/param/category.params';
+import {
   CategoryRepositorySymbol,
   ICategoryRepository,
 } from '@project/application/port/out/category-repository.port';
-import {
-  DeleteCategoryParams,
-  QueryCategoryParams,
-  UpdateCategoryParams,
-  CreateCategoryParams,
-} from '@project/application/param/category.params';
 
-import { Category } from '@project/domain/entity/category.entity';
-import { Inject } from '@nestjs/common';
-import { CategoryPolicyLogic } from '@project/domain/logic/category-policy.logic';
 import { ErrorCode, errorFactory } from '@libs/exception';
-import { QueryProjectByTaskIdParams } from '../param/project.params';
+import { Inject } from '@nestjs/common';
+import { Category } from '@project/domain/entity/category.entity';
+import { CategoryPolicyLogic } from '@project/domain/logic/category-policy.logic';
 
 export class CategoryService {
   constructor(
@@ -42,12 +41,12 @@ export class CategoryService {
     return category;
   }
 
-  async updateCategory(params: UpdateCategoryParams): Promise<Category> {
+  async changeName(params: ChangeCategoryNameParams): Promise<Category> {
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    CategoryPolicyLogic.updateCategory(
+    CategoryPolicyLogic.changeName(
       params.project,
       category,
       params.reqUserId,
@@ -57,12 +56,8 @@ export class CategoryService {
     return category;
   }
 
-  async queryCategoryById(
-    params: QueryProjectByTaskIdParams,
-  ): Promise<Category> {
-    const category = await this.categoryRepo.findCategoryById(
-      params.categoryId,
-    );
+  async queryCategoryById(params: QueryCategoryByIdParams): Promise<Category> {
+    const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }

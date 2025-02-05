@@ -1,30 +1,30 @@
 import { InvitationStatus } from '../value-objects/invation-status.vo';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from './abstract/base-entity.abstract.entity';
 
 type ProjectInvitationImmutableProps = {
-  readonly id: string;
   readonly projectId: string;
   readonly inviterUserId: string;
   readonly inviteeUserId: string;
-  readonly createdAt: Date;
 };
 
 type ProjectInvitationMutableProps = {
   status: InvitationStatus;
-  updatedAt: Date;
 };
 
 type ProjectInvitationProps = ProjectInvitationImmutableProps &
-  ProjectInvitationMutableProps;
+  ProjectInvitationMutableProps &
+  BaseEntityProps;
 
-type CreateProjectInvitationProps = Omit<
+export type CreateProjectInvitationProps = Omit<
   ProjectInvitationProps,
-  'createdAt' | 'updatedAt' | 'id'
+  'createdAt' | 'updatedAt' | 'id' | 'status'
 >;
 
-export class ProjectInvitation {
-  private constructor(private readonly props: ProjectInvitationProps) {}
-
+export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
   get id(): string {
     return this.props.id;
   }
@@ -55,12 +55,13 @@ export class ProjectInvitation {
   static create(props: CreateProjectInvitationProps): ProjectInvitation {
     const id = uuidv4();
     const now = new Date();
+    const newStatus = InvitationStatus.PENDING;
     return new ProjectInvitation({
       id: id,
       createdAt: now,
       updatedAt: now,
       projectId: props.projectId,
-      status: props.status,
+      status: newStatus,
       inviteeUserId: props.inviteeUserId,
       inviterUserId: props.inviterUserId,
     });
@@ -76,5 +77,10 @@ export class ProjectInvitation {
       inviteeUserId: props.inviteeUserId,
       inviterUserId: props.inviterUserId,
     });
+  }
+
+  update(props: Pick<ProjectInvitationMutableProps, 'status'>) {
+    this.props.status = props.status;
+    this.updateTimestamp();
   }
 }

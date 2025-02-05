@@ -14,13 +14,14 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
   ) {}
 
   async execute(query: CategoryByIdQuery): Promise<Category> {
-    await this.projectService.isProjectOwnerByTaskId({
+    await this.projectService.isProjectOwnerByCategoryId({
       id: query.categoryId,
       reqUserId: query.userId,
     });
 
     return await this.categoryService.queryCategoryById({
-      categoryId: query.categoryId,
+      id: query.categoryId,
+      reqUserId: query.userId,
     });
   }
 }

@@ -2,21 +2,21 @@ import { Category } from '@project/domain/entity/category.entity';
 import { CategoryType } from '@project/presentation/resolver/type/category.type';
 import { TaskPresentationMapper } from '@project/presentation/mapper/task.presentation.mapper';
 import {
+  ChangeCategoryNameInput,
   CreateCategoryInput,
   DeleteCategoryInput,
   QueryCategoryByIdInput,
-  UpdateCategoryInput,
 } from '@project/presentation/resolver/input/category.input';
 import { CreateCategoryCommand } from '@project/application/command/category/create-category.command';
 import {
+  ChangeCategoryNameOutput,
   CreateCategoryOutput,
   DeleteCategoryOutput,
   QueryCategoryByIdOutput,
-  UpdateCategoryOutput,
 } from '@project/presentation/resolver/output/category.output';
 import { DeleteCategoryCommand } from '@project/application/command/category/delete-category.command';
-import { UpdateCategoryCommand } from '@project/application/command/category/update-category.command';
 import { CategoryByIdQuery } from '@project/application/query/category-by-id.query';
+import { ChangeCategoryNameCommand } from '@project/application/command/category/change-category-name.command';
 
 export class CategoryPresentationMapper {
   static createCategoryInputToCreateCategoryCommand(
@@ -31,16 +31,11 @@ export class CategoryPresentationMapper {
     return new DeleteCategoryCommand(input.id, userId);
   }
 
-  static updateCategoryInputToUpdateCategoryCommand(
-    input: UpdateCategoryInput,
+  static changeCategoryNameInputToUpdateCategoryCommand(
+    input: ChangeCategoryNameInput,
     userId: string,
-  ): UpdateCategoryCommand {
-    return new UpdateCategoryCommand(
-      userId,
-      input.name,
-      input.id,
-      input.projectId,
-    );
+  ): ChangeCategoryNameCommand {
+    return new ChangeCategoryNameCommand(userId, input.name, input.id);
   }
 
   static queryCategoryByIdInputToQueryCategory(
@@ -67,13 +62,7 @@ export class CategoryPresentationMapper {
     return entities.map(entity => this.entityToObjectType(entity));
   }
   static entityToCreateCategoryOutput(entity: Category): CreateCategoryOutput {
-    return {
-      name: entity.name,
-      projectId: entity.projectId,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
-      createdAt: entity.createdAt,
-    };
+    return this.entityToObjectType(entity);
   }
   static entityToDeleteCategoryOutput(entity: Category): DeleteCategoryOutput {
     return {
@@ -81,7 +70,9 @@ export class CategoryPresentationMapper {
     };
   }
 
-  static entityToUpdateCategoryOutput(entity: Category): UpdateCategoryOutput {
+  static entityToUpdateCategoryOutput(
+    entity: Category,
+  ): ChangeCategoryNameOutput {
     return {
       id: entity.id,
       updatedAt: entity.updatedAt,
@@ -99,7 +90,7 @@ export class CategoryPresentationMapper {
       createdAt: entity.createdAt,
       id: entity.id,
       name: entity.name,
-      projectId: entity.id,
+      projectId: entity.projectId,
       tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
       updatedAt: entity.updatedAt,
     };

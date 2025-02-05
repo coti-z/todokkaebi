@@ -11,12 +11,11 @@ export type DeleteCategoryParams = Pick<Category, 'id'> & {
   reqUserId: string;
 };
 
-export type UpdateCategoryParams = Partial<Pick<CategoryProps, 'name'>> &
-  Pick<Category, 'id'> & {
-    project: Project;
-    reqUserId: string;
-  };
+export type ChangeCategoryNameParams = Pick<Category, 'id' | 'name'> & {
+  project: Project;
+  reqUserId: string;
+};
 
-export type QueryCategoryParams = Pick<Category, 'id'> & {
+export type QueryCategoryByIdParams = Pick<Category, 'id'> & {
   reqUserId: string;
 };
