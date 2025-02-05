@@ -12,6 +12,7 @@ import {
   IProjectInvitationRepository,
   ProjectInvitationRepositorySymbol,
 } from '../port/project-invitation-repository.port';
+import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
 
 @Injectable()
 export class ProjectInvitationService {
@@ -62,6 +63,12 @@ export class ProjectInvitationService {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
 
+    ProjectInvitationLogic.acceptProjectInvitation(
+      projectInvitation,
+      InvitationStatus.ACCEPTED,
+      params.reqUserId,
+    );
+
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
 
     return projectInvitation;
@@ -77,8 +84,12 @@ export class ProjectInvitationService {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
 
+    ProjectInvitationLogic.rejectProjectInvitation(
+      projectInvitation,
+      InvitationStatus.REJECTED,
+      params.reqUserId,
+    );
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
-
     return projectInvitation;
   }
 }

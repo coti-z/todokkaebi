@@ -62,7 +62,7 @@ export class ProjectInvitationResolver {
     const command =
       ProjectInvitationPresentationMapper.acceptProjectInvitationInputToCommand(
         input,
-        'test',
+        'test2',
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -79,7 +79,7 @@ export class ProjectInvitationResolver {
     const command =
       ProjectInvitationPresentationMapper.rejectProjectInvitationInputToCommand(
         input,
-        'test',
+        'test2',
       );
     const result = await this.commandBus.execute(command);
     const output =

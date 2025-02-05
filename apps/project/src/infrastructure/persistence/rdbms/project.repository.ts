@@ -19,6 +19,15 @@ export class ProjectRepositoryImpl implements IProjectRepository {
       where: {
         id: id,
       },
+      include: {
+        categories: {
+          include: {
+            tasks: true,
+          },
+        },
+        memberships: true,
+        projectInvitations: true,
+      },
     });
 
     if (!project) {

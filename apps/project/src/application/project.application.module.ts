@@ -23,6 +23,7 @@ import { UpdateProjectInvitationCommandHandler } from './command/project-invitat
 import { RejectProjectInvitationCommandHandler } from './command/project-invitation/handlers/reject-project-invitation-command.handler';
 import { AcceptProjectInvitationCommandHandler } from './command/project-invitation/handlers/accept-project-invitation-command.handler';
 import { ChangeCategoryNameHandler } from './command/category/handler/change-category-name.handler';
+import { ProjectMembershipService } from './service/project-membership.service';
 
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule],
@@ -50,6 +51,7 @@ import { ChangeCategoryNameHandler } from './command/category/handler/change-cat
     ProjectsByUserIdQueryHandler,
     TasksByCategoryIdQueryHandler,
     ProjectInvitationService,
+    ProjectMembershipService,
     ProjectService,
     CategoryService,
     TaskService,

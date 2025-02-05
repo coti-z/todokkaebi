@@ -20,19 +20,105 @@ describe('ProjectInviationResolver (e2e)', () => {
     await app.init();
 
     graphQLTestHelper = new GraphQLTestHelper(app);
+    projectTestHelper = new ProjectTestHelper(graphQLTestHelper);
     projectInvitationTestHelper = new ProjectInvitationTestHelper(
       graphQLTestHelper,
     );
-    projectTestHelper = new ProjectTestHelper(graphQLTestHelper);
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  describe('Create project invitation ', () => {});
+  describe('Create project invitation ', () => {
+    let projectId: string;
+    beforeAll(async () => {
+      const response = await projectTestHelper.createProject({
+        input: {
+          name: 'test project name',
+        },
+      });
+      projectId = response.data.id;
+    });
 
-  describe('Accept project invitation ', () => {});
+    it('should create project invitation', async () => {
+      const response =
+        await projectInvitationTestHelper.createProjectInvitation({
+          input: {
+            inviteeUserId: 'test2',
+            projectId: projectId,
+          },
+        });
 
-  describe('Reject project invitation ', () => {});
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('Accept project invitation ', () => {
+    let projectId: string;
+    let projectInvitationId: string;
+    beforeAll(async () => {
+      const createProjectResponse = await projectTestHelper.createProject({
+        input: {
+          name: 'test project name',
+        },
+      });
+      projectId = createProjectResponse.data.id;
+
+      const createProjectInvitationResponse =
+        await projectInvitationTestHelper.createProjectInvitation({
+          input: {
+            inviteeUserId: 'test2',
+            projectId: projectId,
+          },
+        });
+
+      projectInvitationId = createProjectInvitationResponse.data.id;
+    });
+
+    it('should accept project invitation', async () => {
+      const response =
+        await projectInvitationTestHelper.acceptProjectInvitation({
+          input: {
+            id: projectInvitationId,
+          },
+        });
+
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('Reject project invitation ', () => {
+    let projectId: string;
+    let projectInvitationId: string;
+    beforeAll(async () => {
+      const createProjectResponse = await projectTestHelper.createProject({
+        input: {
+          name: 'test project name',
+        },
+      });
+      projectId = createProjectResponse.data.id;
+
+      const createProjectInvitationResponse =
+        await projectInvitationTestHelper.createProjectInvitation({
+          input: {
+            inviteeUserId: 'test2',
+            projectId: projectId,
+          },
+        });
+
+      projectInvitationId = createProjectInvitationResponse.data.id;
+    });
+
+    it('should reject project invitation', async () => {
+      const response =
+        await projectInvitationTestHelper.rejectProjectInvitation({
+          input: {
+            id: projectInvitationId,
+          },
+        });
+
+      expect(response.success).toBe(true);
+    });
+  });
 });

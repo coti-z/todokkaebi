@@ -62,9 +62,6 @@ importers:
       '@types/graphql':
         specifier: ^14.2.3
         version: 14.5.0
-      '@types/lodash':
-        specifier: ^4.17.15
-        version: 4.17.15
       axios:
         specifier: ^1.7.7
         version: 1.7.9
@@ -147,6 +144,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.2
         version: 29.5.14
+      '@types/lodash':
+        specifier: ^4.17.15
+        version: 4.17.15
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
