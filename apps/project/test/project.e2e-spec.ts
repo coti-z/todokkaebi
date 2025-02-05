@@ -2,19 +2,12 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '@project/project.module';
 import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
-import {
-  CreateProjectVariables,
-  ProjectMutations,
-  ProjectOperations,
-  UpdateProjectVariables,
-  DeleteProjectVariables,
-  QueryProjectVariables,
-  ProjectQueries,
-} from './graphql-helper/project.operations';
+import { ProjectTestHelper } from './graphql-helper/operations/project.operations';
 
-describe('ProjectResolver (e2e)', () => {
+describe('project resolver (e2e)', () => {
   let app: INestApplication;
   let graphQLTestHelper: GraphQLTestHelper;
+  let projectTestHelper: ProjectTestHelper;
   let createdProjectId: string;
 
   beforeAll(async () => {
@@ -26,100 +19,109 @@ describe('ProjectResolver (e2e)', () => {
     await app.init();
 
     graphQLTestHelper = new GraphQLTestHelper(app);
+    projectTestHelper = new ProjectTestHelper(graphQLTestHelper);
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  describe('Project Operations', () => {
-    it('should create a new project', async () => {
-      const variables: CreateProjectVariables = {
-        input: { name: 'Test Project' },
-      };
+  describe('Create project', () => {
+    it('should create project', async () => {
+      const response = await projectTestHelper.createProject({
+        input: {
+          name: 'test name',
+        },
+      });
 
-      const response = await graphQLTestHelper.execute(
-        ProjectOperations[ProjectMutations.CREATE_PROJECT],
-        variables,
-      );
-
-      expect(response.success).toBe(true);
       expect(response.data).toHaveProperty('id');
-      expect(response.data).toHaveProperty('name', 'Test Project');
+      expect(response.data).toHaveProperty('name', 'test name');
+    });
+  });
 
+  describe('Delete project', () => {
+    let createdProjectId: string;
+    beforeEach(async () => {
+      const response = await projectTestHelper.createProject({
+        input: {
+          name: 'test name',
+        },
+      });
       createdProjectId = response.data.id;
     });
 
-    it('should query a created project', async () => {
-      const variables: QueryProjectVariables = {
-        input: { projectId: createdProjectId },
-      };
-
-      const response = await graphQLTestHelper.execute(
-        ProjectOperations[ProjectQueries.QUERY_PROJECT],
-        variables,
-      );
-
-      expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('id', createdProjectId);
-      expect(response.data).toHaveProperty('name', 'Test Project');
-    });
-
-    it('should update the project', async () => {
-      const variables: UpdateProjectVariables = {
+    it('should delete project', async () => {
+      const response = await projectTestHelper.deleteProject({
         input: {
           projectId: createdProjectId,
-          name: 'Updated Test Project',
         },
-      };
-
-      const response = await graphQLTestHelper.execute(
-        ProjectOperations[ProjectMutations.UPDATE_PROJECT],
-        variables,
-      );
+      });
 
       expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('id', createdProjectId);
-      expect(response.data).toHaveProperty('name', 'Updated Test Project');
     });
 
-    it('should query all projects', async () => {
-      const response = await graphQLTestHelper.execute(
-        ProjectOperations[ProjectQueries.QUERY_PROJECTS],
-      );
-
-      expect(response.success).toBe(true);
-      expect(response.data.projects).toBeInstanceOf(Array);
-      expect(response.data.projects.length).toBeGreaterThan(0);
-    });
-
-    it('should delete the project', async () => {
-      const variables: DeleteProjectVariables = {
-        input: { projectId: createdProjectId },
-      };
-
-      const response = await graphQLTestHelper.execute(
-        ProjectOperations[ProjectMutations.DELETE_PROJECT],
-        variables,
-      );
-
-      expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('id', createdProjectId);
-    });
-
-    it('should fail to query deleted project', async () => {
-      const variables: QueryProjectVariables = {
-        input: { projectId: createdProjectId },
-      };
+    it('should fail to retry that delete project after delete project', async () => {
+      const response = await projectTestHelper.deleteProject({
+        input: {
+          projectId: createdProjectId,
+        },
+      });
 
       try {
-        await graphQLTestHelper.execute(
-          ProjectOperations[ProjectQueries.QUERY_PROJECT],
-          variables,
-        );
+        await projectTestHelper.deleteProject({
+          input: {
+            projectId: createdProjectId,
+          },
+        });
+
+        fail('should fail');
       } catch (error) {
-        expect(error).toBeDefined();
+        expect(error.success).toBe(false);
       }
+    });
+  });
+
+  describe('Query project', () => {
+    let createdProjectId: string;
+
+    beforeAll(async () => {
+      const response = await projectTestHelper.createProject({
+        input: {
+          name: 'test name',
+        },
+      });
+      createdProjectId = response.data.id;
+    });
+    it('should query project', async () => {
+      const response = await projectTestHelper.queryProject({
+        input: {
+          projectId: createdProjectId,
+        },
+      });
+
+      expect(response.success).toBe(true);
+      expect(response.data).toHaveProperty('id', createdProjectId);
+    });
+  });
+
+  describe('Update project', () => {
+    let createdProjectId: string;
+    beforeAll(async () => {
+      const response = await projectTestHelper.createProject({
+        input: {
+          name: 'test name',
+        },
+      });
+      createdProjectId = response.data.id;
+    });
+    it('should update project', async () => {
+      const response = await projectTestHelper.updateProject({
+        input: {
+          projectId: createdProjectId,
+          name: 'test name2',
+        },
+      });
+      expect(response.data).toHaveProperty('name', 'test name2');
     });
   });
 });

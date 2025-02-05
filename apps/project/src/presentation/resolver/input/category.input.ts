@@ -23,7 +23,6 @@ export class DeleteCategoryInput extends PickType(CategoryInput, ['id']) {}
 
 @InputType()
 export class ChangeCategoryNameInput extends PickType(CategoryInput, [
-  'projectId',
   'id',
   'name',
 ]) {}

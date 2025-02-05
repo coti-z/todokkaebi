@@ -1,5 +1,6 @@
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
 import { v4 as uuidv4 } from 'uuid';
+import { pickBy } from 'lodash';
 import {
   BaseEntity,
   BaseEntityProps,
@@ -14,7 +15,6 @@ export type TaskMutableProps = {
   endDate: Date;
   actualStartDate: Date;
   actualEndDate?: Date;
-  updatedAt: Date;
 };
 
 /**
@@ -116,7 +116,7 @@ export class Task extends BaseEntity<TaskProps> {
 
   // ----- UPDATE METHODS -----
 
-  update(partial: Partial<TaskMutableProps>) {
+  public update(partial: Partial<TaskMutableProps>) {
     Object.assign(this.props, partial);
     this.updateTimestamp();
   }

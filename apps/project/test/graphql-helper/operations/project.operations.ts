@@ -1,4 +1,6 @@
+import { DocumentNode } from 'graphql';
 import { gql } from 'graphql-tag';
+import { BaseResponse, GraphQLTestHelper } from '../graphql.helper';
 
 export enum ProjectQueries {
   QUERY_PROJECT = 'QUERY_PROJECT',
@@ -154,6 +156,8 @@ export const ProjectOperations = {
 export interface ProjectInputBase {
   projectId: string;
   name: string;
+
+  userId: string;
 }
 
 export interface CreateProjectVariables {
@@ -161,7 +165,7 @@ export interface CreateProjectVariables {
 }
 
 export interface UpdateProjectVariables {
-  input: ProjectInputBase;
+  input: Pick<ProjectInputBase, 'name' | 'projectId'>;
 }
 
 export interface DeleteProjectVariables {
@@ -170,4 +174,64 @@ export interface DeleteProjectVariables {
 
 export interface QueryProjectVariables {
   input: Pick<ProjectInputBase, 'projectId'>;
+}
+export interface QueryProjectsVariables {}
+
+export class ProjectTestHelper {
+  constructor(private readonly graphQLTestHelper: GraphQLTestHelper) {}
+
+  async createProject(
+    variables: CreateProjectVariables,
+  ): Promise<BaseResponse<any>> {
+    return await this.executeMutation(
+      ProjectMutations.CREATE_PROJECT,
+      variables,
+    );
+  }
+
+  async updateProject(
+    variables: UpdateProjectVariables,
+  ): Promise<BaseResponse<any>> {
+    return await this.executeMutation(
+      ProjectMutations.UPDATE_PROJECT,
+      variables,
+    );
+  }
+
+  async deleteProject(
+    variables: DeleteProjectVariables,
+  ): Promise<BaseResponse<any>> {
+    return await this.executeMutation(
+      ProjectMutations.DELETE_PROJECT,
+      variables,
+    );
+  }
+
+  async queryProject(
+    variables: QueryProjectVariables,
+  ): Promise<BaseResponse<any>> {
+    return await this.executeQuery(ProjectQueries.QUERY_PROJECT, variables);
+  }
+
+  async queryProjects(
+    variables: QueryProjectsVariables,
+  ): Promise<BaseResponse<any>> {
+    return await this.executeQuery(ProjectQueries.QUERY_PROJECTS, variables);
+  }
+
+  private async executeMutation<T>(
+    mutation: ProjectMutations,
+    variables: Record<string, any>,
+  ) {
+    const document: DocumentNode = ProjectOperations[mutation];
+    return await this.graphQLTestHelper.execute<T>(document, variables);
+  }
+
+  private async executeQuery<T>(
+    query: ProjectQueries,
+    variables: Record<string, any>,
+  ) {
+    const document: DocumentNode = ProjectOperations[query];
+    return await this.graphQLTestHelper.execute<T>(document, variables);
+  }
 }

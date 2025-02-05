@@ -1,34 +1,17 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '@project/project.module';
-import {
-  CategoryMutations,
-  CategoryOperations,
-  CreateCategoryVariables,
-} from './graphql-helper/category.operations';
 import { GraphQLTestHelper } from './graphql-helper/graphql.helper';
-import {
-  CreateProjectVariables,
-  ProjectMutations,
-  ProjectOperations,
-} from './graphql-helper/project.operations';
-import {
-  CreateTaskVariables,
-  DeleteTaskVariables,
-  QueryTasksVariables,
-  QueryTaskVariables,
-  TaskMutations,
-  TaskOperations,
-  TaskQueries,
-  UpdateTaskVariables,
-} from './graphql-helper/task.operations';
+import { ProjectTestHelper } from './graphql-helper/operations/project.operations';
+import { CategoryTestHelper } from './graphql-helper/operations/category.operations';
+import { TaskTestHelper } from './graphql-helper/operations/task.operations';
 
-describe('TaskResolver (e2e)', () => {
+describe('Task resolver (e2e)', () => {
   let app: INestApplication;
   let graphQLTestHelper: GraphQLTestHelper;
-  let createdProjectId: string;
-  let createdCategoryId: string;
-  let createdTaskId: string;
+  let projectTestHelper: ProjectTestHelper;
+  let categoryTestHelper: CategoryTestHelper;
+  let taskTestHelper: TaskTestHelper;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -39,120 +22,185 @@ describe('TaskResolver (e2e)', () => {
     await app.init();
 
     graphQLTestHelper = new GraphQLTestHelper(app);
-
-    // Create test project
-    const projectVariables: CreateProjectVariables = {
-      input: { name: 'Test Project for Task' },
-    };
-
-    const projectResponse = await graphQLTestHelper.execute(
-      ProjectOperations[ProjectMutations.CREATE_PROJECT],
-      projectVariables,
-    );
-    createdProjectId = projectResponse.data.id;
-
-    // Create test category
-    const categoryVariables: CreateCategoryVariables = {
-      input: {
-        name: 'Test Category for Task',
-        projectId: createdProjectId,
-      },
-    };
-
-    const categoryResponse = await graphQLTestHelper.execute(
-      CategoryOperations[CategoryMutations.CREATE_CATEGORY],
-      categoryVariables,
-    );
-    createdCategoryId = categoryResponse.data.id;
+    projectTestHelper = new ProjectTestHelper(graphQLTestHelper);
+    categoryTestHelper = new CategoryTestHelper(graphQLTestHelper);
+    taskTestHelper = new TaskTestHelper(graphQLTestHelper);
   });
-
   afterAll(async () => {
     await app.close();
   });
 
-  describe('Task Operations', () => {
-    beforeAll(async () => {
-      const variables: CreateTaskVariables = {
+  describe('Create Task', () => {
+    let projectId: string;
+    let categoryId: string;
+
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
         input: {
-          title: 'Test Task',
-          categoryId: createdCategoryId,
-          startDate: new Date().toISOString(),
-          endDate: new Date().toISOString(),
+          name: 'test project name',
         },
-      };
+      });
+      projectId = projectResponse.data.id;
 
-      const response = await graphQLTestHelper.execute(
-        TaskOperations[TaskMutations.CREATE_TASK],
-        variables,
-      );
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: 'test category name',
+          projectId: projectId,
+        },
+      });
 
-      expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('id');
-      expect(response.data).toHaveProperty('title', 'Test Task');
-      expect(response.data).toHaveProperty('categoryId', createdCategoryId);
-
-      createdTaskId = response.data.id;
+      categoryId = categoryResponse.data.id;
     });
 
-    it('query task by taskId', async () => {
-      const variables: QueryTaskVariables = {
+    it('should create task', async () => {
+      const response = await taskTestHelper.createTask({
         input: {
-          id: createdTaskId,
+          categoryId: categoryId,
+          startDate: new Date().toDateString(),
+          endDate: new Date().toDateString(),
+          title: 'test task name',
         },
-      };
-
-      const response = await graphQLTestHelper.execute(
-        TaskOperations[TaskQueries.QUERY_TASK],
-        variables,
-      );
+      });
 
       expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('title', 'Test Task');
+      expect(response.data).toHaveProperty('title', 'test task name');
     });
+  });
 
-    it('query task by categoryId', async () => {
-      const variables: QueryTasksVariables = {
+  describe('Delete Task', () => {
+    let projectId: string;
+    let categoryId: string;
+    let taskId: string;
+
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
         input: {
-          categoryId: createdCategoryId,
+          name: 'test project name',
         },
-      };
+      });
+      projectId = projectResponse.data.id;
 
-      const response = await graphQLTestHelper.execute(
-        TaskOperations[TaskQueries.QUERY_TASKS],
-        variables,
-      );
-      expect(response.success).toBe(true);
-    });
-
-    it('should update task', async () => {
-      const variables: UpdateTaskVariables = {
+      const categoryResponse = await categoryTestHelper.createCategory({
         input: {
-          id: createdTaskId,
-          check: true,
+          name: 'test category name',
+          projectId: projectId,
         },
-      };
-      const response = await graphQLTestHelper.execute(
-        TaskOperations[TaskMutations.UPDATE_TASK],
-        variables,
-      );
-      expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('check', true);
+      });
+
+      categoryId = categoryResponse.data.id;
+
+      const taskResponse = await taskTestHelper.createTask({
+        input: {
+          categoryId,
+          endDate: new Date().toDateString(),
+          startDate: new Date().toDateString(),
+          title: 'test task name',
+        },
+      });
+
+      taskId = taskResponse.data.id;
     });
 
     it('should delete task', async () => {
-      const variables: DeleteTaskVariables = {
+      const response = await taskTestHelper.deleteTask({
         input: {
-          id: createdTaskId,
+          id: taskId,
         },
-      };
-
-      const response = await graphQLTestHelper.execute(
-        TaskOperations[TaskMutations.DELETE_TASK],
-        variables,
-      );
+      });
 
       expect(response.success).toBe(true);
-      expect(response.data).toHaveProperty('id', createdTaskId);
+    });
+  });
+
+  describe('Query task', () => {
+    let projectId: string;
+    let categoryId: string;
+    let taskId: string;
+
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
+        input: {
+          name: 'test project name',
+        },
+      });
+      projectId = projectResponse.data.id;
+
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: 'test category name',
+          projectId: projectId,
+        },
+      });
+
+      categoryId = categoryResponse.data.id;
+
+      const taskResponse = await taskTestHelper.createTask({
+        input: {
+          categoryId,
+          endDate: new Date().toDateString(),
+          startDate: new Date().toDateString(),
+          title: 'test task name',
+        },
+      });
+
+      taskId = taskResponse.data.id;
+    });
+
+    it('query task', async () => {
+      const response = await taskTestHelper.queryTask({
+        input: {
+          id: taskId,
+        },
+      });
+
+      expect(response.data).toHaveProperty('id', taskId);
+    });
+  });
+
+  describe('Update task', () => {
+    let projectId: string;
+    let categoryId: string;
+    let taskId: string;
+
+    beforeEach(async () => {
+      const projectResponse = await projectTestHelper.createProject({
+        input: {
+          name: 'test project name',
+        },
+      });
+      projectId = projectResponse.data.id;
+
+      const categoryResponse = await categoryTestHelper.createCategory({
+        input: {
+          name: 'test category name',
+          projectId: projectId,
+        },
+      });
+
+      categoryId = categoryResponse.data.id;
+
+      const taskResponse = await taskTestHelper.createTask({
+        input: {
+          categoryId,
+          endDate: new Date().toDateString(),
+          startDate: new Date().toDateString(),
+          title: 'test task name',
+        },
+      });
+
+      taskId = taskResponse.data.id;
+    });
+
+    it('should update task', async () => {
+      const changeName = 'change name';
+      const response = await taskTestHelper.updateTask({
+        input: {
+          id: taskId,
+          title: changeName,
+        },
+      });
+
+      expect(response.data).toHaveProperty('title', changeName);
     });
   });
 });

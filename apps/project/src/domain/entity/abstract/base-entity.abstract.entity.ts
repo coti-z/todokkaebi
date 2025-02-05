@@ -1,4 +1,4 @@
-type BaseEntityProps = {
+export type BaseEntityProps = {
   readonly id: string;
   readonly createdAt: Date;
   updatedAt: Date;

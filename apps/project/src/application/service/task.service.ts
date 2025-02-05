@@ -13,6 +13,7 @@ import {
   ITaskRepository,
   TaskRepositorySymbol,
 } from '../port/out/task-repository.port';
+import { isUndefined, omitBy, pickBy } from 'lodash';
 
 @Injectable()
 export class TaskService {
@@ -34,24 +35,18 @@ export class TaskService {
   }
 
   async updateTask(params: UpdateTaskParams): Promise<Task> {
-    const task = await this.taskRepo.queryTaskByTaskId(params.id);
+    const task = await this.taskRepo.queryTaskByTaskId(
+      params.updateDataParams.id,
+    );
     if (!task) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
-    TaskPolicyLogic.updateTask({
-      id: params.id,
-      project: params.project,
-      reqUserId: params.reqUserId,
-      task: task,
-      actualEndDate: params.actualEndDate,
-      actualStartDate: params.actualStartDate,
-      categoryId: params.categoryId,
-      check: params.check,
-      endDate: params.endDate,
-      startDate: params.startDate,
-      status: params.status,
-      title: params.title,
-    });
+    TaskPolicyLogic.updateTask(
+      omitBy(params.updateDataParams, isUndefined),
+      params.project,
+      params.reqUserId,
+      task,
+    );
 
     return task;
   }

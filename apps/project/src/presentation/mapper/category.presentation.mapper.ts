@@ -35,12 +35,7 @@ export class CategoryPresentationMapper {
     input: ChangeCategoryNameInput,
     userId: string,
   ): ChangeCategoryNameCommand {
-    return new ChangeCategoryNameCommand(
-      userId,
-      input.name,
-      input.id,
-      input.projectId,
-    );
+    return new ChangeCategoryNameCommand(userId, input.name, input.id);
   }
 
   static queryCategoryByIdInputToQueryCategory(

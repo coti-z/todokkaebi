@@ -20,17 +20,19 @@ export class UpdateTaskCommandHandler
     });
 
     return await this.taskService.updateTask({
-      id: command.id,
-      project: project,
+      updateDataParams: {
+        id: command.id,
+        categoryId: command.categoryId,
+        check: command.check,
+        title: command.title,
+        status: command.status,
+        actualStartDate: command.actualStartDate,
+        actualEndDate: command.actualEndDate,
+        startDate: command.startDate,
+        endDate: command.endDate,
+      },
       reqUserId: command.reqUserId,
-      categoryId: command.categoryId,
-      check: command.check,
-      title: command.title,
-      status: command.status,
-      actualStartDate: command.actualStartDate,
-      actualEndDate: command.actualEndDate,
-      startDate: command.startDate,
-      endDate: command.endDate,
+      project: project,
     });
   }
 }

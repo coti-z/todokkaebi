@@ -61,6 +61,7 @@ export class ProjectInvitationService {
     if (!projectInvitation) {
       throw errorFactory(ErrorCode.NOT_FOUND);
     }
+
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
 
     return projectInvitation;

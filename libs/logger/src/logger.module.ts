@@ -4,7 +4,7 @@ import {
   WinstonModule,
 } from 'nest-winston';
 import * as winston from 'winston';
-import { LoggerService } from '@libs/logger';
+import { LoggerService } from './logger.service';
 
 @Global()
 @Module({

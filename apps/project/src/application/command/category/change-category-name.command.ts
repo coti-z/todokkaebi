@@ -5,6 +5,5 @@ export class ChangeCategoryNameCommand implements ICommand {
     public readonly reqUserId: string,
     public readonly name: string,
     public readonly categoryId: string,
-    public readonly projectId: string,
   ) {}
 }

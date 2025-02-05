@@ -62,6 +62,9 @@ importers:
       '@types/graphql':
         specifier: ^14.2.3
         version: 14.5.0
+      '@types/lodash':
+        specifier: ^4.17.15
+        version: 4.17.15
       axios:
         specifier: ^1.7.7
         version: 1.7.9
@@ -83,6 +86,9 @@ importers:
       lib:
         specifier: ^5.1.0
         version: 5.1.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
@@ -1546,6 +1552,9 @@ packages:
 
   '@types/jsonwebtoken@9.0.5':
     resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
+
+  '@types/lodash@4.17.15':
+    resolution: {integrity: sha512-w/P33JFeySuhN6JLkysYUK2gEmy9kHHFN7E8ro0tkfmlDOgxBDzWEZ/J8cWA+fHqFevpswDTFZnDx+R9lbL6xw==}
 
   '@types/long@4.0.2':
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
@@ -6462,6 +6471,8 @@ snapshots:
   '@types/jsonwebtoken@9.0.5':
     dependencies:
       '@types/node': 20.17.14
+
+  '@types/lodash@4.17.15': {}
 
   '@types/long@4.0.2': {}
 

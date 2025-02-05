@@ -1,4 +1,8 @@
 import { gql } from 'graphql-tag';
+import { emit } from 'process';
+import { BaseResponse, GraphQLTestHelper } from '../graphql.helper';
+import { DocumentNode } from 'graphql';
+import { ProjectInvitationOperations } from './project-invitation.operations';
 
 export enum TaskQueries {
   QUERY_TASK = 'QUERY_TASK',
@@ -153,4 +157,44 @@ export interface QueryTasksVariables {
     categoryId?: string;
     status?: TaskInputBase['status'];
   };
+}
+
+export class TaskTestHelper {
+  constructor(private readonly graphQLTestHelper: GraphQLTestHelper) {}
+
+  async createTask(variables: CreateTaskVariables): Promise<BaseResponse<any>> {
+    return await this.executeMutation(TaskMutations.CREATE_TASK, variables);
+  }
+
+  async updateTask(variables: UpdateTaskVariables): Promise<BaseResponse<any>> {
+    return await this.executeMutation(TaskMutations.UPDATE_TASK, variables);
+  }
+
+  async deleteTask(variables: DeleteTaskVariables): Promise<BaseResponse<any>> {
+    return await this.executeMutation(TaskMutations.DELETE_TASK, variables);
+  }
+
+  async queryTask(variables: QueryTaskVariables): Promise<BaseResponse<any>> {
+    return await this.executeQuery(TaskQueries.QUERY_TASK, variables);
+  }
+
+  async queryTasks(variables: QueryTasksVariables): Promise<BaseResponse<any>> {
+    return await this.executeQuery(TaskQueries.QUERY_TASKS, variables);
+  }
+
+  private async executeMutation<T>(
+    mutation: TaskMutations,
+    variables: Record<string, any>,
+  ) {
+    const document: DocumentNode = TaskOperations[mutation];
+    return await this.graphQLTestHelper.execute<T>(document, variables);
+  }
+
+  private async executeQuery<T>(
+    query: TaskQueries,
+    variables: Record<string, any>,
+  ) {
+    const document: DocumentNode = TaskOperations[query];
+    return await this.graphQLTestHelper.execute<T>(document, variables);
+  }
 }

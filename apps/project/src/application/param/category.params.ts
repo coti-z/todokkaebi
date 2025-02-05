@@ -11,7 +11,7 @@ export type DeleteCategoryParams = Pick<Category, 'id'> & {
   reqUserId: string;
 };
 
-export type ChangeNameCategoryParams = Pick<Category, 'id' | 'name'> & {
+export type ChangeCategoryNameParams = Pick<Category, 'id' | 'name'> & {
   project: Project;
   reqUserId: string;
 };
