@@ -1,4 +1,4 @@
-import { TokenEnum } from '@libs/jwt';
+import { TokenEnum } from 'libs/jwt/src/token.enum';
 
 export interface JwtPayload {
   userId: string;

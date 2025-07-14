@@ -1,3 +1,4 @@
+import { LoggerService } from '@libs/logger/logger.service';
 import {
   CallHandler,
   ExecutionContext,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable, tap } from 'rxjs';
-import { LoggerService } from '@libs/logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

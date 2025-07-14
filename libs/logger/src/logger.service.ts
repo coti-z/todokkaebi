@@ -9,14 +9,14 @@ export class LoggerService {
   ) {}
 
   info(message: string, context?: Record<string, any>) {
-    this.logger.info(message, context);
+    this.logger.info(message);
   }
 
-  warn(message: string, context: Record<string, any>) {
-    this.logger.warn(message, context);
+  warn(message: string, context?: Record<string, any>) {
+    this.logger.warn(message);
   }
 
-  error(message: string, trace?: string, context?: Record<string, any>) {
+  error(message: string, trace: string, context?: Record<string, any>) {
     this.logger.error(message, { trace, ...context });
   }
 }

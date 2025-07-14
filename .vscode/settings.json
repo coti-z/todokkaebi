@@ -1,2 +1,7 @@
 {
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
+  "typescript.suggest.paths": true,
+  "window.zoomLevel": 0,
+
 }

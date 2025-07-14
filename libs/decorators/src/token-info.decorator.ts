@@ -1,6 +1,6 @@
+import { JwtPayload } from '@libs/jwt';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { JwtPayload } from '@libs/jwt';
 
 export const TokenInfo = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): JwtPayload => {

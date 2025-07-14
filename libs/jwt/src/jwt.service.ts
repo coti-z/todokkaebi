@@ -4,11 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import {
   JwtPairPayload,
   JwtPayload,
+  TokenEnum,
   TokenPair,
-} from '@libs/jwt/jwt-token.interface';
-import { TokenEnum, TokenTimeEnum } from '@libs/jwt';
+  TokenTimeEnum,
+} from '@libs/jwt';
 import { ErrorCode, errorFactory } from '@libs/exception';
-
 @Injectable()
 export class JwtTokenService {
   constructor(

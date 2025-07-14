@@ -1,99 +1,22 @@
 services:
-  user:
-    container_name: user
+  nestjs:
+    container_name: nestjs-todokkabi
     build:
       context: .
-      dockerfile: ./apps/user/Dockerfile
+      dockerfile: ./Dockerfile
       target: development
     ports:
-      - "3001:3001"
+      - "3000:3000"
 
-    command: sh apps/scripts/start-user.sh
-    depends_on:
-      mysql-user:
-        condition: service_healthy
-    volumes:
-      - ./apps/user:/usr/src/app/apps/user
-      - ./libs:/usr/src/app/libs
-    environment:
-      DATABASE_USER_URL: ${DATABASE_USER_URL}
-
-
-  mysql-user:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: userdb
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: '1234'
-      MYSQL_ROOT_PASSWORD: '1234'
-    ports:
-      - '6001:3306'
-    volumes:
-      - 'mysql_user_data:/var/lib/mysql'
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  auth:
-    container_name: auth
-    build:
-      context: .
-      dockerfile: ./apps/auth/Dockerfile
-      target: development
-    expose:
-      - 50051
-    ports:
-      - "3002:3002"
-      - "50051:50051"    # gRPC 포트 추가
-    command: sh apps/scripts/start-auth.sh
-    depends_on:
-      mysql-auth:
-        condition: service_healthy
-    volumes:
-      - ./apps/auth:/usr/src/app/apps/auth
-      - ./libs:/usr/src/app/libs
-    environment:
-      DATABASE_AUTH_URL: ${DATABASE_AUTH_URL}
-
-  mysql-auth:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: authdb
-      MYSQL_USER: 'auth'
-      MYSQL_PASSWORD: '1234'
-      MYSQL_ROOT_PASSWORD: '1234'
-    ports:
-      - '6002:3306'
-    volumes:
-        - 'mysql_auth_data:/var/lib/mysql'
-    healthcheck:
-        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-        interval: 5s
-        timeout: 5s
-        retries: 5
-        start_period: 30s
-
-  project:
-    build:
-      context: .
-      dockerfile: ./apps/project/Dockerfile
-      target: development
-    ports:
-      - "3003:3003"
-
-    command: sh apps/scripts/start-project.sh
+    command: npm run start:dev
     depends_on:
       mysql-project:
         condition: service_healthy
     volumes:
-      - ./apps/project:/usr/src/app/apps/project
+      - ./src:/usr/src/app/src
       - ./libs:/usr/src/app/libs
-    environment:
-      DATABASE_PROJECT_URL: ${DATABASE_PROJECT_URL}
-
+    env_file:
+      - .env.development
 
   mysql-project:
     image: mysql:latest
@@ -105,7 +28,7 @@ services:
     ports:
       - '6003:3306'
     volumes:
-      - 'mysql_project_data:/var/lib/mysql'
+      - 'mysql_nest_data:/var/lib/mysql'
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 5s
@@ -116,6 +39,4 @@ services:
       
 
 volumes:
-  mysql_user_data:
-  mysql_auth_data:
-  mysql_project_data:
+  mysql_nest_data:

@@ -1,0 +1,29 @@
+import {
+  ITransactionManager,
+  TransactionManagerSymbol,
+} from '@libs/database/index';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { RejectProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/reject-project-invitation.command';
+import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
+import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
+
+@CommandHandler(RejectProjectInvitationCommand)
+export class RejectProjectInvitationCommandHandler
+  implements ICommandHandler<RejectProjectInvitationCommand>
+{
+  constructor(
+    private readonly projectInvitationService: ProjectInvitationService,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManger: ITransactionManager,
+  ) {}
+
+  async execute(
+    command: RejectProjectInvitationCommand,
+  ): Promise<ProjectInvitation> {
+    return await this.projectInvitationService.rejectProjectInvitation({
+      id: command.id,
+      reqUserId: command.reqUserId,
+    });
+  }
+}
