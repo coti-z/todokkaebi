@@ -3,20 +3,9 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ProjectPresentationModule } from './presentation/project.presentation.module';
 import { APP_FILTER } from '@nestjs/core';
-import { GraphQLExceptionFilter } from '@libs/filter/exception.filter';
-import { LoggerModule } from '@libs/logger/logger.module';
+import { LoggerModule } from '@libs/logger';
 
 @Module({
-  imports: [
-   
-    ProjectPresentationModule,
-    LoggerModule,
-  ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: GraphQLExceptionFilter,
-    },
-  ],
+  imports: [ProjectPresentationModule, LoggerModule],
 })
 export class ProjectModule {}

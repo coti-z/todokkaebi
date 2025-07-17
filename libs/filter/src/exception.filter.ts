@@ -1,8 +1,10 @@
-import { ApplicationException } from '@libs/exception/application.exception';
-import { DomainException } from '@libs/exception/domain.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { LoggerService } from '@libs/logger/logger.service';
+import {
+  ApplicationException,
+  DomainException,
+  ErrorFactory,
+} from '@libs/exception';
+import { LoggerService } from '@libs/logger';
+
 import {
   ArgumentsHost,
   Catch,
@@ -12,12 +14,6 @@ import {
 import { GqlExceptionFilter, GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 
-
-interface ErrorInfo {
-  status?: number;
-  message: string;
-  code: ErrorCode | string;
-}
 @Catch()
 export class GraphQLExceptionFilter implements GqlExceptionFilter {
   constructor(
@@ -28,70 +24,24 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
     const { req } = gqlContext.getContext();
+    // 로깅
+    this.logError(exception, req);
 
-    const errorInfo = this.getErrorInfo(exception);
-    this.logError(errorInfo, exception, req);
-
-    return new GraphQLError(errorInfo.message, {
-      extensions: {
-        code: errorInfo.code,
-        status: errorInfo.status,
-        success: false,
-      },
-    });
+    // GraphQLError 생성
+    return this.createGraphQLError(exception);
   }
 
-  private getErrorInfo(exception: any): ErrorInfo {
-    // 1) 도메인 예외
-    if (exception instanceof DomainException) {
-      const baseError = errorFactory(exception.errorCode);
-      return {
-        status: (baseError.extensions?.status as number) || 400, // 혹은 baseError.extensions.status
-        message: exception.message || baseError.message,
-        code: exception.errorCode,
-      };
+  private createGraphQLError(exception: any): GraphQLError {
+    if (
+      exception instanceof DomainException ||
+      exception instanceof ApplicationException
+    ) {
+      return ErrorFactory.fromBusinessException(exception);
     }
-
-    // 2) 애플리케이션 예외
-    if (exception instanceof ApplicationException) {
-      const baseError = errorFactory(exception.errorCode);
-      return {
-        status: (baseError.extensions?.status as number) || 409,
-        message: exception.message || baseError.message,
-        code: exception.errorCode,
-      };
-    }
-
-    // 3) HttpException
-    if (exception instanceof HttpException) {
-      return {
-        status: exception.getStatus(),
-        message: exception.message,
-        code: (exception as any).code || ErrorCode.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    // 4) GraphQLError (이미 변환된 케이스)
-    if (exception instanceof GraphQLError) {
-      return {
-        status: (exception.extensions?.status as number) || 500,
-        message: exception.message,
-        code:
-          (exception.extensions?.code as string) ||
-          ErrorCode.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    // 5) 나머지(미처리 예외)
-    const unhandled = errorFactory(ErrorCode.INTERNAL_SERVER_ERROR);
-    return {
-      status: (unhandled.extensions?.status as number) || 500,
-      message: unhandled.message,
-      code: ErrorCode.INTERNAL_SERVER_ERROR,
-    };
+    return ErrorFactory.fromUnknownException(exception);
   }
 
-  private async logError(errorInfo: ErrorInfo, exception: any, req: any) {
+  private async logError(exception: any, req: any) {
     // 슬랙 알림 + 로깅
     //await this.slackNotificationService.sendErrorNotification({
     //  message: errorInfo.message,
@@ -101,11 +51,24 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
     //  stack: exception.stack,
     //});
 
-    this.logger.warn(errorInfo.message, {
-      status: errorInfo.status,
-      code: errorInfo.code,
-      body: req.body,
-      stack: exception.stack,
-    });
+    const logContext = {
+      exceptionType: exception.constructor.name,
+      message: exception.message,
+      userAgent: req?.headers?.['user-agent'],
+      variables: req?.body?.variables,
+    };
+
+    if (
+      exception instanceof DomainException ||
+      exception instanceof ApplicationException
+    ) {
+      this.logger.warn(`Business Exception: ${exception.message}`, logContext);
+    } else {
+      this.logger.error(
+        `Unhandled Exception: ${exception.message}`,
+        exception.stack,
+        logContext,
+      );
+    }
   }
 }
