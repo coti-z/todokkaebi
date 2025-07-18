@@ -3,6 +3,7 @@ import { ProjectService } from '@project/application/service/project.service';
 import { Injectable } from '@nestjs/common';
 import { Project } from '@project/domain/entity/project.entity';
 import { CreateProjectCommand } from '@project/application/port/in/command/unti-project/create-project.command';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(CreateProjectCommand)
@@ -17,7 +18,7 @@ export class CreateProjectHandler
         adminId: command.userId,
       });
     } catch (error) {
-      throw error;
+      ErrorHandlingStrategy.handleError(error);
     }
   }
 }

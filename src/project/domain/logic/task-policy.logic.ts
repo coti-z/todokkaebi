@@ -1,9 +1,7 @@
+import { DomainException, ErrorCode } from '@libs/exception';
 import { Project } from '../entity/project.entity';
 
 import { Task, TaskMutableProps } from '../entity/task.entity';
-
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
 
 export type updateReq = Partial<TaskMutableProps>;
 
@@ -36,7 +34,7 @@ export class TaskPolicyLogic {
 
   static assertCheckAdmin(project: Project, reqUserId: string) {
     if (project.adminId !== reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
   }
 }

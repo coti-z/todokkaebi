@@ -5,7 +5,6 @@ import {
   IProjectMembershipRepository,
   ProjectMembershipRepositorySymbol,
 } from '../port/out/project-membership-repository.port';
-import { TransactionContext } from '@libs/database/index';
 
 @Injectable()
 export class ProjectMembershipService {

@@ -1,3 +1,4 @@
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
@@ -12,13 +13,17 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   constructor(private readonly userService: UserService) {}
 
   async execute(command: UpdateUserCommand): Promise<User> {
-    return await this.userService.updateUser(
-      new UpdateUserParam(
-        command.id,
-        command.email,
-        command.nickname,
-        command.birthday,
-      ),
-    );
+    try {
+      return await this.userService.updateUser(
+        new UpdateUserParam(
+          command.id,
+          command.email,
+          command.nickname,
+          command.birthday,
+        ),
+      );
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

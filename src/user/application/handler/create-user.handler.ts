@@ -7,11 +7,10 @@ import { CreateUserParam } from '@user/application/dto/param/create-user.param';
 import { UserCredentialService } from '@auth/application/services/user-credential.service';
 import {
   ITransactionManager,
-  PrismaService,
   Transactional,
-  TransactionContext,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
@@ -25,19 +24,23 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
   @Transactional()
   async execute(command: CreateUserCommand): Promise<User> {
-    const user = await this.userService.createUser(
-      new CreateUserParam(
-        command.email,
-        command.nickname,
-        command.password,
-        command.birthday,
-      ),
-    );
-    await this.userCredentialService.createCredential({
-      email: user.email,
-      passwordHash: user.hashedPassword,
-      userId: user.id,
-    });
-    return user;
+    try {
+      const user = await this.userService.createUser(
+        new CreateUserParam(
+          command.email,
+          command.nickname,
+          command.password,
+          command.birthday,
+        ),
+      );
+      await this.userCredentialService.createCredential({
+        email: user.email,
+        passwordHash: user.hashedPassword,
+        userId: user.id,
+      });
+      return user;
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

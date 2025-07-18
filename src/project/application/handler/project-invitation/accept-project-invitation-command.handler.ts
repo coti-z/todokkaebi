@@ -5,10 +5,8 @@ import { ProjectInvitationService } from '@project/application/service/project-i
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 import { AcceptProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/accept-project-invitation.command';
-import {
-  ITransactionManager,
-  TransactionManagerSymbol,
-} from '@libs/database/index';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(AcceptProjectInvitationCommand)
@@ -40,8 +38,7 @@ export class AcceptProjectInvitationCommandHandler
 
       return projectInvitation;
     } catch (error) {
-      console.log(error);
-      throw error;
+      throw ErrorHandlingStrategy.handleError(error);
     }
   }
 }

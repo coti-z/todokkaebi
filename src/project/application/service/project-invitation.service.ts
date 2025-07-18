@@ -12,9 +12,7 @@ import {
   ProjectInvitationRepositorySymbol,
 } from '../port/out/project-invitation-repository.port';
 import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { TransactionContext } from '@libs/database/index';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 
 @Injectable()
 export class ProjectInvitationService {
@@ -42,7 +40,7 @@ export class ProjectInvitationService {
       await this.projectInvitationRepo.findProjectInvitationById(params.id);
 
     if (!projectInvitation) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
 
     ProjectInvitationLogic.updateProjectInviationStatus(
@@ -51,7 +49,6 @@ export class ProjectInvitationService {
       params.reqUserId,
     );
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
-
     return projectInvitation;
   }
 
@@ -60,19 +57,15 @@ export class ProjectInvitationService {
   ): Promise<ProjectInvitation> {
     const projectInvitation =
       await this.projectInvitationRepo.findProjectInvitationById(params.id);
-
     if (!projectInvitation) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-
     ProjectInvitationLogic.acceptProjectInvitation(
       projectInvitation,
       InvitationStatus.ACCEPTED,
       params.reqUserId,
     );
-
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
-
     return projectInvitation;
   }
 
@@ -83,7 +76,7 @@ export class ProjectInvitationService {
       await this.projectInvitationRepo.findProjectInvitationById(params.id);
 
     if (!projectInvitation) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
 
     ProjectInvitationLogic.rejectProjectInvitation(

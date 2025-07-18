@@ -3,13 +3,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ProjectService } from '@project/application/service/project.service';
 import { TaskService } from '@project/application/service/task.service';
 import { Task } from '@project/domain/entity/task.entity';
-import { CategoryService } from '@project/application/service/category.service';
 import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
-import {
-  ITransactionManager,
-  TransactionManagerSymbol,
-} from '@libs/database/index';
-import { Transactional } from '@libs/database/decorator/transactional.decorator';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { Transactional } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(CreateTaskCommand)
@@ -37,7 +34,7 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
         title: command.title,
       });
     } catch (error) {
-      throw error;
+      throw ErrorHandlingStrategy.handleError(error);
     }
   }
 }

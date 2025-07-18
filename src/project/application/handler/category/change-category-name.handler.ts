@@ -6,10 +6,10 @@ import { CategoryService } from '@project/application/service/category.service';
 import { ChangeCategoryNameCommand } from '@project/application/port/in/command/category/change-category-name.command';
 import {
   ITransactionManager,
+  Transactional,
   TransactionManagerSymbol,
-} from '@libs/database/index';
-import { Transactional } from '@libs/database/decorator/transactional.decorator';
-
+} from '@libs/database';
+import { ErrorHandlingStrategy } from 'libs/exception/src/error-handling-strategy';
 @Injectable()
 @CommandHandler(ChangeCategoryNameCommand)
 export class ChangeCategoryNameHandler
@@ -24,14 +24,18 @@ export class ChangeCategoryNameHandler
 
   @Transactional()
   async execute(command: ChangeCategoryNameCommand): Promise<Category> {
-    const project = await this.projectService.queryProjectByCategoryId({
-      categoryId: command.categoryId,
-    });
-    return await this.categoryService.changeName({
-      project: project,
-      id: command.categoryId,
-      name: command.name,
-      reqUserId: command.reqUserId,
-    });
+    try {
+      const project = await this.projectService.queryProjectByCategoryId({
+        categoryId: command.categoryId,
+      });
+      return await this.categoryService.changeName({
+        project: project,
+        id: command.categoryId,
+        name: command.name,
+        reqUserId: command.reqUserId,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

@@ -8,7 +8,7 @@ import {
 import { CreateUserCredentialParam } from '@auth/application/dto/params/create-user-credential.param';
 import { UserCredential } from '@auth/domain/entities/user-credential.entity';
 import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
-import { ErrorCode, errorFactory } from '@libs/exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
@@ -37,7 +37,7 @@ export class UserCredentialService {
         userId: param.userId,
       });
     if (!userCredential) {
-      throw errorFactory(ErrorCode.USER_ALREADY_EXISTS);
+      throw new ApplicationException(ErrorCode.USER_ALREADY_EXISTS);
     }
     const createdUserCredential = UserCredential.create({
       email: param.email,
@@ -63,7 +63,7 @@ export class UserCredentialService {
       });
 
     if (!userCredential) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
 
     await this.userCredentialRepository.updateUserCredential(userCredential);
@@ -82,7 +82,7 @@ export class UserCredentialService {
         userId: param.userId,
       });
     if (!userCredential) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
 
     await this.userCredentialRepository.deleteUserCredential({
@@ -105,11 +105,11 @@ export class UserCredentialService {
       });
 
     if (!userCredential) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     if (userCredential.passwordHash !== params.password) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     return userCredential;

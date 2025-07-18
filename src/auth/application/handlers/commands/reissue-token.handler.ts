@@ -4,9 +4,9 @@ import { TokenService } from '@auth/application/services/token.service';
 import { Token } from '@auth/domain/entities/token.entity';
 import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-token.command';
 import {
+  ApplicationException,
   BaseBusinessException,
   ErrorCode,
-  errorFactory,
 } from '@libs/exception';
 @CommandHandler(ReissueTokenCommand)
 export class ReissueTokenHandler implements ICommandHandler {
@@ -18,9 +18,9 @@ export class ReissueTokenHandler implements ICommandHandler {
       });
     } catch (err) {
       if (err instanceof BaseBusinessException) {
-        throw errorFactory(err.errorCode);
+        throw new ApplicationException(err.errorCode);
       }
-      throw errorFactory(ErrorCode.INTERNAL_SERVER_ERROR, err.message);
+      throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
   }
 }

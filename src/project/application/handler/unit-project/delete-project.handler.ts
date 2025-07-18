@@ -1,3 +1,4 @@
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProjectCommand } from '@project/application/port/in/command/unti-project/delete-project.command';
@@ -11,9 +12,13 @@ export class DeleteProjectHandler
 {
   constructor(private readonly projectService: ProjectService) {}
   async execute(command: DeleteProjectCommand): Promise<Project> {
-    return await this.projectService.deleteProject({
-      adminId: command.adminId,
-      id: command.projectId,
-    });
+    try {
+      return await this.projectService.deleteProject({
+        adminId: command.adminId,
+        id: command.projectId,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

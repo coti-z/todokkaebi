@@ -6,8 +6,7 @@ import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
+import { DomainException, ErrorCode } from '@libs/exception';
 
 type ProjectMutableProps = {
   adminId: string;
@@ -72,7 +71,7 @@ export class Project extends BaseEntity<ProjectProps> {
 
   changeName(req: ChangeNameProps) {
     if (!req.name) {
-      throw errorFactory(ErrorCode.BAD_REQUEST);
+      throw new DomainException(ErrorCode.BAD_REQUEST);
     }
     this.props.name = req.name;
     this.updateTimestamp();

@@ -1,6 +1,5 @@
-import { TransactionContext } from '@libs/database/index';
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { errorFactory } from '@libs/exception/error-factory.exception';
+import { TransactionContext } from '@libs/database';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateProjectParams,
@@ -38,10 +37,10 @@ export class ProjectService {
   async deleteProject(param: DeleteProjectParams): Promise<Project> {
     const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     if (project.adminId !== param.adminId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
     await this.projectRepo.deleteProject(project);
 
@@ -51,7 +50,7 @@ export class ProjectService {
   async updateProject(param: UpdateProjectParams): Promise<Project> {
     const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     if (param.name) {
       ProjectPolicyLogic.changeProjectName(project, param.adminId, param.name);
@@ -64,7 +63,7 @@ export class ProjectService {
   async queryProject(param: QueryProjectParams): Promise<Project> {
     const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     return project;
   }
@@ -79,7 +78,7 @@ export class ProjectService {
       params.categoryId,
     );
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     return project;
   }
@@ -89,7 +88,7 @@ export class ProjectService {
   ): Promise<Project> {
     const project = await this.projectRepo.findProjectByTaskId(params.taskId);
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     return project;
   }
@@ -99,10 +98,10 @@ export class ProjectService {
   ): Promise<void> {
     const project = await this.projectRepo.findProjectByCategoryId(params.id);
     if (!project) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     if (project.adminId !== params.reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }
 }

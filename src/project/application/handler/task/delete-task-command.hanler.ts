@@ -7,10 +7,10 @@ import { DeleteTaskCommand } from '@project/application/port/in/command/task/del
 import { Inject } from '@nestjs/common';
 import {
   ITransactionManager,
+  Transactional,
   TransactionManagerSymbol,
-} from '@libs/database/index';
-import { Transactional } from '@libs/database/decorator/transactional.decorator';
-
+} from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 @CommandHandler(DeleteTaskCommand)
 export class DeleteTaskCommandHandler
   implements ICommandHandler<DeleteTaskCommand>
@@ -24,13 +24,17 @@ export class DeleteTaskCommandHandler
 
   @Transactional()
   async execute(command: DeleteTaskCommand): Promise<Task> {
-    const project = await this.projectService.queryProjectByTaskId({
-      taskId: command.id,
-    });
-    return await this.taskService.deleteTask({
-      id: command.id,
-      project: project,
-      reqUserId: command.reqUserId,
-    });
+    try {
+      const project = await this.projectService.queryProjectByTaskId({
+        taskId: command.id,
+      });
+      return await this.taskService.deleteTask({
+        id: command.id,
+        project: project,
+        reqUserId: command.reqUserId,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

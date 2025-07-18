@@ -13,9 +13,8 @@ import {
   TaskRepositorySymbol,
 } from '../port/out/task-repository.port';
 import { isUndefined, omitBy, pickBy } from 'lodash';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { TransactionContext } from '@libs/database/index';
+import { ApplicationException, ErrorCode } from '@libs/exception';
+import { TransactionContext } from '@libs/database';
 
 @Injectable()
 export class TaskService {
@@ -41,7 +40,7 @@ export class TaskService {
       params.updateDataParams.id,
     );
     if (!task) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     TaskPolicyLogic.updateTask(
       omitBy(params.updateDataParams, isUndefined),
@@ -55,7 +54,7 @@ export class TaskService {
   async deleteTask(params: DeleteTaskParams): Promise<Task> {
     const task = await this.taskRepo.queryTaskByTaskId(params.id);
     if (!task) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     TaskPolicyLogic.canDeleteTask(params.project, params.reqUserId);
     await this.taskRepo.deleteTaskById(params.id);
@@ -67,7 +66,7 @@ export class TaskService {
     const task = await this.taskRepo.queryTaskByTaskId(params.id);
 
     if (!task) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     return task;
   }

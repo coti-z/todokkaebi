@@ -1,5 +1,4 @@
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { errorFactory } from '@libs/exception/error-factory.exception';
+import { DomainException, ErrorCode } from '@libs/exception';
 import { Project } from '@project/domain/entity/project.entity';
 
 export class ProjectPolicyLogic {
@@ -9,7 +8,7 @@ export class ProjectPolicyLogic {
     newName: string,
   ) {
     if (project.adminId !== userId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
     project.changeName({
       name: newName,

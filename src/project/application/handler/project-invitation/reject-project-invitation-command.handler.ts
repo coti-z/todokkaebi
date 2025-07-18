@@ -1,7 +1,5 @@
-import {
-  ITransactionManager,
-  TransactionManagerSymbol,
-} from '@libs/database/index';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RejectProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/reject-project-invitation.command';
@@ -21,9 +19,13 @@ export class RejectProjectInvitationCommandHandler
   async execute(
     command: RejectProjectInvitationCommand,
   ): Promise<ProjectInvitation> {
-    return await this.projectInvitationService.rejectProjectInvitation({
-      id: command.id,
-      reqUserId: command.reqUserId,
-    });
+    try {
+      return await this.projectInvitationService.rejectProjectInvitation({
+        id: command.id,
+        reqUserId: command.reqUserId,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

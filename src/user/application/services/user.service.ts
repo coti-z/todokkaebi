@@ -1,4 +1,4 @@
-import { ErrorCode, errorFactory } from '@libs/exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
@@ -30,7 +30,7 @@ export class UserService {
   async deleteUser(param: DeleteUserParam): Promise<User> {
     const user = await this.userRepository.findUser({ id: param.id });
     if (!user) {
-      throw errorFactory(ErrorCode.USER_NOT_FOUND);
+      throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
     }
     await this.userRepository.deleteUser({
       id: user.id,
@@ -40,7 +40,7 @@ export class UserService {
   async updateUser(param: UpdateUserParam): Promise<User> {
     const user = await this.userRepository.findUser({ id: param.id });
     if (!user) {
-      throw errorFactory(ErrorCode.USER_NOT_FOUND);
+      throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
     }
     user.changeProfile({
       birthday: param.birthday,

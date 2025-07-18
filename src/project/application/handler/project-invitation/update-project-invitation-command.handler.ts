@@ -3,10 +3,8 @@ import { CommandHandler, type ICommandHandler } from '@nestjs/cqrs';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
 import { UpdateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/update-project-invitation.command';
-import {
-  ITransactionManager,
-  TransactionManagerSymbol,
-} from '@libs/database/index';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(UpdateProjectInvitationCommand)
@@ -21,10 +19,14 @@ export class UpdateProjectInvitationCommandHandler
   async execute(
     command: UpdateProjectInvitationCommand,
   ): Promise<ProjectInvitation> {
-    return await this.projectInvitationService.updateProjectInvitation({
-      id: command.id,
-      reqUserId: command.reqUserId,
-      status: command.status,
-    });
+    try {
+      return await this.projectInvitationService.updateProjectInvitation({
+        id: command.id,
+        reqUserId: command.reqUserId,
+        status: command.status,
+      });
+    } catch (error) {
+      throw ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

@@ -5,9 +5,10 @@ import { TaskService } from '@project/application/service/task.service';
 import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
 import {
   ITransactionManager,
+  Transactional,
   TransactionManagerSymbol,
-} from '@libs/database/index';
-import { Transactional } from '@libs/database/decorator/transactional.decorator';
+} from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @CommandHandler(UpdateTaskCommand)
@@ -23,24 +24,28 @@ export class UpdateTaskCommandHandler
 
   @Transactional()
   async execute(command: UpdateTaskCommand): Promise<any> {
-    const project = await this.projectService.queryProjectByTaskId({
-      taskId: command.id,
-    });
+    try {
+      const project = await this.projectService.queryProjectByTaskId({
+        taskId: command.id,
+      });
 
-    return await this.taskService.updateTask({
-      updateDataParams: {
-        id: command.id,
-        categoryId: command.categoryId,
-        check: command.check,
-        title: command.title,
-        status: command.status,
-        actualStartDate: command.actualStartDate,
-        actualEndDate: command.actualEndDate,
-        startDate: command.startDate,
-        endDate: command.endDate,
-      },
-      reqUserId: command.reqUserId,
-      project: project,
-    });
+      return await this.taskService.updateTask({
+        updateDataParams: {
+          id: command.id,
+          categoryId: command.categoryId,
+          check: command.check,
+          title: command.title,
+          status: command.status,
+          actualStartDate: command.actualStartDate,
+          actualEndDate: command.actualEndDate,
+          startDate: command.startDate,
+          endDate: command.endDate,
+        },
+        reqUserId: command.reqUserId,
+        project: project,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

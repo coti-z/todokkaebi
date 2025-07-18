@@ -1,8 +1,6 @@
-import { Transactional } from '@libs/database/decorator/transactional.decorator';
-import {
-  ITransactionManager,
-  TransactionManagerSymbol,
-} from '@libs/database/index';
+import { Transactional } from '@libs/database';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteCategoryCommand } from '@project/application/port/in/command/category/delete-category.command';
@@ -23,7 +21,7 @@ export class DeleteCategoryHandler
 
   @Transactional()
   async execute(command: DeleteCategoryCommand): Promise<Category> {
-    {
+    try {
       const project = await this.projectService.queryProjectByCategoryId({
         categoryId: command.categoryId,
       });
@@ -32,6 +30,8 @@ export class DeleteCategoryHandler
         project,
         id: command.categoryId,
       });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
     }
   }
 }

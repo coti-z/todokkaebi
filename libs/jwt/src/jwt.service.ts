@@ -8,7 +8,7 @@ import {
   TokenPair,
   TokenTimeEnum,
 } from '@libs/jwt';
-import { ErrorCode, errorFactory } from '@libs/exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 @Injectable()
 export class JwtTokenService {
   constructor(
@@ -53,7 +53,7 @@ export class JwtTokenService {
   verifyRefreshToken(token: string) {
     const payload: JwtPayload = this.jwtService.verify(token);
     if (payload.type !== TokenEnum.REFRESH) {
-      throw errorFactory(ErrorCode.INVALID_TOKEN);
+      throw new ApplicationException(ErrorCode.INVALID_TOKEN);
     }
   }
 

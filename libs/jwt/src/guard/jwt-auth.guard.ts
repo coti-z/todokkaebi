@@ -1,5 +1,4 @@
-import { ErrorCode } from '@libs/exception';
-import { errorFactory } from '@libs/exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 import { JwtTokenService } from '@libs/jwt';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -13,14 +12,14 @@ export class JwtAuthGuard implements CanActivate {
     const { req } = gqlContext.getContext();
     const token = this.extractTokenFromHeader(req);
     if (!token) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
     try {
       const payload = this.jwtTokenService.verifyToken(token);
       req['user'] = payload;
       return true;
     } catch {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }
 

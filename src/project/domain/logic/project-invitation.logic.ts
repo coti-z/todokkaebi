@@ -1,12 +1,11 @@
 import { Project } from '../entity/project.entity';
 import type { ProjectInvitation } from '../entity/project-invitation.entity';
 import { InvitationStatus } from '../value-objects/invation-status.vo';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 export class ProjectInvitationLogic {
   static canProjectInvitation(project: Project, reqUserId: string) {
     if (project.adminId !== reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }
   static updateProjectInviationStatus(
@@ -15,7 +14,7 @@ export class ProjectInvitationLogic {
     reqUserId: string,
   ) {
     if (projectInvitation.inviteeUserId != reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     projectInvitation.update({
@@ -29,11 +28,11 @@ export class ProjectInvitationLogic {
     reqUserId: string,
   ) {
     if (projectInvitation.status !== InvitationStatus.PENDING) {
-      throw errorFactory(ErrorCode.BAD_REQUEST);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     if (projectInvitation.inviteeUserId !== reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     projectInvitation.update({
@@ -47,11 +46,11 @@ export class ProjectInvitationLogic {
     reqUserId: string,
   ) {
     if (projectInvitation.status !== InvitationStatus.PENDING) {
-      throw errorFactory(ErrorCode.BAD_REQUEST);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
     if (projectInvitation.inviteeUserId !== reqUserId) {
-      throw errorFactory(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
     projectInvitation.update({
       status,

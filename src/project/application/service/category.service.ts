@@ -12,8 +12,7 @@ import {
 import { Inject } from '@nestjs/common';
 import { Category } from '@project/domain/entity/category.entity';
 import { CategoryPolicyLogic } from '@project/domain/logic/category-policy.logic';
-import { errorFactory } from '@libs/exception/error-factory.exception';
-import { ErrorCode } from '@libs/exception/error-code.enum';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 
 export class CategoryService {
   constructor(
@@ -33,7 +32,7 @@ export class CategoryService {
     CategoryPolicyLogic.canDeleteCategory(params.project, params.reqUserId);
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     await this.categoryRepo.deleteCategoryById(params.id);
     return category;
@@ -42,7 +41,7 @@ export class CategoryService {
   async changeName(params: ChangeCategoryNameParams): Promise<Category> {
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     CategoryPolicyLogic.changeName(
       params.project,
@@ -57,7 +56,7 @@ export class CategoryService {
   async queryCategoryById(params: QueryCategoryByIdParams): Promise<Category> {
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
-      throw errorFactory(ErrorCode.NOT_FOUND);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
 
     return category;

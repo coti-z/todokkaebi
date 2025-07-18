@@ -1,5 +1,4 @@
-import { ErrorCode } from '@libs/exception/error-code.enum';
-import { errorFactory } from '@libs/exception/error-factory.exception';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -54,7 +53,7 @@ export class KakaoAuth {
       });
       return response.data;
     } catch {
-      throw errorFactory(ErrorCode.BAD_REQUEST);
+      throw new ApplicationException(ErrorCode.BAD_REQUEST);
     }
   }
 

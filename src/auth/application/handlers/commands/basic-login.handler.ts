@@ -5,9 +5,9 @@ import { Token } from '@auth/domain/entities/token.entity';
 import { UserCredentialService } from '@auth/application/services/user-credential.service';
 import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
 import {
+  ApplicationException,
   BaseBusinessException,
   ErrorCode,
-  errorFactory,
 } from '@libs/exception';
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
@@ -26,9 +26,9 @@ export class BasicLoginHandler implements ICommandHandler {
       });
     } catch (err) {
       if (err instanceof BaseBusinessException) {
-        throw errorFactory(err.errorCode);
+        throw new ApplicationException(err.errorCode);
       }
-      throw errorFactory(ErrorCode.INTERNAL_SERVER_ERROR, err.messages);
+      throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
   }
 }
