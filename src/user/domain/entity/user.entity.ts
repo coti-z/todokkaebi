@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import { DomainException, ErrorCode } from '@libs/exception';
 
 interface UserProps {
   email: string;
@@ -31,7 +32,10 @@ export class User {
     private _createAt: Date,
     private _updateAt: Date,
     private _birthday?: Date,
-  ) {}
+  ) {
+    this.validateEmail(_email);
+    this.validateNickname(_nickname);
+  }
 
   get nickname() {
     return this._nickname;
@@ -59,6 +63,8 @@ export class User {
 
   static async create(props: UserProps): Promise<User> {
     const now = new Date();
+    this.validatePassword(props.password);
+
     const hashedPassword = await bcrypt.hash(props.password, 12);
 
     return new User(
@@ -70,6 +76,29 @@ export class User {
       now,
       props.birthday,
     );
+  }
+
+  private validateEmail(email: string): void {
+    // 단순 형식 검증이 아닌 비즈니스 규칙
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new DomainException(ErrorCode.INVALID_EMAIL_FORMAT);
+    }
+  }
+
+  private validateNickname(nickname: string): void {
+    if (!nickname || nickname.trim().length === 0) {
+      throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
+    }
+    if (nickname.length < 2 || nickname.length > 20) {
+      throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
+    }
+  }
+
+  private static validatePassword(password: string): void {
+    if (password.length > 4) {
+      throw new DomainException(ErrorCode.INVALID_PASSWORD_FORMAT);
+    }
   }
 
   static fromPersistence(props: UserPersistenceProps): User {

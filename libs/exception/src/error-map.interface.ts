@@ -6,6 +6,18 @@ export interface ErrorResponse {
   message: string;
 }
 export const ERROR_MAP: Record<ErrorCode, ErrorResponse> = {
+  [ErrorCode.INVALID_PASSWORD_FORMAT]: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: '패스워드 형식이 접합하지 않습니다',
+  },
+  [ErrorCode.INVALID_EMAIL_FORMAT]: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: '닉네임이 입력되지 않았습니다.',
+  },
+  [ErrorCode.INVALID_NICKNAME_FORMAT]: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: '유효하지 않는 닉네임 형식입니다.',
+  },
   [ErrorCode.FORBIDDEN]: {
     statusCode: HttpStatus.FORBIDDEN,
     message: '접근 권한이 없습니다.',
