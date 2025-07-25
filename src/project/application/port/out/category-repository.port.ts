@@ -1,4 +1,3 @@
-import { TransactionContext } from '@libs/database/index';
 import { Category } from '@project/domain/entity/category.entity';
 
 export const CategoryRepositorySymbol = Symbol.for('CategoryRepository');

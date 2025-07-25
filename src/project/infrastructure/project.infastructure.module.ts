@@ -9,7 +9,7 @@ import { ProjectRepositoryImpl } from '@project/infrastructure/persistence/datab
 import { ProjectInvitationRepositoryImpl } from './persistence/database/project-invitation.repository';
 import { ProjectMembershipRepositoryImpl } from './persistence/database/project-membership.repository';
 import { TaskRepositoryImpl } from './persistence/database/task.repository';
-import { DatabaseModule } from '@libs/database/database.module';
+import { DatabaseModule } from '@libs/database';
 
 @Module({
   imports: [DatabaseModule],

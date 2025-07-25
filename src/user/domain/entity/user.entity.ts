@@ -90,13 +90,13 @@ export class User {
     if (!nickname || nickname.trim().length === 0) {
       throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
     }
-    if (nickname.length < 2 || nickname.length > 20) {
+    if (nickname.length < 2 || nickname.length > 50) {
       throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
     }
   }
 
   private static validatePassword(password: string): void {
-    if (password.length > 4) {
+    if (password.length < 4) {
       throw new DomainException(ErrorCode.INVALID_PASSWORD_FORMAT);
     }
   }

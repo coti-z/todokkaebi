@@ -1,4 +1,4 @@
-import { ApiResponseOf } from '@libs/response/api-response-factory';
+import { ApiResponseOf } from '@libs/response';
 import { ObjectType } from '@nestjs/graphql';
 import {
   ChangeCategoryNameOutput,

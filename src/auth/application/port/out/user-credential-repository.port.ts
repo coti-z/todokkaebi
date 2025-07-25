@@ -1,4 +1,4 @@
-import { UserCredential } from '@auth/domain/entities/user-credential.entity';
+import { UserCredential } from '@auth/domain/entity/user-credential.entity';
 import { TransactionContext } from '@libs/database';
 
 export interface FindUserCredentialArgs {

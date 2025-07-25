@@ -32,6 +32,7 @@ export class UserResolver {
   }
 
   @Mutation(() => ApiResponseOfUpdateUserOutput)
+  @UseGuards(JwtAuthGuard)
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,

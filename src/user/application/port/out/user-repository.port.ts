@@ -9,9 +9,15 @@ export interface DeleteUserArgs {
 export interface FindUserByIdArgs {
   id: string;
 }
+
+export interface FindUserByEmailArgs {
+  email: string;
+}
+
 export interface IUserRepository {
   createUser(args: User): Promise<void>;
   updateUser(args: User): Promise<void>;
   deleteUser(args: DeleteUserArgs): Promise<void>;
-  findUser(args: FindUserByIdArgs): Promise<User | null>;
+  findUserById(args: FindUserByIdArgs): Promise<User | null>;
+  findUserByEmail(args: FindUserByEmailArgs): Promise<User | null>;
 }

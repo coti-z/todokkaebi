@@ -5,7 +5,7 @@ import {
   RejectProjectInvitationOutput,
   UpdateProjectInvitationOutput,
 } from '../output/project-invitation.output';
-import { ApiResponseOf } from '@libs/response/api-response-factory';
+import { ApiResponseOf } from '@libs/response';
 
 @ObjectType()
 export class CreateProjectInvitationResponse extends ApiResponseOf(

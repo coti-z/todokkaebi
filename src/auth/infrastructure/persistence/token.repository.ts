@@ -5,7 +5,7 @@ import {
 } from '@auth/application/port/out/token-repository.port';
 import { Injectable } from '@nestjs/common';
 import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mapper';
-import { Token } from '@auth/domain/entities/token.entity';
+import { Token } from '@auth/domain/entity/token.entity';
 import {
   BaseRepository,
   PrismaService,

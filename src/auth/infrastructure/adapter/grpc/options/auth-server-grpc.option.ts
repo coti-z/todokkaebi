@@ -1,4 +1,4 @@
-import { AUTH_PACKAGE_NAME } from '@libs/grpc/proto';
+import { AUTH_PACKAGE_NAME } from '@libs/grpc';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 

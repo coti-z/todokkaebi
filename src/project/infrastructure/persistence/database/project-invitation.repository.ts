@@ -1,4 +1,4 @@
-import { BaseRepository } from '@libs/database/index';
+import { BaseRepository } from '@libs/database';
 import { Injectable } from '@nestjs/common';
 import { IProjectInvitationRepository } from '@project/application/port/out/project-invitation-repository.port';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';

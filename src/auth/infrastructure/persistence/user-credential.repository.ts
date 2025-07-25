@@ -6,7 +6,7 @@ import {
   IUserCredentialRepository,
 } from '@auth/application/port/out/user-credential-repository.port';
 import { UserCredentialMapper } from '@auth/infrastructure/persistence/mapper/user-credential.mapper';
-import { UserCredential } from '@auth/domain/entities/user-credential.entity';
+import { UserCredential } from '@auth/domain/entity/user-credential.entity';
 import {
   BaseRepository,
   PrismaService,

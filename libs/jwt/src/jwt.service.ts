@@ -48,7 +48,7 @@ export class JwtTokenService {
   }
 
   verifyToken(token: string) {
-    this.jwtService.verify(token);
+    return this.jwtService.verify(token);
   }
   verifyRefreshToken(token: string) {
     const payload: JwtPayload = this.jwtService.verify(token);

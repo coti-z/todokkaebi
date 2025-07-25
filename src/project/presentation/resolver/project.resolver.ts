@@ -15,7 +15,7 @@ import {
   QueryProjectInput,
   UpdateProjectInput,
 } from '@project/presentation/resolver/input/project.input';
-import { ResponseManager } from '@libs/response/response.manager';
+import { ResponseManager } from '@libs/response';
 
 @Resolver(() => ProjectType)
 export class ProjectResolver {

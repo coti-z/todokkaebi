@@ -1,4 +1,4 @@
-import { TransactionContext } from '@libs/database/index';
+import { TransactionContext } from '@libs/database';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 
 export const ProjectInvitationRepositorySymbol = Symbol.for(

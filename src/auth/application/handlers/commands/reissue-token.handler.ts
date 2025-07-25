@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TokenService } from '@auth/application/services/token.service';
 
-import { Token } from '@auth/domain/entities/token.entity';
+import { Token } from '@auth/domain/entity/token.entity';
 import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-token.command';
 import {
   ApplicationException,

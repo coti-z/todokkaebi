@@ -1,14 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TokenService } from '@auth/application/services/token.service';
 
-import { Token } from '@auth/domain/entities/token.entity';
+import { Token } from '@auth/domain/entity/token.entity';
 import { UserCredentialService } from '@auth/application/services/user-credential.service';
 import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
-import {
-  ApplicationException,
-  BaseBusinessException,
-  ErrorCode,
-} from '@libs/exception';
+import { ErrorHandlingStrategy } from '@libs/exception';
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
   constructor(
@@ -24,11 +20,8 @@ export class BasicLoginHandler implements ICommandHandler {
       return await this.tokenService.createToken({
         userId: credential.userId,
       });
-    } catch (err) {
-      if (err instanceof BaseBusinessException) {
-        throw new ApplicationException(err.errorCode);
-      }
-      throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
     }
   }
 }

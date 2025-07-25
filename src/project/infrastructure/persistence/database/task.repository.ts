@@ -2,8 +2,7 @@ import {
   BaseRepository,
   PrismaService,
   TransactionContext,
-} from '@libs/database/index';
-import { PrismaTransactionClient } from '@libs/database/types/client.type';
+} from '@libs/database';
 import { Injectable } from '@nestjs/common';
 import { ITaskRepository } from '@project/application/port/out/task-repository.port';
 import { Task } from '@project/domain/entity/task.entity';

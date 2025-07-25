@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateTokenParam } from '@auth/application/dto/params/create-token.param';
-import { Token } from '@auth/domain/entities/token.entity';
+import { Token } from '@auth/domain/entity/token.entity';
 import { ReissueTokenParam } from '@auth/application/dto/params/update-access-token.param';
 import { RevokeTokenParam } from '@auth/application/dto/params/revoke-token.param';
 import {

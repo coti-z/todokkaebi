@@ -6,7 +6,7 @@ import {
   QueryTaskByIdOutput,
   UpdateTaskOutput,
 } from '../output/task.output';
-import { ApiResponseOf } from '@libs/response/api-response-factory';
+import { ApiResponseOf } from '@libs/response';
 
 @ObjectType()
 export class CreateTaskResponse extends ApiResponseOf(CreateTaskOutput) {}

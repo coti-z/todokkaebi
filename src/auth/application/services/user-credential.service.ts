@@ -6,9 +6,11 @@ import {
   UserCredentialRepositorySymbol,
 } from '@auth/application/port/out/user-credential-repository.port';
 import { CreateUserCredentialParam } from '@auth/application/dto/params/create-user-credential.param';
-import { UserCredential } from '@auth/domain/entities/user-credential.entity';
+import { UserCredential } from '@auth/domain/entity/user-credential.entity';
 import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
 import { ApplicationException, ErrorCode } from '@libs/exception';
+import { PasswordPolicy } from '@auth/domain/policy/password-policy';
+import { create } from 'domain';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
@@ -36,7 +38,7 @@ export class UserCredentialService {
       await this.userCredentialRepository.findUserCredentials({
         userId: param.userId,
       });
-    if (!userCredential) {
+    if (userCredential) {
       throw new ApplicationException(ErrorCode.USER_ALREADY_EXISTS);
     }
     const createdUserCredential = UserCredential.create({
@@ -108,9 +110,10 @@ export class UserCredentialService {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
-    if (userCredential.passwordHash !== params.password) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
-    }
+    await PasswordPolicy.validateSamePassword(
+      params.password,
+      userCredential.passwordHash,
+    );
 
     return userCredential;
   }

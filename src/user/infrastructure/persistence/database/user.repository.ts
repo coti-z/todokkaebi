@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   DeleteUserArgs,
+  FindUserByEmailArgs,
   FindUserByIdArgs,
   IUserRepository,
 } from '@user/application/port/out/user-repository.port';
@@ -57,7 +58,7 @@ export class UserRepositoryImpl
    * @param args 조회할 유저 ID 정보
    * @returns 찾은 유저 도메인 객체 또는 null
    */
-  async findUser(args: FindUserByIdArgs): Promise<User | null> {
+  async findUserById(args: FindUserByIdArgs): Promise<User | null> {
     const client = this.getPrismaClient();
     const user = await client.users.findUnique({ where: { id: args.id } });
 
@@ -67,6 +68,32 @@ export class UserRepositoryImpl
     }
 
     // DB 객체를 도메인 객체로 변환해서 반환
+    return UserMapper.toDomain({
+      id: user.id,
+      email: user.email,
+      birthday: user.birthday ?? undefined,
+      password: user.password,
+      nickname: user.nickname,
+      updatedAt: user.updatedAt,
+      createdAt: user.createdAt,
+    });
+  }
+
+  /**
+   * EMAIL로 유저 조회
+   * @param args 조회할 유저 EMAIL 정보
+   * @returns 찾은 유저 도메인 객체 또는 null
+   */
+  async findUserByEmail(args: FindUserByEmailArgs): Promise<User | null> {
+    const client = this.getPrismaClient();
+    const user = await client.users.findUnique({
+      where: { email: args.email },
+    });
+
+    if (!user) {
+      return null;
+    }
+
     return UserMapper.toDomain({
       id: user.id,
       email: user.email,

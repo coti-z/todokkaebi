@@ -8,11 +8,11 @@ export interface ErrorResponse {
 export const ERROR_MAP: Record<ErrorCode, ErrorResponse> = {
   [ErrorCode.INVALID_PASSWORD_FORMAT]: {
     statusCode: HttpStatus.BAD_REQUEST,
-    message: '패스워드 형식이 접합하지 않습니다',
+    message: '패스워드 형식이 적합하지 않습니다',
   },
   [ErrorCode.INVALID_EMAIL_FORMAT]: {
     statusCode: HttpStatus.BAD_REQUEST,
-    message: '닉네임이 입력되지 않았습니다.',
+    message: '이메일 형식이 적합하지 않았습니다.',
   },
   [ErrorCode.INVALID_NICKNAME_FORMAT]: {
     statusCode: HttpStatus.BAD_REQUEST,

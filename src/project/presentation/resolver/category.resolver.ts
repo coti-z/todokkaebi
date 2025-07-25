@@ -1,4 +1,4 @@
-import { ResponseManager } from '@libs/response/response.manager';
+import { ResponseManager } from '@libs/response';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';

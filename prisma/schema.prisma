@@ -54,7 +54,7 @@ model ProjectMembership {
   id        String         @id @default(uuid())
   project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
-  user      Users          @relation(fields: [userId], references: [id])
+  user      Users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   role      MembershipRole @default(MEMBER)
   createdAt DateTime       @default(now())
@@ -65,9 +65,9 @@ model ProjectInvitation {
   id            String           @id @default(uuid())
   project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String
-  inviter       Users            @relation("InviterUser", fields: [inviterUserId], references: [id])
+  inviter       Users            @relation("InviterUser", fields: [inviterUserId], references: [id], onDelete: Cascade)
   inviterUserId String
-  invitee       Users            @relation("InviteeUser", fields: [inviteeUserId], references: [id])
+  invitee       Users            @relation("InviteeUser", fields: [inviteeUserId], references: [id], onDelete: Cascade)
   inviteeUserId String
   status        InvitationStatus @default(PENDING)
   createdAt     DateTime         @default(now())
@@ -79,10 +79,10 @@ model ProjectInvitation {
 // 인증 관련 모델
 model Tokens {
   id           String   @id @default(uuid())
-  user         Users    @relation(fields: [userId], references: [id])
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  accessToken  String   @unique
-  refreshToken String   @unique
+  accessToken  String   @unique @db.VarChar(512)
+  refreshToken String   @unique @db.VarChar(512)
   isRevoked    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -95,7 +95,7 @@ model OAuthProvider {
   id         String       @id @default(uuid())
   provider   ProviderType
   providerId String
-  user       Users        @relation(fields: [userId], references: [id])
+  user       Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
   createAt   DateTime     @default(now())
   updateAt   DateTime     @updatedAt
@@ -106,7 +106,7 @@ model OAuthProvider {
 
 model UserCredentials {
   id           String   @id @default(uuid())
-  user         Users    @relation(fields: [userId], references: [id])
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String   @unique
   email        String   @unique
   passwordHash String
@@ -118,7 +118,7 @@ model UserCredentials {
 model Category {
   id        String   @id @default(uuid())
   name      String
-  project   Project  @relation(fields: [projectId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
   tasks     Task[]
   createdAt DateTime @default(now())

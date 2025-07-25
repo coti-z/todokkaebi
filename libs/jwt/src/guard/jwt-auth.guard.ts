@@ -11,6 +11,7 @@ export class JwtAuthGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const { req } = gqlContext.getContext();
     const token = this.extractTokenFromHeader(req);
+
     if (!token) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
@@ -24,6 +25,9 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(req: any): string | undefined {
+    if (!req.headers.authorization) {
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+    }
     const [type, token] = req.headers.authorization?.split(' ');
     return type === 'Bearer' ? token : undefined;
   }

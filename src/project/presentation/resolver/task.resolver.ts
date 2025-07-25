@@ -16,7 +16,7 @@ import {
   UpdateTaskResponse,
 } from './response/task.response';
 import { TaskType } from './type/task.type';
-import { ResponseManager } from '@libs/response/response.manager';
+import { ResponseManager } from '@libs/response';
 
 @Resolver(() => TaskType)
 export class TaskResolver {

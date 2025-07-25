@@ -1,4 +1,4 @@
-import { LoggerService } from '@libs/logger/logger.service';
+import { LoggerService } from '@libs/logger';
 import {
   CallHandler,
   ExecutionContext,
@@ -17,7 +17,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const now = Date.now();
     return next.handle().pipe(
-      tap((data) => {
+      tap(data => {
         this.logger.info(`Success ${resolverName}`, { date: now });
 
         return data;

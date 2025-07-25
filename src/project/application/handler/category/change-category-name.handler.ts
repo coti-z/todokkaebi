@@ -9,7 +9,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { ErrorHandlingStrategy } from 'libs/exception/src/error-handling-strategy';
+import { ErrorHandlingStrategy } from '@libs/exception';
 @Injectable()
 @CommandHandler(ChangeCategoryNameCommand)
 export class ChangeCategoryNameHandler

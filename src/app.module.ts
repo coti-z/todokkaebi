@@ -1,8 +1,9 @@
 import { AuthModule } from '@auth/auth.module';
 import { GraphQLExceptionFilter } from '@libs/filter';
+import { LoggerModule } from '@libs/logger';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ProjectModule } from '@project/project.module';
 import { UserModule } from '@user/user.module';
@@ -16,6 +17,7 @@ import { UserModule } from '@user/user.module';
         orphanedTypes: [],
       },
     }),
+    LoggerModule,
     AuthModule,
     UserModule,
   ],
@@ -23,6 +25,14 @@ import { UserModule } from '@user/user.module';
     {
       provide: APP_FILTER,
       useClass: GraphQLExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
     },
   ],
 })

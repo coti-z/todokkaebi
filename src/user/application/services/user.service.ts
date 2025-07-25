@@ -17,18 +17,25 @@ export class UserService {
   ) {}
 
   async createUser(param: CreateUserParam): Promise<User> {
-    const user = await User.create({
+    const user = await this.userRepository.findUserByEmail({
+      email: param.email,
+    });
+    if (user) {
+      throw new ApplicationException(ErrorCode.USER_ALREADY_EXISTS);
+    }
+    const newUser = await User.create({
       nickname: param.nickname,
       email: param.email,
       password: param.password,
       birthday: param.birthday,
     });
-    await this.userRepository.createUser(user);
-    return user;
+
+    await this.userRepository.createUser(newUser);
+    return newUser;
   }
 
   async deleteUser(param: DeleteUserParam): Promise<User> {
-    const user = await this.userRepository.findUser({ id: param.id });
+    const user = await this.userRepository.findUserById({ id: param.id });
     if (!user) {
       throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
     }
@@ -38,7 +45,7 @@ export class UserService {
     return user;
   }
   async updateUser(param: UpdateUserParam): Promise<User> {
-    const user = await this.userRepository.findUser({ id: param.id });
+    const user = await this.userRepository.findUserById({ id: param.id });
     if (!user) {
       throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
     }

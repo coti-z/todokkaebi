@@ -2,7 +2,7 @@ import { Project } from '@project/domain/entity/project.entity';
 import { ProjectInfraMapper } from '@project/infrastructure/mapper/project.infrastructure.mapper';
 import { IProjectRepository } from '@project/application/port/out/project-repository.port';
 import { Injectable } from '@nestjs/common';
-import { BaseRepository } from '@libs/database/index';
+import { BaseRepository } from '@libs/database';
 
 @Injectable()
 export class ProjectRepositoryImpl

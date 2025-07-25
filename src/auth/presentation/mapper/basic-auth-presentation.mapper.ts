@@ -1,6 +1,6 @@
 import { LoginInput } from '@auth/presentation/resolver/dto/input/login.input';
 import { LogoutInput } from '@auth/presentation/resolver/dto/input/logout.input';
-import { Token } from '@auth/domain/entities/token.entity';
+import { Token } from '@auth/domain/entity/token.entity';
 import { LoginOutput } from '@auth/presentation/resolver/dto/output/login.output';
 import { LogoutOutput } from '@auth/presentation/resolver/dto/output/logout.output';
 import { BasicLogoutCommand } from '@auth/application/port/in/commands/basic-logout.command';

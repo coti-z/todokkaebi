@@ -3,5 +3,7 @@
   "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
   "typescript.suggest.paths": true,
   "window.zoomLevel": 0,
-
+  "jest.runAllTestsFirst": false,
+  "jest.autoEnable": false,
+  "jest.runMode": "on-demand"
 }

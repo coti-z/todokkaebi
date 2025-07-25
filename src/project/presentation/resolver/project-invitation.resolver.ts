@@ -14,7 +14,7 @@ import {
   UpdateProjectInvitationResponse,
 } from './response/project-invitation.response';
 import { ProjectInvitationType } from './type/project-invitation.type';
-import { ResponseManager } from '@libs/response/response.manager';
+import { ResponseManager } from '@libs/response';
 
 @Resolver(() => ProjectInvitationType)
 export class ProjectInvitationResolver {
