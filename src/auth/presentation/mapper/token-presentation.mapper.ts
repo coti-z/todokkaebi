@@ -5,9 +5,7 @@ import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-
 
 export class TokenPresentationMapper {
   static toReissueTokenCommand(input: ReissueTokenInput): ReissueTokenCommand {
-    return {
-      refreshToken: input.refreshToken,
-    };
+    return new ReissueTokenCommand(input.refreshToken);
   }
 
   static resultToTokenReissueOutput(data: Token): ReissueTokenOutput {

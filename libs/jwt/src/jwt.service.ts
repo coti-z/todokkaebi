@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
+  JwtDecodedToken,
   JwtPairPayload,
   JwtPayload,
+  Token,
   TokenEnum,
   TokenPair,
   TokenTimeEnum,
@@ -28,22 +30,19 @@ export class JwtTokenService {
 
     return {
       accessToken: accessToken.token,
-      accessTokenExpires: accessToken.expiresAt,
+      accessTokenExpires: accessToken.tokenExpires,
       refreshToken: refreshToken.token,
-      refreshTokenExpires: refreshToken.expiresAt,
+      refreshTokenExpires: refreshToken.tokenExpires,
     };
   }
-  generateToken(payload: JwtPayload) {
+  generateToken(payload: JwtPayload): Token {
     const expiresIn = this.getExpirationTime(payload.type);
     const token = this.jwtService.sign(payload, { expiresIn });
-    const decoded = this.jwtService.decode(token) as {
-      exp: number;
-      iat: number;
-    };
+    const decoded: JwtDecodedToken = this.jwtService.decode(token);
     const expiresAt = new Date(decoded.exp * 1000);
     return {
-      token,
-      expiresAt,
+      token: token,
+      tokenExpires: expiresAt,
     };
   }
 

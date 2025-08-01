@@ -52,9 +52,13 @@ export class TokenRepositoryImpl
     args: FindTokenByRefreshTokenArgs,
   ): Promise<Token | null> {
     const client = this.getPrismaClient();
-    const record = await client.tokens.findUnique({
+    const record = await client.tokens.findFirst({
       where: {
         refreshToken: args.refreshToken,
+        isRevoked: false,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
@@ -69,7 +73,7 @@ export class TokenRepositoryImpl
     const now = new Date();
     await client.tokens.deleteMany({
       where: {
-        expiresAt: {
+        refreshTokenExpiresAt: {
           lte: now,
         },
       },

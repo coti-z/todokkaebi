@@ -4,7 +4,7 @@ import { UserModule } from '@user/user.module';
 import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
 import {
   CreateUserResponse,
-  DeleteUserReponse,
+  DeleteUserResponse,
   HealthCheckResponse,
   LoginResponse,
   UpdateUserResponse,
@@ -126,7 +126,7 @@ describe('User Resolver (e2e)', () => {
       });
     });
 
-    describe('User Authenticcation', () => {
+    describe('User Authentication', () => {
       const testUser = {
         email: `login-test-${uuid()}@email.com`,
         nickname: `login-user-${uuid()}`,
@@ -282,7 +282,7 @@ describe('User Resolver (e2e)', () => {
       });
 
       it('should delete user successfully with valid token', async () => {
-        const response = await graphqlHelper.mutate<DeleteUserReponse>(
+        const response = await graphqlHelper.mutate<DeleteUserResponse>(
           USER_MUTATIONS.DELETE_USER,
           {},
           { Authorization: `Bearer ${deleteAccessToken}` },
@@ -294,7 +294,7 @@ describe('User Resolver (e2e)', () => {
       });
 
       it('should fail delete without authentication token', async () => {
-        const response = await graphqlHelper.mutate<DeleteUserReponse>(
+        const response = await graphqlHelper.mutate<DeleteUserResponse>(
           USER_MUTATIONS.DELETE_USER,
           {},
         );
@@ -302,7 +302,7 @@ describe('User Resolver (e2e)', () => {
       });
 
       it('should fail delete with invalid token', async () => {
-        const response = await graphqlHelper.mutate<DeleteUserReponse>(
+        const response = await graphqlHelper.mutate<DeleteUserResponse>(
           USER_MUTATIONS.DELETE_USER,
           {},
           { Authorization: 'Bearer invalid-token' },

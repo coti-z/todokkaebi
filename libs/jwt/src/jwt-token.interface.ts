@@ -7,6 +7,12 @@ export interface JwtPayload {
 export interface JwtPairPayload {
   userId: string;
 }
+export interface JwtDecodedToken {
+  userId: string;
+  type: TokenEnum;
+  iat: number;
+  exp: number;
+}
 
 export interface JwtVerifyResult {
   isValid: boolean;
@@ -18,4 +24,9 @@ export interface TokenPair {
   accessTokenExpires: Date;
   refreshToken: string;
   refreshTokenExpires: Date;
+}
+
+export interface Token {
+  token: string;
+  tokenExpires: Date;
 }

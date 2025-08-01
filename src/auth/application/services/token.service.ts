@@ -7,8 +7,11 @@ import {
   ITokensRepository,
   TokenRepositorySymbol,
 } from '@auth/application/port/out/token-repository.port';
-import { JwtTokenService } from '@libs/jwt';
+import { JwtTokenService, TokenEnum } from '@libs/jwt';
 import { ApplicationException, ErrorCode } from '@libs/exception';
+import { access } from 'fs';
+import { RevokeTokenByTokenParam } from '@auth/application/dto/params/revoke-token-by-token.param';
+import { reissueAccessTokenByTokenParam } from '@auth/application/dto/params/reissue-access-token-by-token.param';
 
 /**
  * 토큰의 유효성 관련 서비스를 제공하는 클래스입니다.
@@ -33,24 +36,26 @@ export class TokenService {
   }
 
   /**
-   * 저장된 토큰의 정보를 업데이트합니다.
+   * AccessToken을 재발급 합니다.
    * @param param - 저장된 토큰의 업데이트할 정보를 담은 파라미터
    */
-  async reissueTokens(param: ReissueTokenParam): Promise<Token> {
-    this.jwtTokenService.verifyRefreshToken(param.refreshToken);
-    // refresh token 검증 및 블랙리스트 확인
-    const token = await this.tokenRepository.findTokenByRefreshToken({
-      refreshToken: param.refreshToken,
-    });
-    if (!token || token.isRevoked || token.isExpired()) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+  async reissueAccessTokensByToken(
+    param: reissueAccessTokenByTokenParam,
+  ): Promise<Token> {
+    const token = param.token;
+    if (!token) {
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    // 토큰 무효화 및 DB 반영
-    token.revokeToken();
-    await this.tokenRepository.update(token);
+    const reissuedAccessToken = this.reissueAccessToken(token.userId);
 
     // 토큰 재발급 및 DB 반영
-    const reissuedToken = this.issueToken(token.userId);
+    const reissuedToken = Token.create({
+      userId: token.userId,
+      accessToken: reissuedAccessToken.token,
+      refreshToken: token.refreshToken,
+      refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+    });
+
     await this.tokenRepository.save(reissuedToken);
     return reissuedToken;
   }
@@ -59,7 +64,7 @@ export class TokenService {
    * 저장된 토큰의 발급을 무효화 합니다.
    * @param param - 무효화할 토큰의 정보가 담긴 파라미터
    */
-  async revokeToken(param: RevokeTokenParam): Promise<Token> {
+  async revokeTokenByRefreshToken(param: RevokeTokenParam): Promise<Token> {
     // userId의 토큰 가져오기
     const token = await this.tokenRepository.findTokenByRefreshToken({
       refreshToken: param.refreshToken,
@@ -73,12 +78,32 @@ export class TokenService {
     return token;
   }
 
+  async revokeTokenByToken(param: RevokeTokenByTokenParam) {
+    const token = param.token;
+    if (!token) {
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+    }
+    token.revokeToken();
+
+    await this.tokenRepository.update(token);
+    return token;
+  }
+
   /**
    * 유효시간이 지난 토큰을 무효화 합니다.
    */
   async deleteRevokedAllTokens(): Promise<void> {
     // 유효기간이 지난  기존 모든 토큰 을 무효화 합니다.
     await this.tokenRepository.deleteAllRevokeExpiredToken();
+  }
+
+  /**
+   * 토큰을 검증합니다.
+   * @param
+   * @returns Token
+   */
+  async verifyToken(token: string) {
+    await this.jwtTokenService.verifyToken(token);
   }
 
   private issueToken(userId: string): Token {
@@ -90,7 +115,16 @@ export class TokenService {
       userId: userId,
       accessToken: tokenPair.accessToken,
       refreshToken: tokenPair.refreshToken,
-      expiresAt: tokenPair.refreshTokenExpires,
+      refreshTokenExpiresAt: tokenPair.refreshTokenExpires,
     });
+  }
+
+  private reissueAccessToken(userId: string) {
+    const accessToken = this.jwtTokenService.generateToken({
+      type: TokenEnum.ACCESS,
+      userId: userId,
+    });
+
+    return accessToken;
   }
 }

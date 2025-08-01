@@ -5,7 +5,7 @@ interface TokenProps {
   userId: string;
   accessToken: string;
   refreshToken: string;
-  expiresAt: Date;
+  refreshTokenExpiresAt: Date;
 }
 interface TokenPropsFromPersistence {
   id: string;
@@ -15,7 +15,7 @@ interface TokenPropsFromPersistence {
   isRevoked: boolean;
   createdAt: Date;
   updatedAt: Date;
-  expiresAt: Date;
+  refreshTokenExpiresAt: Date;
 }
 export class Token {
   constructor(
@@ -26,7 +26,7 @@ export class Token {
     private _isRevoked: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
-    private _expiresAt: Date,
+    private _refreshTokenExpiresAt: Date
   ) {}
 
   static create(props: TokenProps): Token {
@@ -39,7 +39,7 @@ export class Token {
       false,
       now,
       now,
-      props.expiresAt,
+      props.refreshTokenExpiresAt,
     );
   }
 
@@ -52,7 +52,7 @@ export class Token {
       props.isRevoked,
       props.createdAt,
       props.updatedAt,
-      props.expiresAt,
+      props.refreshTokenExpiresAt,
     );
   }
 
@@ -70,8 +70,8 @@ export class Token {
     return this._updatedAt;
   }
 
-  get expiresAt() {
-    return this._expiresAt;
+  get refreshTokenExpiresAt() {
+    return this._refreshTokenExpiresAt;
   }
 
   get isRevoked() {
@@ -86,6 +86,6 @@ export class Token {
     this._updatedAt = new Date();
   }
   isExpired(): boolean {
-    return new Date() > this._expiresAt;
+    return new Date() > this._refreshTokenExpiresAt;
   }
 }

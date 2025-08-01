@@ -8,14 +8,14 @@ interface TokenRecord {
   isRevoked: boolean;
   createdAt: Date;
   updatedAt: Date;
-  expiresAt: Date;
+  refreshTokenExpiresAt: Date;
 }
 export class TokenMapper {
   static toPersistence(entity: Token): TokenRecord {
     return {
       id: entity.id,
       userId: entity.userId,
-      expiresAt: entity.expiresAt,
+      refreshTokenExpiresAt: entity.refreshTokenExpiresAt,
       updatedAt: entity.updatedAt,
       createdAt: entity.createdAt,
       refreshToken: entity.refreshToken,
@@ -28,7 +28,7 @@ export class TokenMapper {
     return Token.fromPersistence({
       id: record.id,
       userId: record.userId,
-      expiresAt: record.expiresAt,
+      refreshTokenExpiresAt: record.refreshTokenExpiresAt,
       updatedAt: record.updatedAt,
       createdAt: record.createdAt,
       refreshToken: record.refreshToken,

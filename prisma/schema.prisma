@@ -82,13 +82,13 @@ model Tokens {
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   accessToken  String   @unique @db.VarChar(512)
-  refreshToken String   @unique @db.VarChar(512)
+  refreshToken String   @db.VarChar(512)
   isRevoked    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  expiresAt    DateTime
+  refreshTokenExpiresAt DateTime
 
-  @@index([isRevoked, expiresAt])
+  @@index([isRevoked, refreshTokenExpiresAt])
 }
 
 model OAuthProvider {
