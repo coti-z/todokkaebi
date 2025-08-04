@@ -1,9 +1,10 @@
-import { InvitationStatus } from '../value-objects/invation-status.vo';
 import { v4 as uuidv4 } from 'uuid';
 import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
+import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
+import { DomainException, ErrorCode } from '@libs/exception';
 
 type ProjectInvitationImmutableProps = {
   readonly projectId: string;
@@ -25,36 +26,44 @@ export type CreateProjectInvitationProps = Omit<
 >;
 
 export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
-  get id(): string {
-    return this.props.id;
+  private readonly _projectId: string;
+  private readonly _inviterUserId: string;
+  private readonly _inviteeUserId: string;
+  private _invitationStatus: InvitationStatus;
+
+  private constructor(props: ProjectInvitationProps) {
+    super(props);
+
+    this._projectId = props.projectId;
+    this._inviterUserId = props.inviterUserId;
+    this._invitationStatus = props.status;
   }
-  get projectId() {
-    return this.props.projectId;
+  get projectId(): string {
+    return this._projectId;
   }
 
   get inviterUserId() {
-    return this.props.inviterUserId;
+    return this._inviterUserId;
   }
 
   get inviteeUserId() {
-    return this.props.inviteeUserId;
+    return this._inviteeUserId;
   }
 
   get status() {
-    return this.props.status;
+    return this._invitationStatus;
   }
 
-  get createdAt() {
-    return this.props.createdAt;
-  }
-
-  get updatedAt() {
-    return this.props.updatedAt;
+  changeInvitationStatus(invitationStatus: InvitationStatus) {
+    if (!invitationStatus) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._invitationStatus = invitationStatus;
   }
 
   static create(props: CreateProjectInvitationProps): ProjectInvitation {
-    const id = uuidv4();
-    const now = new Date();
+    const id = this.generateUuid();
+    const now = this.generateTimestamp();
     const newStatus = InvitationStatus.PENDING;
     return new ProjectInvitation({
       id: id,
@@ -77,10 +86,5 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
       inviteeUserId: props.inviteeUserId,
       inviterUserId: props.inviterUserId,
     });
-  }
-
-  update(props: Pick<ProjectInvitationMutableProps, 'status'>) {
-    this.props.status = props.status;
-    this.updateTimestamp();
   }
 }

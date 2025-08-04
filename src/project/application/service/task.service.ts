@@ -51,6 +51,7 @@ export class TaskService {
     await this.taskRepo.updateTask(task);
     return task;
   }
+
   async deleteTask(params: DeleteTaskParams): Promise<Task> {
     const task = await this.taskRepo.queryTaskByTaskId(params.id);
     if (!task) {

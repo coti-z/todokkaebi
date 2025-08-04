@@ -41,6 +41,15 @@ export class ProjectInvitationRepositoryImpl
     if (!record) {
       return null;
     }
-    return ProjectInvitationInfraMapper.projectInvitationToDomain(record);
+
+    return ProjectInvitationInfraMapper.projectInvitationToDomain({
+      createdAt: record.createdAt,
+      id: record.id,
+      inviteeUserId: record.inviteeUserId,
+      inviterUserId: record.inviterUserId,
+      projectId: record.projectId,
+      projectInvitationStatus: record.projectInvitationStatus,
+      updatedAt: record.updatedAt,
+    });
   }
 }

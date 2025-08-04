@@ -33,7 +33,7 @@ export class ProjectPresentationMapper {
       );
     const membershipsType =
       ProjectMembershipPresentationMapper.entitiesToObjectType(
-        entity.memberships,
+        entity.projectMemberships,
       );
     return {
       projectInvitations: invitationsType,

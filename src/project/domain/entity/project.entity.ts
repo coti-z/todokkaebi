@@ -18,32 +18,38 @@ type ProjectMutableProps = {
 
 type ProjectProps = BaseEntityProps & ProjectMutableProps;
 type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
-type ChangeNameProps = Pick<ProjectMutableProps, 'name'>;
 
 export class Project extends BaseEntity<ProjectProps> {
+  private _adminId: string;
+  private _name: string;
+  private _categories: Category[];
+  private _projectInvitations: ProjectInvitation[];
+  private _projectMemberships: ProjectMembership[];
+
   get adminId(): string {
-    return this.props.adminId;
+    return this._adminId;
   }
 
   get name(): string {
-    return this.props.name;
+    return this._name;
   }
 
-  get memberships(): ProjectMembership[] {
-    return this.props.memberships ? this.props.memberships : [];
+  get projectMemberships(): ProjectMembership[] {
+    return this._projectMemberships ? this._projectMemberships : [];
   }
 
   get categories(): Category[] {
-    return this.props.categories || [];
+    return this._categories || [];
   }
 
   get projectInvitations(): ProjectInvitation[] {
-    return this.props.projectInvitations || [];
+    return this._projectInvitations || [];
   }
 
   static create(props: CreateProjectProps): Project {
-    const now = new Date();
-    const id = uuidv4();
+    const now = this.generateTimestamp();
+    const id = this.generateUuid();
+
     return new Project({
       name: props.name,
       id: id,
@@ -69,16 +75,19 @@ export class Project extends BaseEntity<ProjectProps> {
     });
   }
 
-  changeName(req: ChangeNameProps) {
-    if (!req.name) {
+  changeName(name: string) {
+    if (!name) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }
-    this.props.name = req.name;
+    this._name = name;
     this.updateTimestamp();
   }
 
-  update(partialProps: Partial<ProjectMutableProps>): void {
-    Object.assign(this.props, partialProps);
+  changeAdminId(id: string) {
+    if (!id) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._adminId = id;
     this.updateTimestamp();
   }
 }

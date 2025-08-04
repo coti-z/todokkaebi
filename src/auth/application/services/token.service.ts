@@ -34,8 +34,8 @@ export class TokenService {
     await this.tokenRepository.save(token);
     return token;
   }
-
   /**
+
    * AccessToken을 재발급 합니다.
    * @param param - 저장된 토큰의 업데이트할 정보를 담은 파라미터
    */

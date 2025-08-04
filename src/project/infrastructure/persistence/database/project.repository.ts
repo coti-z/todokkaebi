@@ -38,7 +38,16 @@ export class ProjectRepositoryImpl
       return null;
     }
 
-    return ProjectInfraMapper.projectToDomain(project);
+    return ProjectInfraMapper.projectToDomain({
+      adminId: project.adminId,
+      createdAt: project.createdAt,
+      id: project.id,
+      name: project.name,
+      updatedAt: project.updatedAt,
+      categories: project.categories,
+      memberships: project.memberships,
+      projectInvitations: project.projectInvitations,
+    });
   }
 
   async findProjectsByUserId(userId: string): Promise<Project[]> {

@@ -1,10 +1,14 @@
 import { Project } from '@project/domain/entity/project.entity';
 import { Category } from '@project/domain/entity/category.entity';
-import { ApplicationException, ErrorCode } from '@libs/exception';
+import {
+  ApplicationException,
+  DomainException,
+  ErrorCode,
+} from '@libs/exception';
 export class CategoryPolicyLogic {
   static canDeleteCategory(project: Project, reqUserId: string) {
     if (project.adminId !== reqUserId) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+      throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
   }
 
@@ -15,10 +19,9 @@ export class CategoryPolicyLogic {
     name: string,
   ) {
     if (project.adminId !== reqUserId) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+      throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
-    category.update({
-      name: name,
-    });
+
+    category.changeName(name);
   }
 }

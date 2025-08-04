@@ -7,7 +7,7 @@ export interface ProjectInvitationRecord {
   projectId: string;
   inviterUserId: string;
   inviteeUserId: string;
-  status: InvitationStatusRecord;
+  projectInvitationStatus: InvitationStatusRecord;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,7 +43,7 @@ export class ProjectInvitationInfraMapper {
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       projectId: entity.projectId,
-      status: mappedState,
+      projectInvitationStatus: mappedState,
     };
   }
   static projectInvitationsToPersistence(
@@ -57,9 +57,11 @@ export class ProjectInvitationInfraMapper {
     record: ProjectInvitationRecord,
   ): ProjectInvitation {
     const mappedState =
-      ProjectInvitationInfraMapper.STATE_MAPPING_TO_DOMAIN[record.status];
+      ProjectInvitationInfraMapper.STATE_MAPPING_TO_DOMAIN[
+        record.projectInvitationStatus
+      ];
     if (!mappedState) {
-      throw new Error(`Unknown state ${record.status}`);
+      throw new Error(`Unknown state ${record.projectInvitationStatus}`);
     }
     return ProjectInvitation.reconstitute({
       id: record.id,

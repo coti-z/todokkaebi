@@ -69,7 +69,7 @@ model ProjectInvitation {
   inviterUserId String
   invitee       Users            @relation("InviteeUser", fields: [inviteeUserId], references: [id], onDelete: Cascade)
   inviteeUserId String
-  status        InvitationStatus @default(PENDING)
+  projectInvitationStatus        InvitationStatus @default(PENDING)
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
@@ -128,7 +128,7 @@ model Category {
 model Task {
   id              String    @id @default(uuid())
   title           String
-  status          TaskState @default(PENDING)
+  taskStatus      TaskState @default(PENDING)
   check           Boolean   @default(false)
   category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId      String

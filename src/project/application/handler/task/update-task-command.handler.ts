@@ -35,7 +35,7 @@ export class UpdateTaskCommandHandler
           categoryId: command.categoryId,
           check: command.check,
           title: command.title,
-          status: command.status,
+          taskStatus: command.status,
           actualStartDate: command.actualStartDate,
           actualEndDate: command.actualEndDate,
           startDate: command.startDate,

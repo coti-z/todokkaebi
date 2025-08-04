@@ -5,6 +5,7 @@ import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
+import { DomainException, ErrorCode } from '@libs/exception';
 
 export type CategoryMutableProps = {
   name: string;
@@ -20,26 +21,17 @@ type CreateCategoryProps = Omit<
 >;
 
 export class Category extends BaseEntity<CategoryProps> {
-  get id(): string {
-    return this.props.id;
-  }
+  private _name: string;
+  private _tasks: Task[];
+  private _projectId: string;
   get name(): string {
-    return this.props.name;
+    return this._name;
   }
   get projectId(): string {
-    return this.props.projectId;
+    return this._projectId;
   }
-
-  get createdAt(): Date {
-    return this.props.createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this.props.updatedAt;
-  }
-
   get tasks(): Task[] {
-    return this.props.tasks || [];
+    return this._tasks || [];
   }
 
   static create(props: CreateCategoryProps): Category {
@@ -66,8 +58,33 @@ export class Category extends BaseEntity<CategoryProps> {
     });
   }
 
-  update(partialProps: Partial<CategoryMutableProps>): void {
-    Object.assign(this.props, partialProps);
+  changeName(name: string): void {
+    if (!name) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._name = name;
+    this.updateTimestamp();
+  }
+
+  addTask(task: Task): void {
+    this._tasks.push(task);
+    this.updateTimestamp();
+  }
+
+  removeTask(taskId: string): void {
+    if (!taskId) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+
+    const index = this._tasks.findIndex(task => task.id === taskId);
+    if (index !== -1) {
+      this._tasks.splice(index, 1);
+      this.updateTimestamp();
+    }
+  }
+
+  updateTasks(tasks: Task[]): void {
+    this._tasks.splice(0, this._tasks.length, ...tasks);
     this.updateTimestamp();
   }
 }

@@ -20,8 +20,8 @@ import { AUTH_MUTATIONS } from 'test/graphql/auth.graphq';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;
-  let graphqlHelper: GraphqlRequestHelper;
 
+  let graphqlHelper: GraphqlRequestHelper;
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [

@@ -25,7 +25,7 @@ export class TaskType {
   check: boolean;
 
   @Field(() => TaskState)
-  status: TaskState;
+  taskStatus: TaskState;
 
   @Field()
   startDate: Date;

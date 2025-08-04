@@ -10,8 +10,6 @@ export class ProjectPolicyLogic {
     if (project.adminId !== userId) {
       throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
-    project.changeName({
-      name: newName,
-    });
+    project.changeName(newName);
   }
 }

@@ -20,7 +20,6 @@ import { CreateTaskCommand } from '@project/application/port/in/command/task/cre
 import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
 import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
 
-
 export class TaskPresentationMapper {
   static entityToObjectType(entity: Task): TaskType {
     return {
@@ -31,7 +30,7 @@ export class TaskPresentationMapper {
       endDate: entity.endDate,
       createdAt: entity.createdAt,
       startDate: entity.startDate,
-      status: entity.status,
+      taskStatus: entity.taskStatus,
       title: entity.title,
       updateAt: entity.updatedAt,
       id: entity.id,

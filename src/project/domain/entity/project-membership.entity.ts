@@ -4,13 +4,14 @@ import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
+import { DomainException, ErrorCode } from '@libs/exception';
 
 type ProjectMembershipImmutableProps = {
   projectId: string;
+  userId: string;
 };
 
 type ProjectMembershipMutableProps = {
-  userId: string;
   role: MembershipRole;
 };
 
@@ -24,21 +25,41 @@ type CreateProjectMembershipProps = Omit<
 >;
 
 export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
-  get projectId() {
-    return this.props.projectId;
+  private readonly _projectId: string;
+
+  private readonly _userId: string;
+
+  private _role: MembershipRole;
+  private constructor(props: ProjectMembershipProps) {
+    super(props);
+
+    this._projectId = props.projectId;
+    this._userId = props.userId;
+    this._role = props.role;
+  }
+
+  get projectId(): string {
+    return this._projectId;
   }
 
   get userId() {
-    return this.props.userId;
+    return this._userId;
   }
 
   get role() {
-    return this.props.role;
+    return this._role;
+  }
+
+  changeRole(membershipRole: MembershipRole) {
+    if (!membershipRole) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._role = membershipRole;
   }
 
   static create(props: CreateProjectMembershipProps): ProjectMembership {
-    const id = uuidv4();
-    const now = new Date();
+    const id = this.generateUuid();
+    const now = this.generateTimestamp();
 
     return new ProjectMembership({
       id: id,
@@ -59,9 +80,5 @@ export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
       updatedAt: props.updatedAt,
       projectId: props.projectId,
     });
-  }
-  update(partialProps: Partial<ProjectMembershipMutableProps>): void {
-    Object.assign(this.props, partialProps);
-    this.updateTimestamp();
   }
 }

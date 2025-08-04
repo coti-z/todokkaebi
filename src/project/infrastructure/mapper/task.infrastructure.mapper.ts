@@ -6,7 +6,7 @@ export type TaskStateRecord = 'PENDING' | 'IN_PROGRESS' | 'COMPLETE';
 export interface TaskRecord {
   id: string;
   title: string;
-  status: any;
+  taskStatus: any;
   check: boolean;
   categoryId: string;
   startDate: Date;
@@ -33,15 +33,15 @@ export class TaskInfraMapper {
   };
 
   static toPersistence(entity: Task): TaskRecord {
-    const mappedState = TaskInfraMapper.STATE_MAPPING[entity.status];
+    const mappedState = TaskInfraMapper.STATE_MAPPING[entity.taskStatus];
     if (!mappedState) {
-      throw new Error(`Unknown state ${entity.status}`);
+      throw new Error(`Unknown state ${entity.taskStatus}`);
     }
 
     return {
       id: entity.id,
       title: entity.title,
-      status: mappedState,
+      taskStatus: mappedState,
       check: entity.check,
       categoryId: entity.categoryId,
       startDate: entity.startDate,
@@ -58,16 +58,16 @@ export class TaskInfraMapper {
   }
 
   static taskToDomain(record: TaskRecord): Task {
-    const getStatus = record.status as unknown as TaskState;
+    const getStatus = record.taskStatus as unknown as TaskState;
     const mappedState = TaskInfraMapper.STATE_MAPPING_TO_DOMAIN[getStatus];
     if (!mappedState) {
-      throw new Error(`Unknown state ${record.status}`);
+      throw new Error(`Unknown state ${record.taskStatus}`);
     }
 
     return Task.reconstitute({
       id: record.id,
       title: record.title,
-      status: mappedState,
+      taskStatus: mappedState,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
       actualEndDate: record.actualEndDate || undefined,
