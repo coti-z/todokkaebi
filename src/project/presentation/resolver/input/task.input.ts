@@ -34,14 +34,20 @@ export class CreateTaskInput extends PickType(TaskBaseInput, [
 @InputType()
 export class UpdateTaskInput extends PartialType(TaskBaseInput) {
   @Field()
-  id: string;
+  taskId: string;
 }
 
 @InputType()
-export class DeleteTaskInput extends PickType(TaskBaseInput, ['id']) {}
+export class DeleteTaskInput {
+  @Field()
+  taskId: string;
+}
 
 @InputType()
-export class QueryTaskByIdInput extends PickType(TaskBaseInput, ['id']) {}
+export class QueryTaskByIdInput {
+  @Field()
+  taskId: string;
+}
 
 @InputType()
 export class QueryTasksByCategoryIdInput extends PickType(TaskBaseInput, [

@@ -5,6 +5,8 @@ import {
   IProjectMembershipRepository,
   ProjectMembershipRepositorySymbol,
 } from '../port/out/project-membership-repository.port';
+import { IsProjectMembershipParams } from '@project/application/param/is-project-membership.params';
+import { ApplicationException, ErrorCode } from '@libs/exception';
 
 @Injectable()
 export class ProjectMembershipService {
@@ -23,5 +25,19 @@ export class ProjectMembershipService {
     });
 
     await this.projectMembershipRepo.storeProjectMembership(projectMembership);
+  }
+
+  async isProjectMember(params: IsProjectMembershipParams) {
+    const projectMembership =
+      await this.projectMembershipRepo.findProjectMembershipByUserIdAndProjectId(
+        {
+          projectId: params.projectId,
+          userId: params.userId,
+        },
+      );
+
+    if (!projectMembership) {
+      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+    }
   }
 }

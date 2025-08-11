@@ -1,4 +1,7 @@
+import { TokenInfo } from '@libs/decorators';
+import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
+import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
@@ -23,12 +26,15 @@ export class CategoryResolver {
   ) {}
 
   @Mutation(() => CreateCategoryResponse)
+  @UseGuards(JwtAuthGuard)
   async createCategory(
     @Args('input') input: CreateCategoryInput,
+    @TokenInfo() payload: JwtPayload,
   ): Promise<CreateCategoryResponse> {
     const command =
       CategoryPresentationMapper.createCategoryInputToCreateCategoryCommand(
         input,
+        payload.userId,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -37,13 +43,15 @@ export class CategoryResolver {
   }
 
   @Mutation(() => DeleteCategoryResponse)
+  @UseGuards(JwtAuthGuard)
   async deleteCategory(
     @Args('input') input: DeleteCategoryInput,
+    @TokenInfo() payload: JwtPayload,
   ): Promise<DeleteCategoryResponse> {
     const command =
       CategoryPresentationMapper.deleteCategoryInputToDeleteCategoryCommand(
         input,
-        'test',
+        payload.userId,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -52,13 +60,15 @@ export class CategoryResolver {
   }
 
   @Mutation(() => ChangeCategoryNameResponse)
+  @UseGuards(JwtAuthGuard)
   async changeCategoryName(
     @Args('input') input: ChangeCategoryNameInput,
+    @TokenInfo() payload: JwtPayload,
   ): Promise<ChangeCategoryNameResponse> {
     const command =
       CategoryPresentationMapper.changeCategoryNameInputToUpdateCategoryCommand(
         input,
-        'test',
+        payload.userId,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -67,13 +77,15 @@ export class CategoryResolver {
   }
 
   @Query(() => QueryCategoryByIdResponse)
+  @UseGuards(JwtAuthGuard)
   async queryCategoryById(
     @Args('input') input: QueryCategoryByIdInput,
+    @TokenInfo() payload: JwtPayload,
   ): Promise<QueryCategoryByIdResponse> {
     const query =
       CategoryPresentationMapper.queryCategoryByIdInputToQueryCategory(
         input,
-        'test',
+        payload.userId,
       );
     const result = await this.queryBus.execute(query);
     const output =

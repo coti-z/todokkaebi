@@ -29,7 +29,6 @@ export class CategoryService {
   }
 
   async deleteCategory(params: DeleteCategoryParams): Promise<Category> {
-    CategoryPolicyLogic.canDeleteCategory(params.project, params.reqUserId);
     const category = await this.categoryRepo.findCategoryById(params.id);
     if (!category) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
@@ -43,12 +42,7 @@ export class CategoryService {
     if (!category) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    CategoryPolicyLogic.changeName(
-      params.project,
-      category,
-      params.reqUserId,
-      params.name,
-    );
+    category.changeName(params.name);
     await this.categoryRepo.updateCategory(category);
     return category;
   }

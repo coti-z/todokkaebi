@@ -7,7 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphq';
+import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
 import { USER_MUTATIONS } from 'test/graphql/user.graphql';
 import { GraphqlRequestHelper } from 'test/helpers/graphql-request.helper';
 import {

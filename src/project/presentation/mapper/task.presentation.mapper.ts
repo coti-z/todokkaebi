@@ -32,7 +32,7 @@ export class TaskPresentationMapper {
       startDate: entity.startDate,
       taskStatus: entity.taskStatus,
       title: entity.title,
-      updateAt: entity.updatedAt,
+      updatedAt: entity.updatedAt,
       id: entity.id,
     };
   }
@@ -57,9 +57,9 @@ export class TaskPresentationMapper {
   static updateInputToUpdateTaskCommand(
     input: UpdateTaskInput,
     reqUserId: string,
-  ): UpdateTaskInput {
+  ): UpdateTaskCommand {
     return new UpdateTaskCommand(
-      input.id,
+      input.taskId,
       reqUserId,
       input.title,
       input.categoryId,
@@ -74,13 +74,13 @@ export class TaskPresentationMapper {
     input: DeleteTaskInput,
     reqUserId: string,
   ): DeleteTaskCommand {
-    return new DeleteTaskCommand(input.id, reqUserId);
+    return new DeleteTaskCommand(input.taskId, reqUserId);
   }
   static queryTaskByIdInputToTaskByIdQuery(
     input: QueryTaskByIdInput,
     reqUserId: string,
   ): TaskByIdQuery {
-    return new TaskByIdQuery(reqUserId, input.id);
+    return new TaskByIdQuery(reqUserId, input.taskId);
   }
 
   static queryTasksByCategoryIdToTaskByCategoryIdQuery(

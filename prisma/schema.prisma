@@ -24,13 +24,13 @@ model Users {
   updatedAt DateTime  @updatedAt
 
   // 관계 설정
-  projectMemberships ProjectMembership[]
-  sentInvitations    ProjectInvitation[] @relation("InviterUser")  // 보낸 초대
+  projectMemberships  ProjectMembership[]
+  sentInvitations     ProjectInvitation[] @relation("InviterUser") // 보낸 초대
   receivedInvitations ProjectInvitation[] @relation("InviteeUser") // 받은 초대
-  adminProjects      Project[]           @relation("ProjectAdmin")
-  tokens             Tokens[]
-  oAuthProviders     OAuthProvider[]
-  credentials        UserCredentials?
+  adminProjects       Project[]           @relation("ProjectAdmin")
+  tokens              Tokens[]
+  oAuthProviders      OAuthProvider[]
+  credentials         UserCredentials?
 
   @@index([nickname])
 }
@@ -47,7 +47,7 @@ model Project {
   updatedAt          DateTime            @updatedAt
 
   // 관계 설정 - 이것도 relation 이름 명시해야 함
-  admin              Users               @relation("ProjectAdmin", fields: [adminId], references: [id])
+  admin Users @relation("ProjectAdmin", fields: [adminId], references: [id])
 }
 
 model ProjectMembership {
@@ -62,30 +62,30 @@ model ProjectMembership {
 }
 
 model ProjectInvitation {
-  id            String           @id @default(uuid())
-  project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId     String
-  inviter       Users            @relation("InviterUser", fields: [inviterUserId], references: [id], onDelete: Cascade)
-  inviterUserId String
-  invitee       Users            @relation("InviteeUser", fields: [inviteeUserId], references: [id], onDelete: Cascade)
-  inviteeUserId String
-  projectInvitationStatus        InvitationStatus @default(PENDING)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id                      String           @id @default(uuid())
+  project                 Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId               String
+  inviter                 Users            @relation("InviterUser", fields: [inviterUserId], references: [id], onDelete: Cascade)
+  inviterUserId           String
+  invitee                 Users            @relation("InviteeUser", fields: [inviteeUserId], references: [id], onDelete: Cascade)
+  inviteeUserId           String
+  projectInvitationStatus InvitationStatus @default(PENDING)
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
 
   @@index([projectId, inviteeUserId])
 }
 
 // 인증 관련 모델
 model Tokens {
-  id           String   @id @default(uuid())
-  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  accessToken  String   @unique @db.VarChar(512)
-  refreshToken String   @db.VarChar(512)
-  isRevoked    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  user                  Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  accessToken           String   @unique @db.VarChar(512)
+  refreshToken          String   @db.VarChar(512)
+  isRevoked             Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
   refreshTokenExpiresAt DateTime
 
   @@index([isRevoked, refreshTokenExpiresAt])

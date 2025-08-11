@@ -27,6 +27,5 @@ export type UpdateTaskParams = {
 };
 
 export type DeleteTaskParams = Pick<Task, 'id'> & {
-  project: Project;
   reqUserId: string;
 };

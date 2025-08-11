@@ -10,16 +10,19 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 @Injectable()
 @CommandHandler(ChangeCategoryNameCommand)
 export class ChangeCategoryNameHandler
   implements ICommandHandler<ChangeCategoryNameCommand>
 {
   constructor(
-    @Inject(TransactionManagerSymbol)
-    private readonly transactionManager: ITransactionManager,
     private readonly projectService: ProjectService,
     private readonly categoryService: CategoryService,
+
+    private readonly projectMembershipService: ProjectMembershipService,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
   @Transactional()
@@ -28,11 +31,14 @@ export class ChangeCategoryNameHandler
       const project = await this.projectService.queryProjectByCategoryId({
         categoryId: command.categoryId,
       });
+      await this.projectMembershipService.isProjectMember({
+        projectId: project.id,
+        userId: command.userId,
+      });
       return await this.categoryService.changeName({
-        project: project,
         id: command.categoryId,
         name: command.name,
-        reqUserId: command.reqUserId,
+        reqUserId: command.userId,
       });
     } catch (error) {
       ErrorHandlingStrategy.handleError(error);

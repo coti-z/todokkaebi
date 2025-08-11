@@ -45,7 +45,20 @@ export class Task extends BaseEntity<TaskProps> {
   private _startDate: Date;
   private _endDate: Date;
   private _actualStartDate: Date;
-  private _actualEndDate: Date;
+  private _actualEndDate: Date | undefined;
+
+  private constructor(props: TaskProps) {
+    super(props);
+
+    this._title = props.title;
+    this._categoryId = props.categoryId;
+    this._check = props.check;
+    this._taskStatus = props.taskStatus;
+    this._startDate = props.startDate;
+    this._endDate = props.endDate;
+    this._actualEndDate = props.actualEndDate;
+    this._actualStartDate = props.actualStartDate;
+  }
 
   // ----- GETTERS -----
 
@@ -87,8 +100,8 @@ export class Task extends BaseEntity<TaskProps> {
    * @param props CreateTaskProps
    */
   static create(props: CreateTaskProps): Task {
-    const now = new Date();
-    const id = uuidv4();
+    const now = this.generateTimestamp();
+    const id = this.generateUuid();
 
     // 도메인 규칙에 따라 기본 상태 부여
     const defaultStatus = TaskState.PENDING;
@@ -98,7 +111,7 @@ export class Task extends BaseEntity<TaskProps> {
     Task.validateDates(props.startDate, props.endDate);
 
     return new Task({
-      id,
+      id: id,
       title: props.title,
       categoryId: props.categoryId,
       check: defaultCheck,

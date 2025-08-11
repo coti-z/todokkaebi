@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ProjectByIdQuery } from '@project/application/query/project-by-id.query';
 import { ProjectService } from '@project/application/service/project.service';
 import { Project } from '@project/domain/entity/project.entity';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
 @QueryHandler(ProjectByIdQuery)
@@ -12,9 +13,13 @@ export class ProjectByIdQueryHandler
   constructor(private readonly projectService: ProjectService) {}
 
   async execute(query: ProjectByIdQuery): Promise<Project> {
-    return await this.projectService.queryProject({
-      id: query.projectId,
-      userId: query.userId,
-    });
+    try {
+      return await this.projectService.queryProject({
+        id: query.projectId,
+        userId: query.userId,
+      });
+    } catch (error) {
+      ErrorHandlingStrategy.handleError(error);
+    }
   }
 }

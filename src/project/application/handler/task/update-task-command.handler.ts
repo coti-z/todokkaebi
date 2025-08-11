@@ -18,11 +18,8 @@ export class UpdateTaskCommandHandler
   constructor(
     private readonly projectService: ProjectService,
     private readonly taskService: TaskService,
-    @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
   ) {}
 
-  @Transactional()
   async execute(command: UpdateTaskCommand): Promise<any> {
     try {
       const project = await this.projectService.queryProjectByTaskId({

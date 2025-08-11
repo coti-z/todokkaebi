@@ -57,7 +57,7 @@ export class ProjectMembershipInfraMapper {
   ): ProjectMembership {
     const mappedState =
       ProjectMembershipInfraMapper.STATE_MAPPING_TO_DOMAIN[record.role];
-    if (mappedState) {
+    if (!mappedState) {
       throw new Error(`Unknown state ${record.role}`);
     }
     return ProjectMembership.reconstitute({

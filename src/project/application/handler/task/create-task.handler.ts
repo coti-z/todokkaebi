@@ -14,11 +14,8 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   constructor(
     public readonly projectService: ProjectService,
     public readonly taskService: TaskService,
-    @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
   ) {}
 
-  @Transactional()
   async execute(command: CreateTaskCommand): Promise<Task> {
     try {
       const project = await this.projectService.queryProjectByCategoryId({
@@ -34,6 +31,7 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
         title: command.title,
       });
     } catch (error) {
+      console.log(error);
       throw ErrorHandlingStrategy.handleError(error);
     }
   }

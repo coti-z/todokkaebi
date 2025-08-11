@@ -22,9 +22,20 @@ type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
 export class Project extends BaseEntity<ProjectProps> {
   private _adminId: string;
   private _name: string;
-  private _categories: Category[];
-  private _projectInvitations: ProjectInvitation[];
-  private _projectMemberships: ProjectMembership[];
+  private _categories?: Category[];
+  private _projectInvitations?: ProjectInvitation[];
+  private _projectMemberships?: ProjectMembership[];
+
+  private constructor(props: ProjectProps) {
+    super(props);
+
+    this._adminId = props.adminId;
+    this._name = props.name;
+
+    this._categories = props.categories;
+    this._projectInvitations = props.projectInvitations;
+    this._projectMemberships = props.memberships;
+  }
 
   get adminId(): string {
     return this._adminId;

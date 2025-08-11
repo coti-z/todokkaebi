@@ -21,28 +21,29 @@ import { ChangeCategoryNameCommand } from '@project/application/port/in/command/
 export class CategoryPresentationMapper {
   static createCategoryInputToCreateCategoryCommand(
     input: CreateCategoryInput,
+    userId: string,
   ): CreateCategoryCommand {
-    return new CreateCategoryCommand(input.projectId, input.name);
+    return new CreateCategoryCommand(input.projectId, input.name, userId);
   }
   static deleteCategoryInputToDeleteCategoryCommand(
     input: DeleteCategoryInput,
     userId: string,
   ): DeleteCategoryCommand {
-    return new DeleteCategoryCommand(input.id, userId);
+    return new DeleteCategoryCommand(input.categoryId, userId);
   }
 
   static changeCategoryNameInputToUpdateCategoryCommand(
     input: ChangeCategoryNameInput,
     userId: string,
   ): ChangeCategoryNameCommand {
-    return new ChangeCategoryNameCommand(userId, input.name, input.id);
+    return new ChangeCategoryNameCommand(userId, input.name, input.categoryId);
   }
 
   static queryCategoryByIdInputToQueryCategory(
     input: QueryCategoryByIdInput,
     userId: string,
   ): CategoryByIdQuery {
-    return new CategoryByIdQuery(userId, input.id);
+    return new CategoryByIdQuery(userId, input.categoryId);
   }
 
   // entity to ObjectType

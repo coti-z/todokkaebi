@@ -5,6 +5,7 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteCategoryCommand } from '@project/application/port/in/command/category/delete-category.command';
 import { CategoryService } from '@project/application/service/category.service';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { Category } from '@project/domain/entity/category.entity';
 
@@ -17,6 +18,8 @@ export class DeleteCategoryHandler
     private readonly transactionManager: ITransactionManager,
     private readonly projectService: ProjectService,
     private readonly categoryService: CategoryService,
+
+    private readonly projectMembershipService: ProjectMembershipService,
   ) {}
 
   @Transactional()
@@ -25,9 +28,12 @@ export class DeleteCategoryHandler
       const project = await this.projectService.queryProjectByCategoryId({
         categoryId: command.categoryId,
       });
+      await this.projectMembershipService.isProjectMember({
+        userId: command.userId,
+        projectId: project.id,
+      });
       return await this.categoryService.deleteCategory({
         reqUserId: command.userId,
-        project,
         id: command.categoryId,
       });
     } catch (error) {

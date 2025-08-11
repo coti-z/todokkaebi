@@ -1,3 +1,8 @@
+import {
+  DatabaseModule,
+  PrismaTransactionManager,
+  TransactionManagerSymbol,
+} from '@libs/database';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ChangeCategoryNameHandler } from '@project/application/handler/category/change-category-name.handler';
@@ -17,7 +22,7 @@ import { CategoryByIdHandler } from '@project/application/query/handler/category
 import { ProjectByIdQueryHandler } from '@project/application/query/handler/project-by-id-query.handler';
 import { ProjectsByUserIdQueryHandler } from '@project/application/query/handler/projects-by-userid-query.handler';
 import { TasksByCategoryIdQueryHandler } from '@project/application/query/handler/task-by-categoryid-query.handler';
-import { TaskByIdQueryHadnler } from '@project/application/query/handler/task-by-id-query.handler';
+import { TaskByIdQueryHandler } from '@project/application/query/handler/task-by-id-query.handler';
 import { CategoryService } from '@project/application/service/category.service';
 import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
@@ -26,7 +31,7 @@ import { TaskService } from '@project/application/service/task.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
 
 @Module({
-  imports: [CqrsModule, ProjectInfrastructureModule],
+  imports: [CqrsModule, ProjectInfrastructureModule, DatabaseModule],
   providers: [
     CreateProjectHandler,
     CreateCategoryHandler,
@@ -47,14 +52,19 @@ import { ProjectInfrastructureModule } from '@project/infrastructure/project.inf
 
     CategoryByIdHandler,
     ProjectByIdQueryHandler,
-    TaskByIdQueryHadnler,
     ProjectsByUserIdQueryHandler,
     TasksByCategoryIdQueryHandler,
     ProjectInvitationService,
+    TaskByIdQueryHandler,
     ProjectMembershipService,
     ProjectService,
     CategoryService,
     TaskService,
+
+    {
+      provide: TransactionManagerSymbol,
+      useClass: PrismaTransactionManager,
+    },
   ],
   exports: [],
 })

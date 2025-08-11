@@ -3,7 +3,7 @@ import { Field, InputType, PickType } from '@nestjs/graphql';
 @InputType()
 export class CategoryInput {
   @Field()
-  id: string;
+  categoryId: string;
 
   @Field()
   name: string;
@@ -19,13 +19,17 @@ export class CreateCategoryInput extends PickType(CategoryInput, [
 ]) {}
 
 @InputType()
-export class DeleteCategoryInput extends PickType(CategoryInput, ['id']) {}
+export class DeleteCategoryInput extends PickType(CategoryInput, [
+  'categoryId',
+]) {}
 
 @InputType()
 export class ChangeCategoryNameInput extends PickType(CategoryInput, [
-  'id',
+  'categoryId',
   'name',
 ]) {}
 
 @InputType()
-export class QueryCategoryByIdInput extends PickType(CategoryInput, ['id']) {}
+export class QueryCategoryByIdInput extends PickType(CategoryInput, [
+  'categoryId',
+]) {}

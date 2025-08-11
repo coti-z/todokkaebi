@@ -1,6 +1,4 @@
 import { Task } from './task.entity';
-
-import { v4 as uuidv4 } from 'uuid';
 import {
   BaseEntity,
   BaseEntityProps,
@@ -10,20 +8,27 @@ import { DomainException, ErrorCode } from '@libs/exception';
 export type CategoryMutableProps = {
   name: string;
   projectId: string;
-  tasks?: Task[];
+  tasks: Task[];
 };
 
 export type CategoryProps = CategoryMutableProps & BaseEntityProps;
 
 type CreateCategoryProps = Omit<
   CategoryProps,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'tasks'
 >;
 
 export class Category extends BaseEntity<CategoryProps> {
   private _name: string;
   private _tasks: Task[];
   private _projectId: string;
+
+  private constructor(props: CategoryProps) {
+    super(props);
+    this._name = props.name;
+    this._projectId = props.projectId;
+    this._tasks = props.tasks;
+  }
   get name(): string {
     return this._name;
   }
@@ -35,14 +40,15 @@ export class Category extends BaseEntity<CategoryProps> {
   }
 
   static create(props: CreateCategoryProps): Category {
-    const id = uuidv4();
-    const now = new Date();
+    const id = this.generateUuid();
+    const now = this.generateTimestamp();
+
     return new Category({
       id: id,
       updatedAt: now,
       createdAt: now,
       name: props.name,
-      tasks: props.tasks,
+      tasks: [],
       projectId: props.projectId,
     });
   }

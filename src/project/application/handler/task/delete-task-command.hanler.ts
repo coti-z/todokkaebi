@@ -10,26 +10,28 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 @CommandHandler(DeleteTaskCommand)
 export class DeleteTaskCommandHandler
   implements ICommandHandler<DeleteTaskCommand>
 {
   constructor(
     private readonly projectService: ProjectService,
+    private readonly projectMembershipService: ProjectMembershipService,
     private readonly taskService: TaskService,
-    @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
   ) {}
 
-  @Transactional()
   async execute(command: DeleteTaskCommand): Promise<Task> {
     try {
       const project = await this.projectService.queryProjectByTaskId({
         taskId: command.id,
       });
+      await this.projectMembershipService.isProjectMember({
+        projectId: project.id,
+        userId: command.reqUserId,
+      });
       return await this.taskService.deleteTask({
         id: command.id,
-        project: project,
         reqUserId: command.reqUserId,
       });
     } catch (error) {

@@ -5,7 +5,7 @@ import { Task } from '@project/domain/entity/task.entity';
 import { ProjectService } from '@project/application/service/project.service';
 
 @QueryHandler(TaskByIdQuery)
-export class TaskByIdQueryHadnler implements IQueryHandler<TaskByIdQuery> {
+export class TaskByIdQueryHandler implements IQueryHandler<TaskByIdQuery> {
   constructor(
     private readonly taskService: TaskService,
     private readonly projectService: ProjectService,

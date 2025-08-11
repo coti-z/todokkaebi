@@ -43,5 +43,5 @@ export class TaskType {
   createdAt: Date;
 
   @Field()
-  updateAt: Date;
+  updatedAt: Date;
 }

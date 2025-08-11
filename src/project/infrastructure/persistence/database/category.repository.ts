@@ -17,8 +17,8 @@ export class CategoryRepositoryImpl
   implements ICategoryRepository
 {
   async storeCategory(entity: Category): Promise<void> {
-    const data = CategoryInfraMapper.createToPersistence(entity);
     const client = this.getPrismaClient();
+    const data = CategoryInfraMapper.createToPersistence(entity);
     await client.category.create({ data });
   }
 

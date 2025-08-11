@@ -2,13 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { UserModule } from '@user/user.module';
 import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
-import {
-  CreateUserResponse,
-  DeleteUserResponse,
-  HealthCheckResponse,
-  LoginResponse,
-  UpdateUserResponse,
-} from './types/user/user-response.types';
+
 import { USER_MUTATIONS, USER_QUERIES } from './graphql/user.graphql';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -16,7 +10,16 @@ import { v4 as uuid } from 'uuid';
 import { LoggerModule } from '@libs/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLExceptionFilter } from '@libs/filter';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphq';
+import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
+import { HealthCheckResponse } from 'test/types/common.types';
+import {
+  CreateUserResponse,
+  DeleteUserResponse,
+  UpdateUserResponse,
+} from 'test/types/user-response.types';
+import { LoginResponse } from 'test/types/auth-response.types';
+import { CreateProjectResponse } from '@project/presentation/resolver/response/project.response';
+import { PROJECT_MUTATIONS } from 'test/graphql/project.graphql';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;

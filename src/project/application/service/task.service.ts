@@ -57,7 +57,6 @@ export class TaskService {
     if (!task) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    TaskPolicyLogic.canDeleteTask(params.project, params.reqUserId);
     await this.taskRepo.deleteTaskById(params.id);
     return task;
   }

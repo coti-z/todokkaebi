@@ -7,12 +7,10 @@ import { Project } from '@project/domain/entity/project.entity';
 export type CreateCategoryParams = Pick<Category, 'name' | 'projectId'>;
 
 export type DeleteCategoryParams = Pick<Category, 'id'> & {
-  project: Project;
   reqUserId: string;
 };
 
 export type ChangeCategoryNameParams = Pick<Category, 'id' | 'name'> & {
-  project: Project;
   reqUserId: string;
 };
 

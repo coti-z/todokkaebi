@@ -14,7 +14,6 @@ export class BasicLogoutHandler implements ICommandHandler {
         refreshToken: command.refreshToken,
       });
     } catch (error) {
-      console.log(error);
       ErrorHandlingStrategy.handleError(error);
     }
   }

@@ -4,7 +4,10 @@ import {
   TransactionContext,
 } from '@libs/database';
 import { Injectable } from '@nestjs/common';
-import { IProjectMembershipRepository } from '@project/application/port/out/project-membership-repository.port';
+import {
+  findByUserIdAndProjectIdArgs,
+  IProjectMembershipRepository,
+} from '@project/application/port/out/project-membership-repository.port';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 import { ProjectMembershipInfraMapper } from '@project/infrastructure/mapper/project-membership.infrastructure';
 
@@ -19,5 +22,23 @@ export class ProjectMembershipRepositoryImpl
     await client.projectMembership.create({
       data,
     });
+  }
+
+  async findProjectMembershipByUserIdAndProjectId(
+    args: findByUserIdAndProjectIdArgs,
+  ): Promise<ProjectMembership | null> {
+    const client = this.getPrismaClient();
+    const record = await client.projectMembership.findFirst({
+      where: {
+        userId: args.userId,
+        projectId: args.projectId,
+      },
+    });
+
+    if (!record) {
+      return null;
+    }
+
+    return ProjectMembershipInfraMapper.projectMembershipToDomain(record);
   }
 }
