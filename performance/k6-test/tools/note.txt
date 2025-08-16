@@ -1,0 +1,41 @@
+tools/
+├── src/
+│   ├── cli/
+│   │   ├── commands/
+│   │   │   ├── create-accounts.command.ts
+│   │   │   ├── verify-accounts.command.ts
+│   │   │   └── cleanup-accounts.command.ts
+│   │   ├── options/
+│   │   │   └── create-accounts.options.ts
+│   │   └── index.ts
+│   ├── core/
+│   │   ├── account-creator.ts
+│   │   ├── account-verifier.ts
+│   │   └── account-cleaner.ts
+│   ├── graphql/
+│   │   ├── client.ts
+│   │   ├── queries.ts
+│   │   └── mutations.ts
+│   ├── utils/
+│   │   ├── file-manager.ts
+│   │   ├── progress-manager.ts
+│   │   ├── stats-reporter.ts
+│   │   └── logger.ts
+│   ├── types/
+│   │   ├── account.types.ts
+│   │   ├── graphql.types.ts
+│   │   └── index.ts
+│   ├── config/
+│   │   ├── constants.ts
+│   │   └── environment.ts
+│   └── index.ts
+├── dist/                    # 컴파일된 JS 파일
+├── data/                    # 생성된 계정 파일
+│   └── .gitkeep
+├── logs/                    # 로그 파일
+│   └── .gitkeep
+├── package.json
+├── tsconfig.json
+├── .env.example
+├── .gitignore
+└── README.md

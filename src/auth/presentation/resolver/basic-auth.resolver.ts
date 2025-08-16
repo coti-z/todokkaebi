@@ -9,16 +9,14 @@ import { ResponseManager } from '@libs/response';
 
 @Resolver()
 export class BasicAuthResolver {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
-  ) {}
+  constructor(private readonly commandBus: CommandBus) {}
   @Query(() => String)
   healthCheck() {
     return 'OK';
   }
   @Mutation(() => ApiResponseOfLoginOutput)
   async basicLogin(@Args('input') input: LoginInput) {
+    console.log(input);
     const command = BasicAuthPresentationMapper.toBasicLoginCommand(input);
     const result = await this.commandBus.execute(command);
     const output = BasicAuthPresentationMapper.resultToLoginOutput(result);

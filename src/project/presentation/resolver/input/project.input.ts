@@ -1,11 +1,15 @@
 import { Field, InputType, PickType } from '@nestjs/graphql';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @InputType('ProjectInputType')
 export class Project {
   @Field()
+  @IsNotEmpty()
   projectId: string;
 
   @Field()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 }
 
