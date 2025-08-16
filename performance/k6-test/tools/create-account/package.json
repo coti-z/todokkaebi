@@ -1,0 +1,41 @@
+{
+  "name": "create-account",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/cli/commands/index.ts",
+    "dev": "tsx --watch src/cli/commands/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.4",
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/node": "^24.2.1",
+    "cli-progress": "^3.12.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.4",
+    "@types/chalk": "^2.2.4",
+    "@types/commander": "^2.12.5",
+    "@types/dotenv": "^8.2.3",
+    "@types/ora": "^3.2.0",
+    "@types/p-limit": "^2.2.0",
+    "axios": "^1.11.0",
+    "chalk": "^5.5.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.1",
+    "ora": "^8.2.0",
+    "p-limit": "^6.2.0",
+    "reflect-metadata": "^0.2.2"
+  }
+}

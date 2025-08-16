@@ -21,6 +21,8 @@ export class BasicLoginHandler implements ICommandHandler {
         userId: credential.userId,
       });
     } catch (error) {
+      console.log(error);
+
       ErrorHandlingStrategy.handleError(error);
     }
   }

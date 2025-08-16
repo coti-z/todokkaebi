@@ -25,6 +25,7 @@ export class UserResolver {
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<ApiResponseOfCreateUserOutput> {
+    console.log(input);
     const command = UserPresentationMapper.toCreateUserCommand(input);
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToCreateUserOutput(result);
