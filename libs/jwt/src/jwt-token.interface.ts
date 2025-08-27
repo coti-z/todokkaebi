@@ -3,7 +3,13 @@ import { TokenEnum } from 'libs/jwt/src/token.enum';
 export interface JwtPayload {
   userId: string;
   type: TokenEnum;
+  jti: string;
 }
+
+export interface JwtPayloadWithToken extends JwtPayload {
+  token: string;
+}
+
 export interface JwtPairPayload {
   userId: string;
 }

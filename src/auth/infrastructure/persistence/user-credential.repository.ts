@@ -7,11 +7,7 @@ import {
 } from '@auth/application/port/out/user-credential-repository.port';
 import { UserCredentialMapper } from '@auth/infrastructure/persistence/mapper/user-credential.mapper';
 import { UserCredential } from '@auth/domain/entity/user-credential.entity';
-import {
-  BaseRepository,
-  PrismaService,
-  TransactionContext,
-} from '@libs/database';
+import { BaseRepository } from '@libs/database';
 
 @Injectable()
 export class UserCredentialRepositoryImpl

@@ -6,25 +6,36 @@
     "webpack": false,
     "tsConfigPath": "./tsconfig.json"
   },
-    "common": {
-      "type": "library",
-      "root": "libs/common",
-      "entryFile": "index",
-      "sourceRoot": "libs/common/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
-    },
-    "grpc": {
-      "type": "library",
-      "root": "libs/grpc",
-      "entryFile": "index",
-      "sourceRoot": "libs/grpc/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/grpc/tsconfig.lib.json"
-      }
-    },
+  "common": {
+    "type": "library",
+    "root": "libs/common",
+    "entryFile": "index",
+    "sourceRoot": "libs/common/src",
+    "compilerOptions": {
+      "tsConfigPath": "libs/common/tsconfig.lib.json"
+    }
+  },
+  "grpc": {
+    "type": "library",
+    "root": "libs/grpc",
+    "entryFile": "index",
+    "sourceRoot": "libs/grpc/src",
+    "compilerOptions": {
+      "tsConfigPath": "libs/grpc/tsconfig.lib.json"
+    }
+  },
   "monorepo": true,
   "root": ".",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "projects": {
+    "token": {
+      "type": "library",
+      "root": "libs/token",
+      "entryFile": "index",
+      "sourceRoot": "libs/token/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/token/tsconfig.lib.json"
+      }
+    }
+  }
 }

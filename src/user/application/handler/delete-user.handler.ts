@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserCredentialService } from '@auth/application/services/user-credential.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
 import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';

@@ -1,5 +1,14 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+
+import {
+  CreateProjectInput,
+  DeleteProjectInput,
+  QueryProjectInput,
+  UpdateProjectInput,
+} from '@project/presentation/resolver/input/project.input';
+import { ProjectPresentationMapper } from '@project/presentation/mapper/project.presentation.mapper';
 import {
   CreateProjectResponse,
   DeleteProjectResponse,
@@ -7,18 +16,12 @@ import {
   QueryProjectsResponse,
   UpdateProjectResponse,
 } from '@project/presentation/resolver/response/project.response';
-import { ProjectPresentationMapper } from '@project/presentation/mapper/project.presentation.mapper';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
-import {
-  CreateProjectInput,
-  DeleteProjectInput,
-  QueryProjectInput,
-  UpdateProjectInput,
-} from '@project/presentation/resolver/input/project.input';
-import { ResponseManager } from '@libs/response';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
+
 import { TokenInfo } from '@libs/decorators';
+import { JwtPayload } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 
 @Resolver(() => ProjectType)
 export class ProjectResolver {
@@ -33,7 +36,7 @@ export class ProjectResolver {
   }
 
   @Mutation(() => CreateProjectResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async createProject(
     @Args('input') input: CreateProjectInput,
     @TokenInfo() payload: JwtPayload,
@@ -48,7 +51,7 @@ export class ProjectResolver {
   }
 
   @Mutation(() => DeleteProjectResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteProject(
     @Args('input') input: DeleteProjectInput,
     @TokenInfo() payload: JwtPayload,
@@ -63,7 +66,7 @@ export class ProjectResolver {
   }
 
   @Mutation(() => UpdateProjectResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async updateProject(
     @Args('input') input: UpdateProjectInput,
     @TokenInfo() payload: JwtPayload,
@@ -79,7 +82,7 @@ export class ProjectResolver {
   }
 
   @Query(() => QueryProjectResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProject(
     @Args('input') input: QueryProjectInput,
     @TokenInfo() payload: JwtPayload,
@@ -94,7 +97,7 @@ export class ProjectResolver {
   }
 
   @Query(() => QueryProjectsResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProjects(
     @TokenInfo() payload: JwtPayload,
   ): Promise<QueryProjectsResponse> {

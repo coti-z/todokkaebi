@@ -10,7 +10,8 @@ import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/upd
 import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
 import { ResponseManager } from '@libs/response';
 import { TokenInfo } from '@libs/decorators';
-import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
+import { JwtPayload } from '@libs/jwt';
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 
 @Resolver()
 export class UserResolver {
@@ -25,7 +26,6 @@ export class UserResolver {
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<ApiResponseOfCreateUserOutput> {
-    console.log(input);
     const command = UserPresentationMapper.toCreateUserCommand(input);
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToCreateUserOutput(result);
@@ -33,7 +33,7 @@ export class UserResolver {
   }
 
   @Mutation(() => ApiResponseOfUpdateUserOutput)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,
@@ -48,7 +48,7 @@ export class UserResolver {
   }
 
   @Mutation(() => ApiResponseOfDeleteUserOutput)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
   ): Promise<ApiResponseOfDeleteUserOutput> {

@@ -1,3 +1,8 @@
 export class CreateTokenParam {
-  constructor(public readonly userId: string) {}
+  constructor(
+    public readonly userId: string,
+    public readonly refreshToken: string,
+    public readonly accessToken: string,
+    public readonly refreshTokenExpiresAt: Date,
+  ) {}
 }

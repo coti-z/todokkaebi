@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserCredentialService } from '@auth/application/services/user-credential.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { UpdateUserCredentialCommand } from '@auth/application/port/in/commands/update-user-credential.command';
 
 @CommandHandler(UpdateUserCredentialCommand)
@@ -13,8 +13,8 @@ export class UpdateUserCredentialHandler
       await this.userCredentialService.deleteCredential({
         userId: command.userId,
       });
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      throw error;
     }
   }
 }

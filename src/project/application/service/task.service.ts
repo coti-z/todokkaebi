@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Task } from '@project/domain/entity/task.entity';
-import { TaskPolicyLogic } from '@project/domain/logic/task-policy.logic';
+import { isUndefined, omitBy } from 'lodash';
+
 import {
   DeleteTaskParams,
   QueryTaskByIdParams,
@@ -12,9 +12,10 @@ import {
   ITaskRepository,
   TaskRepositorySymbol,
 } from '../port/out/task-repository.port';
-import { isUndefined, omitBy, pickBy } from 'lodash';
+import { Task } from '@project/domain/entity/task.entity';
+import { TaskPolicyLogic } from '@project/domain/logic/task-policy.logic';
+
 import { ApplicationException, ErrorCode } from '@libs/exception';
-import { TransactionContext } from '@libs/database';
 
 @Injectable()
 export class TaskService {

@@ -1,29 +1,66 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { TokenService } from '@auth/application/services/token.service';
 import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
-import { UserCredentialService } from '@auth/application/services/user-credential.service';
-import { BasicLoginHandler } from '@auth/application/handlers/commands/basic-login.handler';
-import { ReissueTokenHandler } from '@auth/application/handlers/commands/reissue-token.handler';
-import { JwtTokenModule } from '@libs/jwt';
-import { BasicLogoutHandler } from '@auth/application/handlers/commands/basic-logout.handler';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
+import { BasicLoginHandler } from '@auth/application/handler/commands/basic-login.handler';
+import { ReissueTokenHandler } from '@auth/application/handler/commands/reissue-token.handler';
+import { BasicLogoutHandler } from '@auth/application/handler/commands/basic-logout.handler';
+import {
+  DatabaseModule,
+  PrismaTransactionManager,
+  TransactionManagerSymbol,
+} from '@libs/database';
+import { TokenRepositoryImpl } from '@auth/infrastructure/persistence/token.repository';
+import { TokenRepositorySymbol } from '@auth/application/port/out/token-repository.port';
+import { TokenService } from '@auth/application/service/token.service';
+import { ValidateAccessTokenHandler } from '@auth/application/handler/query/validate-access-token.handler';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
 
 @Module({
-  imports: [CqrsModule, JwtTokenModule, AuthInfrastructureModule],
+  imports: [
+    CqrsModule,
+    AuthInfrastructureModule,
+    DatabaseModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+      }),
+
+      inject: [ConfigService],
+    }),
+    ConfigModule,
+  ],
   providers: [
     BasicLoginHandler,
     BasicLogoutHandler,
     ReissueTokenHandler,
+    ValidateAccessTokenHandler,
+    ValidateRefreshTokenHandler,
     UserCredentialService,
     TokenService,
+    TokenByJWTService,
+    {
+      provide: TransactionManagerSymbol,
+      useClass: PrismaTransactionManager,
+    },
+    {
+      provide: TokenRepositorySymbol,
+      useClass: TokenRepositoryImpl,
+    },
   ],
   exports: [
     BasicLoginHandler,
     BasicLogoutHandler,
     ReissueTokenHandler,
+    ValidateAccessTokenHandler,
+    ValidateRefreshTokenHandler,
     UserCredentialService,
-    TokenService,
+    TokenRepositorySymbol,
   ],
 })
 export class AuthApplicationModule {}

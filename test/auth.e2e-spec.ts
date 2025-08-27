@@ -24,13 +24,13 @@ describe('Auth Resolver (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        AuthModule,
-        UserModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
           driver: ApolloDriver,
           autoSchemaFile: true,
           path: '/graphql',
         }),
+        AuthModule,
+        UserModule,
         LoggerModule,
       ],
       providers: [
@@ -85,31 +85,38 @@ describe('Auth Resolver (e2e)', () => {
     it('should reissue token successfully', async () => {
       const response = await graphqlHelper.mutate<ReissueTokenResponse>(
         AUTH_MUTATIONS.REISSUE_TOKEN,
-        {
-          input: {
-            refreshToken: refreshToken,
-          },
-        },
+        {},
+        { Authorization: `Bearer ${refreshToken}` },
       );
 
       expect(response.errors).toBeUndefined();
       expect(response.data?.reissueToken.success).toBe(true);
       expect(response.data?.reissueToken.data.accessToken).toBeDefined();
       expect(response.data?.reissueToken.data.refreshToken).toBeDefined();
+
+      accessToken = response.data!.reissueToken.data.accessToken;
+      refreshToken = response.data!.reissueToken.data.refreshToken;
     });
     it('should logout successfully', async () => {
       const response = await graphqlHelper.mutate<LogoutResponse>(
         AUTH_MUTATIONS.LOGOUT,
-        {
-          input: {
-            refreshToken: refreshToken,
-          },
-        },
+        {},
+        { Authorization: `Bearer ${accessToken}` },
       );
 
       expect(response.errors).toBeUndefined();
       expect(response.data?.basicLogout.success).toBe(true);
       expect(response.data?.basicLogout.data.userId).toBeDefined();
+    });
+
+    it('should fail to reissue token with revoked token', async () => {
+      const response = await graphqlHelper.mutate<ReissueTokenResponse>(
+        AUTH_MUTATIONS.REISSUE_TOKEN,
+        {},
+        { Authorization: `Bearer ${refreshToken}` },
+      );
+
+      expect(response.errors).toBeDefined();
     });
   });
 });

@@ -5,7 +5,7 @@ import {
   testProjectQuery,
   testProjectsQuery,
 } from './scenarios/project.test.js';
-import { testLogin, testUserInfo } from './scenarios/user.test.js';
+import { testUserInfo } from './scenarios/user.test.js';
 
 // Load 1000 test accounts for all VUs to share
 const accounts = new SharedArray('accounts', function () {

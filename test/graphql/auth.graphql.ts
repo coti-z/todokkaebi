@@ -13,8 +13,8 @@ export const AUTH_MUTATIONS = {
   }
   `,
   LOGOUT: `#graphql
-  mutation BasicLogout($input: LogoutInput!) {
-    basicLogout(input: $input) {
+  mutation BasicLogout {
+    basicLogout {
       success
       message
       data {
@@ -25,8 +25,8 @@ export const AUTH_MUTATIONS = {
   `,
 
   REISSUE_TOKEN: `#graphql
-  mutation ReissueToken($input: ReissueTokenInput!) {
-    reissueToken(input: $input) {
+  mutation ReissueToken {
+    reissueToken {
       success
       message
       data {

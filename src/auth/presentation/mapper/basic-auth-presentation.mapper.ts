@@ -1,14 +1,14 @@
 import { LoginInput } from '@auth/presentation/resolver/dto/input/login.input';
 import { LogoutInput } from '@auth/presentation/resolver/dto/input/logout.input';
-import { Token } from '@auth/domain/entity/token.entity';
 import { LoginOutput } from '@auth/presentation/resolver/dto/output/login.output';
 import { LogoutOutput } from '@auth/presentation/resolver/dto/output/logout.output';
 import { BasicLogoutCommand } from '@auth/application/port/in/commands/basic-logout.command';
 import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
+import { Token } from '@auth/domain/entity/token.entity';
 
 export class BasicAuthPresentationMapper {
   static toBasicLogoutCommand(input: LogoutInput): BasicLogoutCommand {
-    return new BasicLogoutCommand(input.refreshToken);
+    return new BasicLogoutCommand(input.accessToken);
   }
 
   static toBasicLoginCommand(input: LoginInput): BasicLoginCommand {

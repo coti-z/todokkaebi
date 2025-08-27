@@ -1,11 +1,11 @@
-import { UserCredentialService } from '@auth/application/services/user-credential.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { AuthModule } from '@auth/auth.module';
+import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
 import {
   DatabaseModule,
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { JwtTokenModule } from '@libs/jwt';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateUserHandler } from '@user/application/handler/create-user.handler';
@@ -19,7 +19,7 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
   imports: [
     CqrsModule,
     UserInfrastructureModule,
-    JwtTokenModule,
+    AuthInfrastructureModule,
     DatabaseModule,
     AuthModule,
   ],
@@ -28,6 +28,7 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
     UpdateUserHandler,
     DeleteUserHandler,
     UserService,
+    UserCredentialService,
     {
       provide: TransactionManagerSymbol,
       useClass: PrismaTransactionManager,

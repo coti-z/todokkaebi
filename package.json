@@ -1,5 +1,5 @@
 {
-  "name": "todogebi",
+  "name": "todokkabi",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -119,7 +119,8 @@
       "^libs/decorators(|/.*)$": "<rootDir>/libs/decorators/src/$1",
       "^libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@libs/test(|/.*)$": "<rootDir>/libs/test/src/$1",
-      "^@libs/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1"
+      "^@libs/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
+      "^@app/token(|/.*)$": "<rootDir>/libs/token/src/$1"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

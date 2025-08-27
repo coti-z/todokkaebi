@@ -1,20 +1,29 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
   "rootDir": "../",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"],
+  "setupFilesAfterEnv": [
+    "<rootDir>/test/setup.ts"
+  ],
   "moduleNameMapper": {
     "^@user/(.*)$": "<rootDir>/src/user/$1",
-    "^@auth/(.*)$": "<rootDir>/src/auth/$1", 
+    "^@auth/(.*)$": "<rootDir>/src/auth/$1",
     "^@project/(.*)$": "<rootDir>/src/project/$1",
     "^@libs/database/(.*)$": "<rootDir>/libs/database/src/$1",
     "^@libs/auth/(.*)$": "<rootDir>/libs/auth/src/$1",
+    "^@libs/token/(.*)$": "<rootDir>/libs/token/src/$1",
     "^@libs/exception/(.*)$": "<rootDir>/libs/exception/src/$1",
     "^@libs/(.*)$": "<rootDir>/libs/$1/src",
-     "^test/(.*)$": "<rootDir>/test/$1"
+    "^test/(.*)$": "<rootDir>/test/$1",
+    "@app/token/(.*)": "<rootDir>/../libs/token/src/$1",
+    "@app/token": "<rootDir>/../libs/token/src"
   }
 }

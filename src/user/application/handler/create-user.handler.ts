@@ -4,7 +4,7 @@ import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 import { CreateUserCommand } from '@user/application/port/in/create-user.command';
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
-import { UserCredentialService } from '@auth/application/services/user-credential.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import {
   ITransactionManager,
   Transactional,

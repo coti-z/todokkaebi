@@ -18,8 +18,7 @@ import {
   UpdateUserResponse,
 } from 'test/types/user-response.types';
 import { LoginResponse } from 'test/types/auth-response.types';
-import { CreateProjectResponse } from '@project/presentation/resolver/response/project.response';
-import { PROJECT_MUTATIONS } from 'test/graphql/project.graphql';
+import { JwtTokenModule } from '@libs/jwt';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;

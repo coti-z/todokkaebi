@@ -1,5 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+
 import { TaskPresentationMapper } from '../mapper/task.presentation.mapper';
 import {
   CreateTaskInput,
@@ -16,10 +18,11 @@ import {
   UpdateTaskResponse,
 } from './response/task.response';
 import { TaskType } from './type/task.type';
-import { ResponseManager } from '@libs/response';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard, JwtPayload } from '@libs/jwt';
+
 import { TokenInfo } from '@libs/decorators';
+import { JwtPayload } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 
 @Resolver(() => TaskType)
 export class TaskResolver {
@@ -29,7 +32,7 @@ export class TaskResolver {
   ) {}
 
   @Mutation(() => CreateTaskResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async createTask(
     @Args('input') input: CreateTaskInput,
     @TokenInfo() payload: JwtPayload,
@@ -44,7 +47,7 @@ export class TaskResolver {
   }
 
   @Mutation(() => UpdateTaskResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async updateTask(
     @Args('input') input: UpdateTaskInput,
     @TokenInfo() payload: JwtPayload,
@@ -59,7 +62,7 @@ export class TaskResolver {
   }
 
   @Mutation(() => DeleteTaskResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteTask(
     @Args('input') input: DeleteTaskInput,
     @TokenInfo() payload: JwtPayload,
@@ -74,7 +77,7 @@ export class TaskResolver {
   }
 
   @Query(() => QueryTaskByIdResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryTaskById(
     @Args('input') input: QueryTaskByIdInput,
     @TokenInfo() payload: JwtPayload,
@@ -89,7 +92,7 @@ export class TaskResolver {
   }
 
   @Query(() => QueryTaskByCategoryIdResponse)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryTasksByCategoryId(
     @Args('input') input: QueryTasksByCategoryIdInput,
     @TokenInfo() payload: JwtPayload,

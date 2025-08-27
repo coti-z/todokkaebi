@@ -1,11 +1,10 @@
-import { ReissueTokenInput } from '@auth/presentation/resolver/dto/input/reissue-token.input';
-import { Token } from '@auth/domain/entity/token.entity';
 import { ReissueTokenOutput } from '@auth/presentation/resolver/dto/output/reissue-token.output';
 import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-token.command';
+import { Token } from '@auth/domain/entity/token.entity';
 
 export class TokenPresentationMapper {
-  static toReissueTokenCommand(input: ReissueTokenInput): ReissueTokenCommand {
-    return new ReissueTokenCommand(input.refreshToken);
+  static toReissueTokenCommand(refreshToken: string): ReissueTokenCommand {
+    return new ReissueTokenCommand(refreshToken);
   }
 
   static resultToTokenReissueOutput(data: Token): ReissueTokenOutput {

@@ -5,7 +5,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
-import { Project } from '@project/domain/entity/project.entity';
 import { ProjectModule } from '@project/project.module';
 import { UserModule } from '@user/user.module';
 

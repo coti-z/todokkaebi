@@ -10,7 +10,6 @@ import { UserCredential } from '@auth/domain/entity/user-credential.entity';
 import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
 import { ApplicationException, ErrorCode } from '@libs/exception';
 import { PasswordPolicy } from '@auth/domain/policy/password-policy';
-import { create } from 'domain';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.

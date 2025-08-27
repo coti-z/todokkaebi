@@ -3,14 +3,10 @@ import {
   FindTokenByRefreshTokenArgs,
   ITokensRepository,
 } from '@auth/application/port/out/token-repository.port';
-import { Injectable } from '@nestjs/common';
-import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mapper';
 import { Token } from '@auth/domain/entity/token.entity';
-import {
-  BaseRepository,
-  PrismaService,
-  TransactionContext,
-} from '@libs/database';
+import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mapper';
+import { BaseRepository } from '@libs/database';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TokenRepositoryImpl

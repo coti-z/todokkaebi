@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UserResolver } from '@user/presentation/resolver/user.resolver';
 import { CqrsModule } from '@nestjs/cqrs';
-import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructure.module';
+import { AuthModule } from '@auth/auth.module';
 import { JwtTokenModule } from '@libs/jwt';
 
 @Module({
-  imports: [CqrsModule, UserInfrastructureModule, JwtTokenModule],
+  imports: [CqrsModule, JwtTokenModule, AuthModule],
   providers: [UserResolver],
   exports: [UserResolver],
 })
