@@ -18,7 +18,6 @@ import {
   UpdateUserResponse,
 } from 'test/types/user-response.types';
 import { LoginResponse } from 'test/types/auth-response.types';
-import { JwtTokenModule } from '@libs/jwt';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;

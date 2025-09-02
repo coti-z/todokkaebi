@@ -19,7 +19,7 @@ export class CreateProjectInvitationCommandHandler
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
 
     @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
   @Transactional()

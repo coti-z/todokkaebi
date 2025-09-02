@@ -15,8 +15,11 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
     public readonly projectService: ProjectService,
     public readonly taskService: TaskService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(command: CreateTaskCommand): Promise<Task> {
     try {
       const project = await this.projectService.queryProjectByCategoryId({

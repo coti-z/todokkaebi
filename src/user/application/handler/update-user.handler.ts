@@ -1,5 +1,10 @@
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
 import { UpdateUserCommand } from '@user/application/port/in/update-user.command';
@@ -14,8 +19,12 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     private readonly userService: UserService,
 
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(command: UpdateUserCommand): Promise<User> {
     try {
       return await this.userService.updateUser(

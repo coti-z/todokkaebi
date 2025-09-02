@@ -1,5 +1,10 @@
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProjectCommand } from '@project/application/port/in/command/unti-project/delete-project.command';
 import { ProjectService } from '@project/application/service/project.service';
@@ -13,7 +18,11 @@ export class DeleteProjectHandler
   constructor(
     private readonly projectService: ProjectService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
+
+  @Transactional()
   async execute(command: DeleteProjectCommand): Promise<Project> {
     try {
       return await this.projectService.deleteProject({

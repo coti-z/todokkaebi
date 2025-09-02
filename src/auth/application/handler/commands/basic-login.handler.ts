@@ -6,6 +6,13 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 import { TokenService } from '@auth/application/service/token.service';
 import { Token } from '@auth/domain/entity/token.entity';
 import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
+import { Inject, Injectable } from '@nestjs/common';
+@Injectable()
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
   constructor(
@@ -13,7 +20,12 @@ export class BasicLoginHandler implements ICommandHandler {
     private readonly tokenService: TokenService,
     private readonly tokenByJwtService: TokenByJWTService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
+
+  @Transactional()
   async execute(command: BasicLoginCommand): Promise<Token> {
     try {
       const credential = await this.userAuthService.validatePassword({

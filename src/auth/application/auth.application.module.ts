@@ -50,10 +50,6 @@ import { ErrorHandlingStrategy } from '@libs/exception';
       provide: TransactionManagerSymbol,
       useClass: PrismaTransactionManager,
     },
-    {
-      provide: TokenRepositorySymbol,
-      useClass: TokenRepositoryImpl,
-    },
   ],
   exports: [
     BasicLoginHandler,
@@ -62,7 +58,6 @@ import { ErrorHandlingStrategy } from '@libs/exception';
     ValidateAccessTokenHandler,
     ValidateRefreshTokenHandler,
     UserCredentialService,
-    TokenRepositorySymbol,
   ],
 })
 export class AuthApplicationModule {}

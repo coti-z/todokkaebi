@@ -5,13 +5,25 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 import { Token } from '@auth/domain/entity/token.entity';
 import { TokenService } from '@auth/application/service/token.service';
 import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
+@Injectable()
 @CommandHandler(ReissueTokenCommand)
 export class ReissueTokenHandler implements ICommandHandler {
   constructor(
     private readonly tokenService: TokenService,
     private readonly tokenByJWTService: TokenByJWTService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
+
+  @Transactional()
   async execute(command: ReissueTokenCommand): Promise<Token> {
     try {
       const oldToken = await this.tokenService.revokeTokenByRefreshToken({

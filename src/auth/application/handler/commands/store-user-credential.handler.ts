@@ -2,7 +2,14 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { StoreUserCredentialCommand } from '@auth/application/port/in/commands/store-user-credential.command';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 
+@Injectable()
 @CommandHandler(StoreUserCredentialCommand)
 export class StoreUserCredentialHandler
   implements ICommandHandler<StoreUserCredentialCommand>
@@ -10,7 +17,11 @@ export class StoreUserCredentialHandler
   constructor(
     private readonly userCredentialService: UserCredentialService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
+
+  @Transactional()
   async execute(command: StoreUserCredentialCommand): Promise<void> {
     try {
       await this.userCredentialService.createCredential({

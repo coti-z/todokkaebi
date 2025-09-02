@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
@@ -6,6 +6,11 @@ import { DeleteUserCommand } from '@user/application/port/in/delete-user.command
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 
 @Injectable()
 @CommandHandler(DeleteUserCommand)
@@ -14,8 +19,12 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
     private readonly userService: UserService,
 
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(command: DeleteUserCommand): Promise<User> {
     try {
       return await this.userService.deleteUser(new DeleteUserParam(command.id));

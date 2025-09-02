@@ -28,9 +28,11 @@ export class UserResolver {
     @Args('input') input: CreateUserInput,
     @Context() gqlContext: any,
   ): Promise<ApiResponseOfCreateUserOutput> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = UserPresentationMapper.toCreateUserCommand(
       input,
-      gqlContext,
+      requestContext,
     );
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToCreateUserOutput(result);

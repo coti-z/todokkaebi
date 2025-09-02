@@ -14,7 +14,7 @@ import { CreateProjectInvitationCommandHandler } from '@project/application/hand
 import { RejectProjectInvitationCommandHandler } from '@project/application/handler/project-invitation/reject-project-invitation-command.handler';
 import { UpdateProjectInvitationCommandHandler } from '@project/application/handler/project-invitation/update-project-invitation-command.handler';
 import { CreateTaskHandler } from '@project/application/handler/task/create-task.handler';
-import { DeleteTaskCommandHandler } from '@project/application/handler/task/delete-task-command.hanler';
+import { DeleteTaskCommandHandler } from '@project/application/handler/task/delete-task-command.handler';
 import { UpdateTaskCommandHandler } from '@project/application/handler/task/update-task-command.handler';
 import { CreateProjectHandler } from '@project/application/handler/unit-project/create-project.handler';
 import { DeleteProjectHandler } from '@project/application/handler/unit-project/delete-project.handler';

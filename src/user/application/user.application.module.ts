@@ -12,6 +12,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreateUserHandler } from '@user/application/handler/create-user.handler';
 import { DeleteUserHandler } from '@user/application/handler/delete-user.handler';
 import { UpdateUserHandler } from '@user/application/handler/update-user.handler';
+import { UserRepositorySymbol } from '@user/application/port/out/user-repository.port';
 
 import { UserService } from '@user/application/services/user.service';
 import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructure.module';
@@ -25,6 +26,10 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
     AuthModule,
   ],
   providers: [
+    {
+      provide: TransactionManagerSymbol,
+      useClass: PrismaTransactionManager,
+    },
     ErrorHandlingStrategy,
     CreateUserHandler,
     UpdateUserHandler,
@@ -32,10 +37,6 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
 
     UserService,
     UserCredentialService,
-    {
-      provide: TransactionManagerSymbol,
-      useClass: PrismaTransactionManager,
-    },
   ],
   exports: [
     CreateUserHandler,

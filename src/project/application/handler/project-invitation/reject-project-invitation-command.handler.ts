@@ -1,4 +1,8 @@
-import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -13,10 +17,11 @@ export class RejectProjectInvitationCommandHandler
   constructor(
     private readonly projectInvitationService: ProjectInvitationService,
     @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
+    private readonly transactionManager: ITransactionManager,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
+  @Transactional()
   async execute(
     command: RejectProjectInvitationCommand,
   ): Promise<ProjectInvitation> {

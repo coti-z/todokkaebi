@@ -5,7 +5,11 @@ import { ProjectInvitationService } from '@project/application/service/project-i
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 import { AcceptProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/accept-project-invitation.command';
-import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Injectable()
@@ -18,9 +22,10 @@ export class AcceptProjectInvitationCommandHandler
     private readonly projectMembershipService: ProjectMembershipService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
     @Inject(TransactionManagerSymbol)
-    private readonly transactionManger: ITransactionManager,
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(
     command: AcceptProjectInvitationCommand,
   ): Promise<ProjectInvitation> {

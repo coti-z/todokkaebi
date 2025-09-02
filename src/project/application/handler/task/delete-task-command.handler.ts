@@ -20,8 +20,11 @@ export class DeleteTaskCommandHandler
     private readonly projectMembershipService: ProjectMembershipService,
     private readonly taskService: TaskService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(command: DeleteTaskCommand): Promise<Task> {
     try {
       const project = await this.projectService.queryProjectByTaskId({

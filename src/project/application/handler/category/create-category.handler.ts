@@ -6,6 +6,12 @@ import { ProjectMembershipService } from '@project/application/service/project-m
 import { Category } from '@project/domain/entity/category.entity';
 
 import { ErrorHandlingStrategy } from '@libs/exception';
+import {
+  ITransactionManager,
+  Transactional,
+  TransactionManagerSymbol,
+} from '@libs/database';
+import { Inject } from '@nestjs/common';
 
 @CommandHandler(CreateCategoryCommand)
 export class CreateCategoryHandler
@@ -15,8 +21,11 @@ export class CreateCategoryHandler
     private readonly categoryService: CategoryService,
     private readonly projectMembershipService: ProjectMembershipService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Transactional()
   async execute(command: CreateCategoryCommand): Promise<Category> {
     try {
       this.projectMembershipService.isProjectMember({

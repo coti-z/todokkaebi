@@ -17,7 +17,6 @@ export function Transactional() {
         return await originalMethod.apply(this, args);
       }
 
-      // 오타 수정: transactionManger -> transactionManager
       if (!this.transactionManager) {
         throw new Error(
           'TransactionManager가 주입되지 않았습니다. Dependency Inject(DI)를 확인하세요',
