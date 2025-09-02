@@ -12,14 +12,15 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   constructor(
     private readonly userService: UserService,
-    private readonly userCredentialService: UserCredentialService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(command: DeleteUserCommand): Promise<User> {
     try {
       return await this.userService.deleteUser(new DeleteUserParam(command.id));
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

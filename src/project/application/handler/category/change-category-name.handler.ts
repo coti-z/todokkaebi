@@ -23,6 +23,8 @@ export class ChangeCategoryNameHandler
     private readonly categoryService: CategoryService,
 
     private readonly projectMembershipService: ProjectMembershipService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
   ) {}
@@ -43,7 +45,7 @@ export class ChangeCategoryNameHandler
         reqUserId: command.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

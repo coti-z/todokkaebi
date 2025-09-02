@@ -1,4 +1,8 @@
-import { ApplicationException, ErrorCode } from '@libs/exception';
+import {
+  ApplicationException,
+  ErrorCode,
+  RequestContextExtractor,
+} from '@libs/exception';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -20,7 +24,9 @@ export class JwtAuthWithRefreshTokenGuard implements CanActivate {
     if (!refreshToken) {
       throw new ApplicationException(ErrorCode.INVALID_TOKEN);
     }
-    const query = new ValidateRefreshTokenQuery(refreshToken);
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+    const query = new ValidateRefreshTokenQuery(refreshToken, requestContext);
 
     try {
       const payload = this.JwtTokenService.verifyRefreshToken(refreshToken);

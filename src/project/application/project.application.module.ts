@@ -3,6 +3,7 @@ import {
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ChangeCategoryNameHandler } from '@project/application/handler/category/change-category-name.handler';
@@ -33,6 +34,7 @@ import { ProjectInfrastructureModule } from '@project/infrastructure/project.inf
 @Module({
   imports: [CqrsModule, ProjectInfrastructureModule, DatabaseModule],
   providers: [
+    ErrorHandlingStrategy,
     CreateProjectHandler,
     CreateCategoryHandler,
     CreateTaskHandler,

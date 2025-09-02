@@ -10,7 +10,10 @@ import { Project } from '@project/domain/entity/project.entity';
 export class DeleteProjectHandler
   implements ICommandHandler<DeleteProjectCommand>
 {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
   async execute(command: DeleteProjectCommand): Promise<Project> {
     try {
       return await this.projectService.deleteProject({
@@ -18,7 +21,7 @@ export class DeleteProjectHandler
         id: command.projectId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

@@ -19,6 +19,7 @@ export class DeleteTaskCommandHandler
     private readonly projectService: ProjectService,
     private readonly projectMembershipService: ProjectMembershipService,
     private readonly taskService: TaskService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(command: DeleteTaskCommand): Promise<Task> {
@@ -35,7 +36,7 @@ export class DeleteTaskCommandHandler
         reqUserId: command.reqUserId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

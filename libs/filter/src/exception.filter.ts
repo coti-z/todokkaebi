@@ -24,10 +24,14 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
     const { req } = gqlContext.getContext();
-    // 로깅
-    this.logError(exception, req);
 
-    // GraphQLError 생성
+    if (
+      exception instanceof ApplicationException ||
+      exception instanceof DomainException
+    ) {
+      return this.createGraphQLError(exception);
+    }
+    this.logError(exception, req);
     return this.createGraphQLError(exception);
   }
 
@@ -58,17 +62,10 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
       variables: req?.body?.variables,
     };
 
-    if (
-      exception instanceof DomainException ||
-      exception instanceof ApplicationException
-    ) {
-      this.logger.warn(`Business Exception: ${exception.message}`, logContext);
-    } else {
-      this.logger.error(
-        `Unhandled Exception: ${exception.message}`,
-        exception.stack,
-        logContext,
-      );
-    }
+    this.logger.error(
+      `Unhandled Exception: ${exception.message}`,
+      exception.stack,
+      logContext,
+    );
   }
 }

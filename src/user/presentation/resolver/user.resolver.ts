@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 
@@ -12,6 +12,7 @@ import { ResponseManager } from '@libs/response';
 import { TokenInfo } from '@libs/decorators';
 import { JwtPayload } from '@libs/jwt';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+import { RequestContextExtractor } from '@libs/exception';
 
 @Resolver()
 export class UserResolver {
@@ -25,8 +26,12 @@ export class UserResolver {
   @Mutation(() => ApiResponseOfCreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
+    @Context() gqlContext: any,
   ): Promise<ApiResponseOfCreateUserOutput> {
-    const command = UserPresentationMapper.toCreateUserCommand(input);
+    const command = UserPresentationMapper.toCreateUserCommand(
+      input,
+      gqlContext,
+    );
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToCreateUserOutput(result);
     return ResponseManager.success(output);
@@ -37,10 +42,14 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<ApiResponseOfUpdateUserOutput> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = UserPresentationMapper.toUpdateUserCommand(
       payload.userId,
       input,
+      requestContext,
     );
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToUpdateUserOutput(result);
@@ -51,8 +60,14 @@ export class UserResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<ApiResponseOfDeleteUserOutput> {
-    const command = UserPresentationMapper.toDeleteUserCommand(payload.userId);
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+    const command = UserPresentationMapper.toDeleteUserCommand(
+      payload.userId,
+      requestContext,
+    );
     const result = await this.commandBus.execute(command);
     const output = UserPresentationMapper.resultToDeleteUserOutput(result);
     return ResponseManager.success(output);

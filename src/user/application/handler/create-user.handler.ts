@@ -18,6 +18,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     private readonly userService: UserService,
     private readonly userCredentialService: UserCredentialService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
   ) {}
@@ -40,7 +41,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
       });
       return user;
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

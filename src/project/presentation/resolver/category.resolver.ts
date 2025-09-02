@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import {
@@ -20,6 +20,7 @@ import { TokenInfo } from '@libs/decorators';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+import { RequestContextExtractor } from '@libs/exception';
 
 @Resolver('category')
 export class CategoryResolver {
@@ -33,11 +34,15 @@ export class CategoryResolver {
   async createCategory(
     @Args('input') input: CreateCategoryInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<CreateCategoryResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command =
       CategoryPresentationMapper.createCategoryInputToCreateCategoryCommand(
         input,
         payload.userId,
+        requestContext,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -50,11 +55,16 @@ export class CategoryResolver {
   async deleteCategory(
     @Args('input') input: DeleteCategoryInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<DeleteCategoryResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+
     const command =
       CategoryPresentationMapper.deleteCategoryInputToDeleteCategoryCommand(
         input,
         payload.userId,
+        requestContext,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -67,11 +77,16 @@ export class CategoryResolver {
   async changeCategoryName(
     @Args('input') input: ChangeCategoryNameInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<ChangeCategoryNameResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+
     const command =
       CategoryPresentationMapper.changeCategoryNameInputToUpdateCategoryCommand(
         input,
         payload.userId,
+        requestContext,
       );
     const result = await this.commandBus.execute(command);
     const output =
@@ -84,11 +99,16 @@ export class CategoryResolver {
   async queryCategoryById(
     @Args('input') input: QueryCategoryByIdInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<QueryCategoryByIdResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+
     const query =
       CategoryPresentationMapper.queryCategoryByIdInputToQueryCategory(
         input,
         payload.userId,
+        requestContext,
       );
     const result = await this.queryBus.execute(query);
     const output =

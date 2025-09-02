@@ -10,6 +10,7 @@ export class ReissueTokenHandler implements ICommandHandler {
   constructor(
     private readonly tokenService: TokenService,
     private readonly tokenByJWTService: TokenByJWTService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
   async execute(command: ReissueTokenCommand): Promise<Token> {
     try {
@@ -28,7 +29,7 @@ export class ReissueTokenHandler implements ICommandHandler {
         userId: oldToken.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

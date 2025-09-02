@@ -7,14 +7,18 @@ import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input
 import { CreateUserCommand } from '@user/application/port/in/create-user.command';
 import { UpdateUserCommand } from '@user/application/port/in/update-user.command';
 import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';
-
+import { RequestContext } from '@libs/exception';
 
 export class UserPresentationMapper {
-  static toCreateUserCommand(input: CreateUserInput): CreateUserCommand {
+  static toCreateUserCommand(
+    input: CreateUserInput,
+    context: RequestContext,
+  ): CreateUserCommand {
     return new CreateUserCommand(
       input.email,
       input.nickname,
       input.password,
+      context,
       input.birthday,
     );
   }
@@ -22,17 +26,22 @@ export class UserPresentationMapper {
   static toUpdateUserCommand(
     userid: string,
     input: UpdateUserInput,
+    context: RequestContext,
   ): UpdateUserCommand {
     return new UpdateUserCommand(
       userid,
+      context,
       input.nickname,
       input.email,
       input.password,
     );
   }
 
-  static toDeleteUserCommand(userId: string): DeleteUserCommand {
-    return new DeleteUserCommand(userId);
+  static toDeleteUserCommand(
+    userId: string,
+    context: RequestContext,
+  ): DeleteUserCommand {
+    return new DeleteUserCommand(userId, context);
   }
 
   static resultToCreateUserOutput(result: User): CreateUserOutput {

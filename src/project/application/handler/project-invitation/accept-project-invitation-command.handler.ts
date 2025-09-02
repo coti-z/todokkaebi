@@ -16,6 +16,7 @@ export class AcceptProjectInvitationCommandHandler
   constructor(
     private readonly projectInvitationService: ProjectInvitationService,
     private readonly projectMembershipService: ProjectMembershipService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
     @Inject(TransactionManagerSymbol)
     private readonly transactionManger: ITransactionManager,
   ) {}
@@ -38,7 +39,7 @@ export class AcceptProjectInvitationCommandHandler
 
       return projectInvitation;
     } catch (error) {
-      throw ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

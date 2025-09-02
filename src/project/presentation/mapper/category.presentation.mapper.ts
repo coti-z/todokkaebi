@@ -17,33 +17,48 @@ import { CategoryByIdQuery } from '@project/application/query/category-by-id.que
 import { CreateCategoryCommand } from '@project/application/port/in/command/category/create-category.command';
 import { DeleteCategoryCommand } from '@project/application/port/in/command/category/delete-category.command';
 import { ChangeCategoryNameCommand } from '@project/application/port/in/command/category/change-category-name.command';
+import { RequestContext } from '@libs/exception';
 
 export class CategoryPresentationMapper {
   static createCategoryInputToCreateCategoryCommand(
     input: CreateCategoryInput,
     userId: string,
+    context: RequestContext,
   ): CreateCategoryCommand {
-    return new CreateCategoryCommand(input.projectId, input.name, userId);
+    return new CreateCategoryCommand(
+      input.projectId,
+      input.name,
+      userId,
+      context,
+    );
   }
   static deleteCategoryInputToDeleteCategoryCommand(
     input: DeleteCategoryInput,
     userId: string,
+    context: RequestContext,
   ): DeleteCategoryCommand {
-    return new DeleteCategoryCommand(input.categoryId, userId);
+    return new DeleteCategoryCommand(input.categoryId, userId, context);
   }
 
   static changeCategoryNameInputToUpdateCategoryCommand(
     input: ChangeCategoryNameInput,
     userId: string,
+    context: RequestContext,
   ): ChangeCategoryNameCommand {
-    return new ChangeCategoryNameCommand(userId, input.name, input.categoryId);
+    return new ChangeCategoryNameCommand(
+      userId,
+      input.name,
+      input.categoryId,
+      context,
+    );
   }
 
   static queryCategoryByIdInputToQueryCategory(
     input: QueryCategoryByIdInput,
     userId: string,
+    context: RequestContext,
   ): CategoryByIdQuery {
-    return new CategoryByIdQuery(userId, input.categoryId);
+    return new CategoryByIdQuery(userId, input.categoryId, context);
   }
 
   // entity to ObjectType

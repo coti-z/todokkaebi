@@ -12,6 +12,8 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
   constructor(
     private readonly projectService: ProjectService,
     private readonly categoryService: CategoryService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(query: CategoryByIdQuery): Promise<Category> {
@@ -26,7 +28,7 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
         reqUserId: query.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, query.context);
     }
   }
 }

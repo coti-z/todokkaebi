@@ -10,7 +10,10 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 export class UpdateProjectHandler
   implements ICommandHandler<UpdateProjectCommand>
 {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
   async execute(command: UpdateProjectCommand): Promise<Project> {
     try {
       return await this.projectService.updateProject({
@@ -19,7 +22,7 @@ export class UpdateProjectHandler
         adminId: command.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

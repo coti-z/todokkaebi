@@ -21,6 +21,7 @@ import {
 import { CreateProjectCommand } from '@project/application/port/in/command/unti-project/create-project.command';
 import { DeleteProjectCommand } from '@project/application/port/in/command/unti-project/delete-project.command';
 import { UpdateProjectCommand } from '@project/application/port/in/command/unti-project/update-project.command';
+import { RequestContext } from '@libs/exception';
 
 export class ProjectPresentationMapper {
   static entityToObjectType(entity: Project): ProjectType {
@@ -52,33 +53,46 @@ export class ProjectPresentationMapper {
   static toCreateProjectCommand(
     input: CreateProjectInput,
     userId: string,
+    context: RequestContext,
   ): CreateProjectCommand {
-    return new CreateProjectCommand(userId, input.name);
+    return new CreateProjectCommand(userId, input.name, context);
   }
 
   static toDeleteProjectCommand(
     input: DeleteProjectInput,
     userId: string,
+    context: RequestContext,
   ): DeleteProjectCommand {
-    return new DeleteProjectCommand(input.projectId, userId);
+    return new DeleteProjectCommand(input.projectId, userId, context);
   }
 
   static toUpdateProjectCommand(
     input: UpdateProjectInput,
     userId: string,
+    context: RequestContext,
   ): UpdateProjectCommand {
-    return new UpdateProjectCommand(userId, input.projectId, input.name);
+    return new UpdateProjectCommand(
+      userId,
+      input.projectId,
+      input.name,
+      context,
+    );
   }
 
   static toProjectQuery(
     input: QueryProjectInput,
     userId: string,
+    context: RequestContext,
   ): ProjectByIdQuery {
-    return new ProjectByIdQuery(userId, input.projectId);
+    return new ProjectByIdQuery(userId, input.projectId, context);
   }
 
-  static toProjectsQuery(userId: string): ProjectsByUserIdQuery {
-    return new ProjectsByUserIdQuery(userId);
+  static toProjectsQuery(
+    userId: string,
+
+    context: RequestContext,
+  ): ProjectsByUserIdQuery {
+    return new ProjectsByUserIdQuery(userId, context);
   }
 
   static createProjectToOutput(entity: Project): CreateProjectOutput {

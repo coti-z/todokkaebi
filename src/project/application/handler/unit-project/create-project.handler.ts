@@ -15,6 +15,7 @@ export class CreateProjectHandler
   constructor(
     private readonly projectMembershipService: ProjectMembershipService,
     private readonly projectService: ProjectService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
   async execute(command: CreateProjectCommand): Promise<Project> {
     try {
@@ -30,7 +31,7 @@ export class CreateProjectHandler
 
       return project;
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

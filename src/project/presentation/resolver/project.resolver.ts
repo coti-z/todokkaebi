@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
   CreateProjectInput,
@@ -22,6 +22,7 @@ import { TokenInfo } from '@libs/decorators';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+import { RequestContextExtractor } from '@libs/exception';
 
 @Resolver(() => ProjectType)
 export class ProjectResolver {
@@ -40,10 +41,15 @@ export class ProjectResolver {
   async createProject(
     @Args('input') input: CreateProjectInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<CreateProjectResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+
     const command = ProjectPresentationMapper.toCreateProjectCommand(
       input,
       payload.userId,
+      requestContext,
     );
     const result = await this.commandBus.execute(command);
     const output = ProjectPresentationMapper.createProjectToOutput(result);
@@ -55,10 +61,14 @@ export class ProjectResolver {
   async deleteProject(
     @Args('input') input: DeleteProjectInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<DeleteProjectResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = ProjectPresentationMapper.toDeleteProjectCommand(
       input,
       payload.userId,
+      requestContext,
     );
     const result = await this.commandBus.execute(command);
     const output = ProjectPresentationMapper.deleteProjectToOutput(result);
@@ -70,10 +80,14 @@ export class ProjectResolver {
   async updateProject(
     @Args('input') input: UpdateProjectInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<UpdateProjectResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = ProjectPresentationMapper.toUpdateProjectCommand(
       input,
       payload.userId,
+      requestContext,
     );
 
     const result = await this.commandBus.execute(command);
@@ -86,10 +100,14 @@ export class ProjectResolver {
   async queryProject(
     @Args('input') input: QueryProjectInput,
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<QueryProjectResponse> {
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
     const query = ProjectPresentationMapper.toProjectQuery(
       input,
       payload.userId,
+      requestContext,
     );
     const result = await this.queryBus.execute(query);
     const output = ProjectPresentationMapper.queryProjectToOutput(result);
@@ -100,8 +118,14 @@ export class ProjectResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProjects(
     @TokenInfo() payload: JwtPayload,
+    @Context() gqlContext: any,
   ): Promise<QueryProjectsResponse> {
-    const query = ProjectPresentationMapper.toProjectsQuery(payload.userId);
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
+    const query = ProjectPresentationMapper.toProjectsQuery(
+      payload.userId,
+      requestContext,
+    );
     const result = await this.queryBus.execute(query);
     const output = ProjectPresentationMapper.queryProjectsToOutput(result);
     return ResponseManager.success(output);

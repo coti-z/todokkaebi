@@ -1,3 +1,4 @@
+import { RequestContext } from '@libs/exception';
 import { ICommand } from '@nestjs/cqrs';
 
 export class ChangeCategoryNameCommand implements ICommand {
@@ -5,5 +6,6 @@ export class ChangeCategoryNameCommand implements ICommand {
     public readonly userId: string,
     public readonly name: string,
     public readonly categoryId: string,
+    public readonly context: RequestContext,
   ) {}
 }

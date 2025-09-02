@@ -1,5 +1,9 @@
 import { ValidateAccessTokenQuery } from '@auth/application/port/in/query/validate-access-token.query';
-import { ApplicationException, ErrorCode } from '@libs/exception';
+import {
+  ApplicationException,
+  ErrorCode,
+  RequestContextExtractor,
+} from '@libs/exception';
 import { JwtPayloadWithToken, JwtTokenService } from '@libs/jwt';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
@@ -16,12 +20,14 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const { req } = gqlContext.getContext();
     const accessToken = this.extractAccessTokenFromHeader(req);
+    const requestContext =
+      RequestContextExtractor.fromGraphQLContext(gqlContext);
 
     if (!accessToken) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
 
-    const query = new ValidateAccessTokenQuery(accessToken);
+    const query = new ValidateAccessTokenQuery(accessToken, requestContext);
     try {
       const payload = this.jwtTokenService.verifyAccessToken(accessToken);
       await this.queryBus.execute(query);

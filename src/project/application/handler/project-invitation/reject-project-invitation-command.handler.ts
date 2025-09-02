@@ -14,6 +14,7 @@ export class RejectProjectInvitationCommandHandler
     private readonly projectInvitationService: ProjectInvitationService,
     @Inject(TransactionManagerSymbol)
     private readonly transactionManger: ITransactionManager,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(
@@ -25,7 +26,7 @@ export class RejectProjectInvitationCommandHandler
         reqUserId: command.reqUserId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

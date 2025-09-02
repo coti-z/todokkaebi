@@ -18,6 +18,8 @@ export class UpdateTaskCommandHandler
   constructor(
     private readonly projectService: ProjectService,
     private readonly taskService: TaskService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(command: UpdateTaskCommand): Promise<any> {
@@ -42,7 +44,7 @@ export class UpdateTaskCommandHandler
         project: project,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

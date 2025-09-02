@@ -6,6 +6,7 @@ import {
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateUserHandler } from '@user/application/handler/create-user.handler';
@@ -24,9 +25,11 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
     AuthModule,
   ],
   providers: [
+    ErrorHandlingStrategy,
     CreateUserHandler,
     UpdateUserHandler,
     DeleteUserHandler,
+
     UserService,
     UserCredentialService,
     {

@@ -19,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
 import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
+import { ErrorHandlingStrategy } from '@libs/exception';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/val
     ConfigModule,
   ],
   providers: [
+    ErrorHandlingStrategy,
     BasicLoginHandler,
     BasicLogoutHandler,
     ReissueTokenHandler,

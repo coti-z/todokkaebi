@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+/* import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { UserCredentialPresentationMapper } from '@auth/presentation/mapper/user-credential-presentation.mapper';
 import {
@@ -49,3 +49,4 @@ export class AuthGrpcController implements AuthServiceController {
     };
   }
 }
+ */

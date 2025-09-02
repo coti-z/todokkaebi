@@ -1,4 +1,3 @@
-
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 import {
@@ -17,6 +16,7 @@ import { CreateProjectInvitationCommand } from '@project/application/port/in/com
 import { UpdateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/update-project-invitation.command';
 import { AcceptProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/accept-project-invitation.command';
 import { RejectProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/reject-project-invitation.command';
+import { RequestContext } from '@libs/exception';
 
 export class ProjectInvitationPresentationMapper {
   static entityToObjectType(entity: ProjectInvitation): ProjectInvitationType {
@@ -44,37 +44,44 @@ export class ProjectInvitationPresentationMapper {
   static createProjectInvitationInputToCommand(
     input: CreateProjectInvitationInput,
     inviterUserId: string,
+    context: RequestContext,
   ): CreateProjectInvitationCommand {
     return new CreateProjectInvitationCommand(
       input.projectId,
       inviterUserId,
       input.inviteeUserId,
+      context,
     );
   }
 
   static updateProjectInvitationInputToCommand(
     input: UpdateProjectInvitationInput,
     reqUserId: string,
+    context: RequestContext,
   ): UpdateProjectInvitationCommand {
     return new UpdateProjectInvitationCommand(
       input.id,
       reqUserId,
       input.status,
+      context,
     );
   }
 
   static acceptProjectInvitationInputToCommand(
     input: AcceptProjectInvitationInput,
     reqUserId: string,
+    context: RequestContext,
   ): AcceptProjectInvitationCommand {
-    return new AcceptProjectInvitationCommand(input.id, reqUserId);
+    return new AcceptProjectInvitationCommand(input.id, reqUserId, context);
   }
 
   static rejectProjectInvitationInputToCommand(
     input: RejectProjectInvitationInput,
     reqUserId: string,
+
+    context: RequestContext,
   ): RejectProjectInvitationCommand {
-    return new RejectProjectInvitationCommand(input.id, reqUserId);
+    return new RejectProjectInvitationCommand(input.id, reqUserId, context);
   }
 
   /* -------------------------------------------------------------------------- */

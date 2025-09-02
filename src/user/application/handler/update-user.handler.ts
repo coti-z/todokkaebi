@@ -10,7 +10,11 @@ import { User } from '@user/domain/entity/user.entity';
 @Injectable()
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
 
   async execute(command: UpdateUserCommand): Promise<User> {
     try {
@@ -23,7 +27,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
         ),
       );
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

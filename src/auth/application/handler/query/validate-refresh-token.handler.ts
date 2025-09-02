@@ -5,13 +5,16 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 @QueryHandler(ValidateRefreshTokenQuery)
 export class ValidateRefreshTokenHandler implements IQueryHandler {
-  constructor(private readonly tokenService: TokenService) {}
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
 
   async execute(query: ValidateRefreshTokenQuery): Promise<any> {
     try {
       await this.tokenService.isRevokeRefreshToken(query.refreshToken);
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, query.context);
     }
   }
 }

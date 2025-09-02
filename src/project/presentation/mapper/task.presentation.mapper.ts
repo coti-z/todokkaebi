@@ -19,6 +19,7 @@ import { TasksByCategoryIdQuery } from '@project/application/query/task-by-categ
 import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
 import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
 import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
+import { RequestContext } from '@libs/exception';
 
 export class TaskPresentationMapper {
   static entityToObjectType(entity: Task): TaskType {
@@ -44,6 +45,7 @@ export class TaskPresentationMapper {
   static createInputToCreateTaskCommand(
     input: CreateTaskInput,
     reqUserId: string,
+    context: RequestContext,
   ): CreateTaskCommand {
     return new CreateTaskCommand(
       input.title,
@@ -51,16 +53,19 @@ export class TaskPresentationMapper {
       input.startDate,
       input.endDate,
       reqUserId,
+      context,
     );
   }
 
   static updateInputToUpdateTaskCommand(
     input: UpdateTaskInput,
     reqUserId: string,
+    context: RequestContext,
   ): UpdateTaskCommand {
     return new UpdateTaskCommand(
       input.taskId,
       reqUserId,
+      context,
       input.title,
       input.categoryId,
       input.status,
@@ -73,21 +78,24 @@ export class TaskPresentationMapper {
   static deleteInputToDeleteTaskCommand(
     input: DeleteTaskInput,
     reqUserId: string,
+    context: RequestContext,
   ): DeleteTaskCommand {
-    return new DeleteTaskCommand(input.taskId, reqUserId);
+    return new DeleteTaskCommand(input.taskId, reqUserId, context);
   }
   static queryTaskByIdInputToTaskByIdQuery(
     input: QueryTaskByIdInput,
     reqUserId: string,
+    context: RequestContext,
   ): TaskByIdQuery {
-    return new TaskByIdQuery(reqUserId, input.taskId);
+    return new TaskByIdQuery(reqUserId, input.taskId, context);
   }
 
   static queryTasksByCategoryIdToTaskByCategoryIdQuery(
     input: QueryTasksByCategoryIdInput,
     reqUserId: string,
+    context: RequestContext,
   ): TasksByCategoryIdQuery {
-    return new TasksByCategoryIdQuery(input.categoryId, reqUserId);
+    return new TasksByCategoryIdQuery(input.categoryId, reqUserId, context);
   }
 
   static entityToCreateTaskOutput(entity: Task): CreateTaskOutput {

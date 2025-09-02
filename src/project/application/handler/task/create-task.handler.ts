@@ -14,6 +14,7 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   constructor(
     public readonly projectService: ProjectService,
     public readonly taskService: TaskService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(command: CreateTaskCommand): Promise<Task> {
@@ -31,8 +32,7 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
         title: command.title,
       });
     } catch (error) {
-      console.log(error);
-      throw ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

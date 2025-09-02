@@ -7,14 +7,17 @@ import { Token } from '@auth/domain/entity/token.entity';
 
 @CommandHandler(BasicLogoutCommand)
 export class BasicLogoutHandler implements ICommandHandler {
-  constructor(private readonly tokenService: TokenService) {}
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
   async execute(command: BasicLogoutCommand): Promise<Token> {
     try {
       return await this.tokenService.revokeTokenByAccessToken({
         accessToken: command.accessToken,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

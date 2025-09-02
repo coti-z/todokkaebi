@@ -6,7 +6,11 @@ import {
   ProjectMembershipRepositorySymbol,
 } from '../port/out/project-membership-repository.port';
 import { IsProjectMembershipParams } from '@project/application/param/is-project-membership.params';
-import { ApplicationException, ErrorCode } from '@libs/exception';
+import {
+  ApplicationException,
+  DomainException,
+  ErrorCode,
+} from '@libs/exception';
 
 @Injectable()
 export class ProjectMembershipService {
@@ -37,7 +41,7 @@ export class ProjectMembershipService {
       );
 
     if (!projectMembership) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+      throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
   }
 }

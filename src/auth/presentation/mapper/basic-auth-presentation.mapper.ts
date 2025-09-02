@@ -5,14 +5,21 @@ import { LogoutOutput } from '@auth/presentation/resolver/dto/output/logout.outp
 import { BasicLogoutCommand } from '@auth/application/port/in/commands/basic-logout.command';
 import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
 import { Token } from '@auth/domain/entity/token.entity';
+import { RequestContext } from '@libs/exception';
 
 export class BasicAuthPresentationMapper {
-  static toBasicLogoutCommand(input: LogoutInput): BasicLogoutCommand {
-    return new BasicLogoutCommand(input.accessToken);
+  static toBasicLogoutCommand(
+    input: LogoutInput,
+    context: RequestContext,
+  ): BasicLogoutCommand {
+    return new BasicLogoutCommand(input.accessToken, context);
   }
 
-  static toBasicLoginCommand(input: LoginInput): BasicLoginCommand {
-    return new BasicLoginCommand(input.email, input.password);
+  static toBasicLoginCommand(
+    input: LoginInput,
+    context: RequestContext,
+  ): BasicLoginCommand {
+    return new BasicLoginCommand(input.email, input.password, context);
   }
 
   static resultToLoginOutput(result: Token): LoginOutput {

@@ -14,6 +14,7 @@ export class CreateCategoryHandler
   constructor(
     private readonly categoryService: CategoryService,
     private readonly projectMembershipService: ProjectMembershipService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   async execute(command: CreateCategoryCommand): Promise<Category> {
@@ -27,7 +28,7 @@ export class CreateCategoryHandler
         projectId: command.projectId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

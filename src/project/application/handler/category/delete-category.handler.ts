@@ -20,6 +20,8 @@ export class DeleteCategoryHandler
     private readonly categoryService: CategoryService,
 
     private readonly projectMembershipService: ProjectMembershipService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   @Transactional()
@@ -37,7 +39,7 @@ export class DeleteCategoryHandler
         id: command.categoryId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

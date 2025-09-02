@@ -10,7 +10,10 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 export class ProjectsByUserIdQueryHandler
   implements IQueryHandler<ProjectsByUserIdQuery>
 {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
 
   async execute(query: ProjectsByUserIdQuery): Promise<Project[]> {
     try {
@@ -18,7 +21,7 @@ export class ProjectsByUserIdQueryHandler
         userId: query.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, query.context);
     }
   }
 }

@@ -12,6 +12,7 @@ export class BasicLoginHandler implements ICommandHandler {
     private readonly userAuthService: UserCredentialService,
     private readonly tokenService: TokenService,
     private readonly tokenByJwtService: TokenByJWTService,
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
   async execute(command: BasicLoginCommand): Promise<Token> {
     try {
@@ -30,7 +31,7 @@ export class BasicLoginHandler implements ICommandHandler {
         userId: credential.userId,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }

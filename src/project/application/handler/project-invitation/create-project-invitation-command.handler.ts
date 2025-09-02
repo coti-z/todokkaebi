@@ -16,6 +16,8 @@ export class CreateProjectInvitationCommandHandler
     private readonly projectInvitationService: ProjectInvitationService,
     private readonly projectService: ProjectService,
 
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
     @Inject(TransactionManagerSymbol)
     private readonly transactionManger: ITransactionManager,
   ) {}
@@ -37,7 +39,7 @@ export class CreateProjectInvitationCommandHandler
         project,
       });
     } catch (error) {
-      ErrorHandlingStrategy.handleError(error);
+      this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
 }
