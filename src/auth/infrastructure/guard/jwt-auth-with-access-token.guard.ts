@@ -38,7 +38,7 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
       };
       req['user'] = payloadWithToken;
       return true;
-    } catch {
+    } catch (error) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }

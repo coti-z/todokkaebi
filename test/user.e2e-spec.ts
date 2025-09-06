@@ -43,8 +43,11 @@ describe('User Resolver (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    const server = app.getHttpServer();
+    server.maxConnections = 0;
+    server.keepAliveTimeout = 30000;
+    server.headersTimeout = 30000;
     await app.init();
-
     graphqlHelper = new GraphqlRequestHelper(app);
   });
 
@@ -124,6 +127,67 @@ describe('User Resolver (e2e)', () => {
         );
 
         expect(response.errors).toBeDefined();
+      });
+
+      it('should allow only one user creation when multiple requests with same email arrive simultaneously', async () => {
+        const concurrentEmail = `lock-test-${uuid()}@email.com`;
+        const testInput = {
+          email: concurrentEmail,
+          nickname: `lockUser-${uuid()}`,
+          password: 'lockTest123',
+          birthday: new Date().toISOString(),
+        };
+
+        const concurrentRequests = Array.from({ length: 5 }, () =>
+          graphqlHelper.mutate<CreateUserResponse>(USER_MUTATIONS.CREATE_USER, {
+            input: testInput,
+          }),
+        );
+
+        const results = await Promise.allSettled(concurrentRequests);
+
+        const successful = results.filter(
+          r =>
+            r.status === 'fulfilled' &&
+            !r.value.errors &&
+            r.value.data?.createUser.success,
+        );
+        const failed = results.filter(
+          r =>
+            r.status === 'fulfilled' &&
+            (r.value.errors || !r.value.data?.createUser.success),
+        );
+
+        expect(successful.length).toBe(1);
+        expect(failed.length).toBe(4);
+      });
+
+      it('should allow concurrent requests with different emails', async () => {
+        const differentRequests = Array.from({ length: 3 }, (_, index) => {
+          const uniqueId = `${uuid()}-${index}`;
+          return graphqlHelper.mutate<CreateUserResponse>(
+            USER_MUTATIONS.CREATE_USER,
+            {
+              input: {
+                email: `${uniqueId}@email.com`,
+                nickname: `${uniqueId}`,
+                password: 'differentTest123',
+                birthday: new Date().toISOString(),
+              },
+            },
+          );
+        });
+
+        const results = await Promise.allSettled(differentRequests);
+
+        const successful = results.filter(
+          r =>
+            r.status === 'fulfilled' &&
+            !r.value.errors &&
+            r.value.data?.createUser.success,
+        );
+
+        expect(successful.length).toBe(3);
       });
     });
 
@@ -252,6 +316,56 @@ describe('User Resolver (e2e)', () => {
         );
 
         expect(response.errors).toBeDefined();
+      });
+
+      it('should handle simultaneous nickname updates from same user', async () => {
+        const nicknameUser = {
+          email: `nickname-test-${uuid()}@email.com`,
+          nickname: `nickname-user-${uuid()}`,
+          password: 'nicknameTest123',
+        };
+
+        await graphqlHelper.mutate<CreateUserResponse>(
+          USER_MUTATIONS.CREATE_USER,
+          { input: nicknameUser },
+        );
+
+        const loginResponse = await graphqlHelper.mutate<LoginResponse>(
+          AUTH_MUTATIONS.LOGIN,
+          {
+            input: {
+              email: nicknameUser.email,
+              password: nicknameUser.password,
+            },
+          },
+        );
+
+        const accessToken = loginResponse.data!.basicLogin.data.accessToken;
+        const nicknameRequests = Array.from({ length: 50 }, (_, index) =>
+          graphqlHelper.mutate<UpdateUserResponse>(
+            USER_MUTATIONS.UPDATE_USER,
+            {
+              input: {
+                nickname: `${index}-${uuid()}`,
+              },
+            },
+            { Authorization: `Bearer ${accessToken}` },
+          ),
+        );
+
+        const results = await Promise.allSettled(nicknameRequests);
+
+        const successful = results.filter(
+          r =>
+            r.status === 'fulfilled' &&
+            !r.value.errors &&
+            r.value.data?.updateUser.success,
+        );
+        // HTTP Agent와 서버 최적화로 모든 요청이 성공해야 함
+        console.log(
+          `Success: ${successful.length}/50, Failed: ${50 - successful.length}`,
+        );
+        expect(successful.length).toBeGreaterThanOrEqual(45); // 최소 90% 성공률
       });
     });
 

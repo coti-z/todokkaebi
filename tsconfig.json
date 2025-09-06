@@ -27,9 +27,6 @@
       "@project/*": [
         "src/project/*"
       ],
-      "@libs/decorators": [
-        "libs/decorators/src"
-      ],
       "@libs/jwt": [
         "libs/jwt/src"
       ],
@@ -68,6 +65,18 @@
       ],
       "@libs/token/*": [
         "libs/token/src/*"
+      ],
+      "@libs/redis": [
+        "libs/redis/src"
+      ],
+      "@libs/redis/*": [
+        "libs/redis/src/*"
+      ],
+      "@libs/decorators": [
+        "libs/decorators/src"
+      ],
+      "@libs/decorators/*": [
+        "libs/decorators/src/*"
       ]
     }
   },

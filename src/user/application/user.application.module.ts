@@ -6,13 +6,14 @@ import {
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { DecoratorsModule } from '@libs/decorators/decorators.module';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { RedisModule } from '@libs/redis';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateUserHandler } from '@user/application/handler/create-user.handler';
 import { DeleteUserHandler } from '@user/application/handler/delete-user.handler';
 import { UpdateUserHandler } from '@user/application/handler/update-user.handler';
-import { UserRepositorySymbol } from '@user/application/port/out/user-repository.port';
 
 import { UserService } from '@user/application/services/user.service';
 import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructure.module';
@@ -24,6 +25,8 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
     AuthInfrastructureModule,
     DatabaseModule,
     AuthModule,
+    RedisModule,
+    DecoratorsModule,
   ],
   providers: [
     {

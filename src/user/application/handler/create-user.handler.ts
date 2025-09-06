@@ -11,6 +11,7 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { Lock } from '@libs/decorators';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
@@ -23,6 +24,11 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `create-user:${args[0].email}`,
+    ttl: 10000,
+    timeout: 5000,
+  })
   @Transactional()
   async execute(command: CreateUserCommand): Promise<User> {
     try {

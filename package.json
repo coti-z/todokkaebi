@@ -48,6 +48,7 @@
     "dotenv": "^16.4.7",
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
+    "ioredis": "^5.7.0",
     "lib": "^5.1.0",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
@@ -120,6 +121,7 @@
       "^libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@libs/test(|/.*)$": "<rootDir>/libs/test/src/$1",
       "^@libs/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
+      "^@libs/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
       "^@app/token(|/.*)$": "<rootDir>/libs/token/src/$1"
     },
     "coverageDirectory": "../coverage",

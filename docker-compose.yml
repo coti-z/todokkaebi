@@ -12,6 +12,8 @@ services:
     depends_on:
       mysql-project:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./src:/usr/src/app/src
       - ./libs:/usr/src/app/libs
@@ -35,8 +37,23 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-todokkabi
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/data'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    command: redis-server --appendonly yes
   
       
 
 volumes:
   mysql_nest_data:
+  redis_data:

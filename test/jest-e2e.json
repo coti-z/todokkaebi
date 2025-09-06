@@ -21,6 +21,8 @@
     "^@libs/auth/(.*)$": "<rootDir>/libs/auth/src/$1",
     "^@libs/token/(.*)$": "<rootDir>/libs/token/src/$1",
     "^@libs/exception/(.*)$": "<rootDir>/libs/exception/src/$1",
+    "^@libs/decorators/(.*)$": "<rootDir>/libs/decorators/src/$1",
+    "^@libs/redis/(.*)$": "<rootDir>/libs/redis/src/$1",
     "^@libs/(.*)$": "<rootDir>/libs/$1/src",
     "^test/(.*)$": "<rootDir>/test/$1",
     "@app/token/(.*)": "<rootDir>/../libs/token/src/$1",

@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import * as http from 'http';
 
 export interface GraphQLResponse<T = any> {
   data?: T;
@@ -12,7 +13,18 @@ export interface GraphQLResponse<T = any> {
 }
 
 export class GraphqlRequestHelper {
-  constructor(private app: INestApplication) {}
+  private baseURL: string;
+  private http: http.Agent;
+
+  constructor(private app: INestApplication) {
+    // Node.js 20의 keepAlive 문제 해결을 위한 최적화
+    this.http = new http.Agent({
+      keepAlive: false, // Node.js 18 방식으로 설정
+      maxSockets: Infinity, // 무제한 동시 소켓
+      timeout: 30000, // 타임아웃 증가
+      maxFreeSockets: 0, // keepAlive false이므로 불필요
+    });
+  }
 
   async query<T = any>(
     query: string,
@@ -21,6 +33,7 @@ export class GraphqlRequestHelper {
   ): Promise<GraphQLResponse<T>> {
     const response = await request(this.app.getHttpServer())
       .post('/graphql')
+      .agent(this.http)
       .set(headers || {})
       .send({ query, variables });
 

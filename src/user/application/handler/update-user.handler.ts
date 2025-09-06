@@ -3,6 +3,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { Lock } from '@libs/decorators';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -24,6 +25,11 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `update-user:${args[0].id}`,
+    ttl: 10000,
+    timeout: 10000,
+  })
   @Transactional()
   async execute(command: UpdateUserCommand): Promise<User> {
     try {
