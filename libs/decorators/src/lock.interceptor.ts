@@ -22,7 +22,10 @@ export class LockInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const lockOptions = this.reflector.get<LockOptions>(LOCK_METADATA_KEY, context.getHandler());
+    const lockOptions = this.reflector.get<LockOptions>(
+      LOCK_METADATA_KEY,
+      context.getHandler(),
+    );
     if (!lockOptions) {
       return next.handle();
     }
@@ -33,25 +36,31 @@ export class LockInterceptor implements NestInterceptor {
     const throwOnTimeout = lockOptions.throwOnTimeout ?? true;
 
     return from(this.acquireLockWithQueue(lockKey, ttl, timeout)).pipe(
-      switchMap((lockResult) => {
+      switchMap(lockResult => {
         if (!lockResult.acquired) {
           if (throwOnTimeout) {
-            return throwError(() => new RequestTimeoutException(`Lock timeout: ${lockKey}`));
+            return throwError(
+              () => new RequestTimeoutException(`Lock timeout: ${lockKey}`),
+            );
           }
           return from(Promise.resolve(null));
         }
 
         return next.handle().pipe(
-          switchMap(async (result) => {
+          switchMap(async result => {
             await lockResult.release?.();
             return result;
-          })
+          }),
         );
-      })
+      }),
     );
   }
 
-  private async acquireLockWithQueue(lockKey: string, ttl: number, timeoutMs: number) {
+  private async acquireLockWithQueue(
+    lockKey: string,
+    ttl: number,
+    timeoutMs: number,
+  ) {
     const queueKey = `lock_queue:${lockKey}`;
     const actualLockKey = `lock:${lockKey}`;
     const identifier = Math.random().toString(36).substring(2, 15);
@@ -68,8 +77,14 @@ export class LockInterceptor implements NestInterceptor {
         return { acquired: false };
       }
 
-      // 실제 락 획득
-      const acquired = await client.set(actualLockKey, identifier, 'PX', ttl);
+      // 실제 락 획득 - NX 플래그로 이미 존재하는 락 보호
+      const acquired = await client.set(
+        actualLockKey,
+        identifier,
+        'PX',
+        ttl,
+        'NX',
+      );
       if (acquired === 'OK') {
         return {
           acquired: true,
@@ -81,7 +96,12 @@ export class LockInterceptor implements NestInterceptor {
                 return 0
               end
             `;
-            const released = await client.eval(script, 1, actualLockKey, identifier);
+            const released = await client.eval(
+              script,
+              1,
+              actualLockKey,
+              identifier,
+            );
             return released === 1;
           },
         };
@@ -94,7 +114,10 @@ export class LockInterceptor implements NestInterceptor {
     }
   }
 
-  private async cleanupQueue(queueKey: string, identifier: string): Promise<void> {
+  private async cleanupQueue(
+    queueKey: string,
+    identifier: string,
+  ): Promise<void> {
     try {
       const client = this.redisService.getClient();
       await client.lrem(queueKey, 1, identifier);
@@ -103,7 +126,10 @@ export class LockInterceptor implements NestInterceptor {
     }
   }
 
-  private generateLockKey(options: LockOptions, context: ExecutionContext): string {
+  private generateLockKey(
+    options: LockOptions,
+    context: ExecutionContext,
+  ): string {
     const args = context.getArgs();
 
     if (typeof options.key === 'function') {
@@ -116,8 +142,10 @@ export class LockInterceptor implements NestInterceptor {
 
     const className = context.getClass().name;
     const methodName = context.getHandler().name;
-    const argsHash = JSON.stringify(args).replace(/[^a-zA-Z0-9]/g, '').substring(0, 50);
-    
+    const argsHash = JSON.stringify(args)
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .substring(0, 50);
+
     return `${className}.${methodName}:${argsHash}`;
   }
 }

@@ -12,6 +12,7 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Inject, Injectable } from '@nestjs/common';
+import { Lock, RateLimit } from '@libs/decorators';
 @Injectable()
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
@@ -25,6 +26,11 @@ export class BasicLoginHandler implements ICommandHandler {
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `login-user:${args[0].email}`,
+    ttl: 5000,
+    timeout: 3000,
+  })
   @Transactional()
   async execute(command: BasicLoginCommand): Promise<Token> {
     try {

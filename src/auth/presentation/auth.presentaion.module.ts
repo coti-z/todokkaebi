@@ -3,9 +3,10 @@ import { BasicAuthResolver } from '@auth/presentation/resolver/basic-auth.resolv
 import { TokenResolver } from '@auth/presentation/resolver/token.resolver';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtTokenModule } from '@libs/jwt';
+import { RedisModule } from '@libs/redis';
 
 @Module({
-  imports: [CqrsModule, JwtTokenModule],
+  imports: [CqrsModule, JwtTokenModule, RedisModule],
   providers: [TokenResolver, BasicAuthResolver],
   controllers: [],
   exports: [TokenResolver, BasicAuthResolver],

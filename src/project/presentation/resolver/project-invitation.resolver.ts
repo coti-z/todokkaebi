@@ -18,7 +18,7 @@ import { ResponseManager } from '@libs/response';
 import { RequestContextExtractor } from '@libs/exception';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { TokenInfo } from '@libs/decorators';
+import { RateLimit, TokenInfo } from '@libs/decorators';
 import { JwtPayloadWithToken } from '@libs/jwt';
 
 @Resolver(() => ProjectInvitationType)

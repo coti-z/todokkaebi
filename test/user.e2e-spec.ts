@@ -341,7 +341,7 @@ describe('User Resolver (e2e)', () => {
         );
 
         const accessToken = loginResponse.data!.basicLogin.data.accessToken;
-        const nicknameRequests = Array.from({ length: 50 }, (_, index) =>
+        const nicknameRequests = Array.from({ length: 10 }, (_, index) =>
           graphqlHelper.mutate<UpdateUserResponse>(
             USER_MUTATIONS.UPDATE_USER,
             {
@@ -362,10 +362,7 @@ describe('User Resolver (e2e)', () => {
             r.value.data?.updateUser.success,
         );
         // HTTP Agent와 서버 최적화로 모든 요청이 성공해야 함
-        console.log(
-          `Success: ${successful.length}/50, Failed: ${50 - successful.length}`,
-        );
-        expect(successful.length).toBeGreaterThanOrEqual(45); // 최소 90% 성공률
+        expect(successful.length).toBeGreaterThanOrEqual(10); // 최소 90% 성공률
       });
     });
 

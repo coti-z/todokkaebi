@@ -6,9 +6,10 @@ import { TaskResolver } from './resolver/task.resolver';
 import { ProjectInvitationResolver } from './resolver/project-invitation.resolver';
 import { JwtTokenModule } from '@libs/jwt';
 import { AuthModule } from '@auth/auth.module';
+import { RedisModule } from '@libs/redis';
 
 @Module({
-  imports: [CqrsModule, JwtTokenModule, AuthModule],
+  imports: [CqrsModule, JwtTokenModule, AuthModule, RedisModule],
   providers: [
     ProjectResolver,
     CategoryResolver,

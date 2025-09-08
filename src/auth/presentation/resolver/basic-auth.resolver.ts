@@ -7,7 +7,7 @@ import { BasicAuthPresentationMapper } from '@auth/presentation/mapper/basic-aut
 import { ResponseManager } from '@libs/response';
 import { UseGuards } from '@nestjs/common';
 import { JwtPayloadWithToken } from '@libs/jwt';
-import { TokenInfo } from '@libs/decorators';
+import { RateLimit, TokenInfo } from '@libs/decorators';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 import { RequestContextExtractor } from '@libs/exception';
 
@@ -19,6 +19,13 @@ export class BasicAuthResolver {
     return 'OK';
   }
   @Mutation(() => ApiResponseOfLoginOutput)
+  @RateLimit({
+    limit: 5,
+    window: 900,
+    blockDuration: 1800,
+    key: args => `login:${args[1].input.email}`,
+    errorMessage: '로그인 시도 횟수를 초과했습니다. 30분 후 다시 시도해주세요.',
+  })
   async basicLogin(
     @Args('input') input: LoginInput,
     @Context() gqlContext: any,

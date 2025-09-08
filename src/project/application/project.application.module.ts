@@ -4,6 +4,7 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { RedisModule } from '@libs/redis';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ChangeCategoryNameHandler } from '@project/application/handler/category/change-category-name.handler';
@@ -32,7 +33,12 @@ import { TaskService } from '@project/application/service/task.service';
 import { ProjectInfrastructureModule } from '@project/infrastructure/project.infastructure.module';
 
 @Module({
-  imports: [CqrsModule, ProjectInfrastructureModule, DatabaseModule],
+  imports: [
+    CqrsModule,
+    ProjectInfrastructureModule,
+    DatabaseModule,
+    RedisModule,
+  ],
   providers: [
     ErrorHandlingStrategy,
     CreateProjectHandler,

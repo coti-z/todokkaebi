@@ -20,6 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
 import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { RedisModule } from '@libs/redis';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ErrorHandlingStrategy } from '@libs/exception';
       inject: [ConfigService],
     }),
     ConfigModule,
+    RedisModule,
   ],
   providers: [
     ErrorHandlingStrategy,

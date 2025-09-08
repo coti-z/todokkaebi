@@ -8,6 +8,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { Lock, RateLimit } from '@libs/decorators';
 
 @Injectable()
 @CommandHandler(StoreUserCredentialCommand)
@@ -21,6 +22,9 @@ export class StoreUserCredentialHandler
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `store-credential:${args[0].userId}`,
+  })
   @Transactional()
   async execute(command: StoreUserCredentialCommand): Promise<void> {
     try {

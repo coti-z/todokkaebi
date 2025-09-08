@@ -11,6 +11,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { Lock } from '@libs/decorators';
 @Injectable()
 @CommandHandler(ReissueTokenCommand)
 export class ReissueTokenHandler implements ICommandHandler {
@@ -23,6 +24,10 @@ export class ReissueTokenHandler implements ICommandHandler {
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `token-reissue:${args[0].refreshToken}`,
+    ttl: 5000,
+  })
   @Transactional()
   async execute(command: ReissueTokenCommand): Promise<Token> {
     try {

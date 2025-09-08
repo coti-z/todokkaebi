@@ -11,6 +11,7 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { Lock } from '@libs/decorators';
 
 @Injectable()
 @CommandHandler(AcceptProjectInvitationCommand)
@@ -25,6 +26,10 @@ export class AcceptProjectInvitationCommandHandler
     private readonly transactionManager: ITransactionManager,
   ) {}
 
+  @Lock({
+    key: args => `accept-project:${args[0].invitationId}`,
+    ttl: 5000,
+  })
   @Transactional()
   async execute(
     command: AcceptProjectInvitationCommand,

@@ -9,7 +9,7 @@ import { UserPresentationMapper } from '@user/presentation/mapper/user-presentat
 import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
 import { ResponseManager } from '@libs/response';
-import { TokenInfo } from '@libs/decorators';
+import { RateLimit, TokenInfo } from '@libs/decorators';
 import { JwtPayload } from '@libs/jwt';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 import { RequestContextExtractor } from '@libs/exception';
@@ -24,6 +24,14 @@ export class UserResolver {
   }
 
   @Mutation(() => ApiResponseOfCreateUserOutput)
+  @RateLimit({
+    limit: 5,
+    window: 3600,
+    blockDuration: 7200,
+    key: args => args[1].input.email,
+    errorMessage:
+      '회원가입 시도 횟수를 초과했습니다. 2시간 후 다시 시도해주세요.',
+  })
   async createUser(
     @Args('input') input: CreateUserInput,
     @Context() gqlContext: any,
