@@ -1,3 +1,4 @@
+import { LoggerService } from '@libs/logger';
 import {
   CallHandler,
   ExecutionContext,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable, tap } from 'rxjs';
-import { LoggerService } from '@libs/logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -17,7 +17,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const now = Date.now();
     return next.handle().pipe(
-      tap((data) => {
+      tap(data => {
         this.logger.info(`Success ${resolverName}`, { date: now });
 
         return data;

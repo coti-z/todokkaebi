@@ -12,11 +12,11 @@ export class LoggerService {
     this.logger.info(message, context);
   }
 
-  warn(message: string, context: Record<string, any>) {
+  warn(message: string, context?: Record<string, any>) {
     this.logger.warn(message, context);
   }
 
-  error(message: string, trace?: string, context?: Record<string, any>) {
+  error(message: string, trace: string, context?: Record<string, any>) {
     this.logger.error(message, { trace, ...context });
   }
 }
