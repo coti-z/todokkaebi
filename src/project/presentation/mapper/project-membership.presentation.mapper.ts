@@ -1,21 +1,24 @@
+import { ProjectMembershipReadModel } from '@project/application/dto/project-membership-read.model';
 import { ProjectMembershipType } from '@project/presentation/resolver/type/project-membership.type';
-import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 
 export class ProjectMembershipPresentationMapper {
-  static entityToObjectType(entity: ProjectMembership): ProjectMembershipType {
+  static readModelToObjectType(
+    readModel: ProjectMembershipReadModel,
+  ): ProjectMembershipType {
     return {
-      projectId: entity.projectId,
-      id: entity.id,
-      role: entity.role,
-      createdAt: entity.createdAt,
-      userId: entity.userId,
-      updatedAt: entity.updatedAt,
+      projectId: readModel.projectId,
+      id: readModel.id,
+      role: readModel.role,
+      userId: readModel.userId,
+      createdAt: new Date(readModel.createdAt),
+      updatedAt: new Date(readModel.updatedAt),
     };
   }
 
-  static entitiesToObjectType(
-    entities: ProjectMembership[],
+  static readModelsToObjectType(
+    readModels: ProjectMembershipReadModel[],
   ): ProjectMembershipType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
+    if (!readModels) return [];
+    return readModels.map(readModel => this.readModelToObjectType(readModel));
   }
 }

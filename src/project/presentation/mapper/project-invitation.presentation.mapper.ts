@@ -1,4 +1,3 @@
-import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 import {
   AcceptProjectInvitationInput,
@@ -8,7 +7,7 @@ import {
 } from '../resolver/input/project-invitation.input';
 import {
   AcceptProjectInvitationOutput,
-  CreateaProjectInvitationOutput,
+  CreateProjectInvitationOutput,
   RejectProjectInvitationOutput,
   type UpdateProjectInvitationOutput,
 } from '../resolver/output/project-invitation.output';
@@ -17,24 +16,28 @@ import { UpdateProjectInvitationCommand } from '@project/application/port/in/com
 import { AcceptProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/accept-project-invitation.command';
 import { RejectProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/reject-project-invitation.command';
 import { RequestContext } from '@libs/exception';
+import { ProjectInvitationReadModel } from '@project/application/dto/project-invitation-read.model';
 
 export class ProjectInvitationPresentationMapper {
-  static entityToObjectType(entity: ProjectInvitation): ProjectInvitationType {
+  static readModelToObjectType(
+    readModel: ProjectInvitationReadModel,
+  ): ProjectInvitationType {
     return {
-      updatedAt: entity.updatedAt,
-      projectId: entity.projectId,
-      createdAt: entity.createdAt,
-      inviterUserId: entity.inviterUserId,
-      status: entity.status,
-      inviteeUserId: entity.inviteeUserId,
-      id: entity.id,
+      updatedAt: readModel.updatedAt,
+      projectId: readModel.projectId,
+      createdAt: readModel.createdAt,
+      inviterUserId: readModel.inviterUserId,
+      status: readModel.status,
+      inviteeUserId: readModel.inviteeUserId,
+      id: readModel.id,
     };
   }
 
-  static entitiesToObjectType(
-    entities: ProjectInvitation[],
+  static readModelsToObjectType(
+    readModels: ProjectInvitationReadModel[],
   ): ProjectInvitationType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
+    if (!readModels) return [];
+    return readModels.map(readModel => this.readModelToObjectType(readModel));
   }
 
   /* -------------------------------------------------------------------------- */
@@ -78,37 +81,36 @@ export class ProjectInvitationPresentationMapper {
   static rejectProjectInvitationInputToCommand(
     input: RejectProjectInvitationInput,
     reqUserId: string,
-
     context: RequestContext,
   ): RejectProjectInvitationCommand {
     return new RejectProjectInvitationCommand(input.id, reqUserId, context);
   }
 
   /* -------------------------------------------------------------------------- */
-  /*                               entity To Ouput                              */
+  /*                               readModel To Ouput                              */
   /* -------------------------------------------------------------------------- */
 
-  static entityToCreateProjectInvitationOutput(
-    entity: ProjectInvitation,
-  ): CreateaProjectInvitationOutput {
-    return this.entityToObjectType(entity);
+  static readModelToCreateProjectInvitationOutput(
+    readModel: ProjectInvitationReadModel,
+  ): CreateProjectInvitationOutput {
+    return this.readModelToObjectType(readModel);
   }
 
-  static entityToUpdateProjectInvitationOutput(
-    entity: ProjectInvitation,
+  static readModelToUpdateProjectInvitationOutput(
+    readModel: ProjectInvitationReadModel,
   ): UpdateProjectInvitationOutput {
-    return this.entityToObjectType(entity);
+    return this.readModelToObjectType(readModel);
   }
 
-  static entityToRejectProjectInvitationOutput(
-    entity: ProjectInvitation,
+  static readModelToRejectProjectInvitationOutput(
+    readModel: ProjectInvitationReadModel,
   ): RejectProjectInvitationOutput {
-    return this.entityToObjectType(entity);
+    return this.readModelToObjectType(readModel);
   }
 
-  static entityToAcceptProjectInvitationOutput(
-    entity: ProjectInvitation,
+  static readModelToAcceptProjectInvitationOutput(
+    readModel: ProjectInvitationReadModel,
   ): AcceptProjectInvitationOutput {
-    return this.entityToObjectType(entity);
+    return this.readModelToObjectType(readModel);
   }
 }

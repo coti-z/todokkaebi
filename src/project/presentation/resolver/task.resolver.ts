@@ -47,7 +47,7 @@ export class TaskResolver {
       requestContext,
     );
     const result = await this.commandBus.execute(command);
-    const output = TaskPresentationMapper.entityToCreateTaskOutput(result);
+    const output = TaskPresentationMapper.readModelToCreateTaskOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -66,7 +66,7 @@ export class TaskResolver {
       requestContext,
     );
     const result = await this.commandBus.execute(command);
-    const output = TaskPresentationMapper.entityToUpdateTaskOutput(result);
+    const output = TaskPresentationMapper.readModelToUpdateTaskOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -85,7 +85,7 @@ export class TaskResolver {
       requestContext,
     );
     const result = await this.commandBus.execute(command);
-    const output = TaskPresentationMapper.entityToDeleteTaskOutput(result);
+    const output = TaskPresentationMapper.readModelToDeleteTaskOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -104,7 +104,8 @@ export class TaskResolver {
       requestContext,
     );
     const result = await this.queryBus.execute(query);
-    const output = TaskPresentationMapper.entityToQueryTaskByIdOutput(result);
+    const output =
+      TaskPresentationMapper.readModelToQueryTaskByIdOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -125,7 +126,7 @@ export class TaskResolver {
       );
     const result = await this.queryBus.execute(query);
     const output =
-      TaskPresentationMapper.entitiesToQueryTasksByCategoryIdOutput(result);
+      TaskPresentationMapper.readModelsToQueryTasksByCategoryIdOutput(result);
     return ResponseManager.success(output);
   }
 }

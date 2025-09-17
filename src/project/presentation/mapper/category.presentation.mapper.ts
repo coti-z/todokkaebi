@@ -1,4 +1,3 @@
-import { Category } from '@project/domain/entity/category.entity';
 import { CategoryType } from '@project/presentation/resolver/type/category.type';
 import { TaskPresentationMapper } from '@project/presentation/mapper/task.presentation.mapper';
 import {
@@ -13,11 +12,12 @@ import {
   DeleteCategoryOutput,
   QueryCategoryByIdOutput,
 } from '@project/presentation/resolver/output/category.output';
-import { CategoryByIdQuery } from '@project/application/query/category-by-id.query';
+import { CategoryByIdQuery } from '@project/application/port/in/query/category/category-by-id.query';
 import { CreateCategoryCommand } from '@project/application/port/in/command/category/create-category.command';
 import { DeleteCategoryCommand } from '@project/application/port/in/command/category/delete-category.command';
 import { ChangeCategoryNameCommand } from '@project/application/port/in/command/category/change-category-name.command';
 import { RequestContext } from '@libs/exception';
+import { CategoryReadModel } from '@project/application/dto/category-read.model';
 
 export class CategoryPresentationMapper {
   static createCategoryInputToCreateCategoryCommand(
@@ -61,54 +61,63 @@ export class CategoryPresentationMapper {
     return new CategoryByIdQuery(userId, input.categoryId, context);
   }
 
-  // entity to ObjectType
-  static entityToObjectType(entity: Category): CategoryType {
-    const tasksType = TaskPresentationMapper.entitiesToObjectType(entity.tasks);
+  // readModel to ObjectType
+  static readModelToObjectType(readModel: CategoryReadModel): CategoryType {
+    const tasksType = TaskPresentationMapper.readModelsToObjectType(
+      readModel.tasks,
+    );
     return {
-      createdAt: entity.createdAt,
-      name: entity.name,
+      createdAt: readModel.createdAt,
+      name: readModel.name,
       tasks: tasksType,
-      projectId: entity.projectId,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
+      projectId: readModel.projectId,
+      updatedAt: readModel.updatedAt,
+      id: readModel.id,
     };
   }
 
-  static entitiesToObjectType(entities: Category[]): CategoryType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
+  static readModelsToObjectType(
+    readModels: CategoryReadModel[],
+  ): CategoryType[] {
+    if (!readModels) return [];
+    return readModels.map(readModel => this.readModelToObjectType(readModel));
   }
-  static entityToCreateCategoryOutput(entity: Category): CreateCategoryOutput {
-    return this.entityToObjectType(entity);
+  static readModelToCreateCategoryOutput(
+    readModel: CategoryReadModel,
+  ): CreateCategoryOutput {
+    return this.readModelToObjectType(readModel);
   }
-  static entityToDeleteCategoryOutput(entity: Category): DeleteCategoryOutput {
+  static readModelToDeleteCategoryOutput(
+    readModel: CategoryReadModel,
+  ): DeleteCategoryOutput {
     return {
-      id: entity.id,
+      id: readModel.id,
     };
   }
 
-  static entityToUpdateCategoryOutput(
-    entity: Category,
+  static readModelToUpdateCategoryOutput(
+    readModel: CategoryReadModel,
   ): ChangeCategoryNameOutput {
     return {
-      id: entity.id,
-      updatedAt: entity.updatedAt,
-      tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
-      name: entity.name,
-      projectId: entity.projectId,
-      createdAt: entity.createdAt,
+      id: readModel.id,
+      updatedAt: readModel.updatedAt,
+      tasks: TaskPresentationMapper.readModelsToObjectType(readModel.tasks),
+      name: readModel.name,
+      projectId: readModel.projectId,
+      createdAt: readModel.createdAt,
     };
   }
 
-  static entityToQueryCategoryByIdOutput(
-    entity: Category,
+  static readModelToQueryCategoryByIdOutput(
+    readModel: CategoryReadModel,
   ): QueryCategoryByIdOutput {
     return {
-      createdAt: entity.createdAt,
-      id: entity.id,
-      name: entity.name,
-      projectId: entity.projectId,
-      tasks: TaskPresentationMapper.entitiesToObjectType(entity.tasks),
-      updatedAt: entity.updatedAt,
+      createdAt: readModel.createdAt,
+      id: readModel.id,
+      name: readModel.name,
+      projectId: readModel.projectId,
+      tasks: TaskPresentationMapper.readModelsToObjectType(readModel.tasks),
+      updatedAt: readModel.updatedAt,
     };
   }
 }

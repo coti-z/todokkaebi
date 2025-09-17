@@ -18,6 +18,8 @@ import { Project } from '@project/domain/entity/project.entity';
 import { ProjectPolicyLogic } from '@project/domain/logic/project-policy.logic';
 
 import { ApplicationException, ErrorCode } from '@libs/exception';
+import { Cache, CacheEvict } from '@libs/decorators';
+import { RedisService } from '@libs/redis';
 
 @Injectable()
 export class ProjectService {
@@ -68,6 +70,7 @@ export class ProjectService {
     }
     return project;
   }
+
   async queryProjects(param: QueryProjectsByUserIdParams): Promise<Project[]> {
     return await this.projectRepo.findProjectsByUserId(param.userId);
   }

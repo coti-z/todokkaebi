@@ -46,7 +46,7 @@ export class CategoryResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      CategoryPresentationMapper.entityToCreateCategoryOutput(result);
+      CategoryPresentationMapper.readModelToCreateCategoryOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -68,7 +68,7 @@ export class CategoryResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      CategoryPresentationMapper.entityToDeleteCategoryOutput(result);
+      CategoryPresentationMapper.readModelToDeleteCategoryOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -90,7 +90,7 @@ export class CategoryResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      CategoryPresentationMapper.entityToUpdateCategoryOutput(result);
+      CategoryPresentationMapper.readModelToUpdateCategoryOutput(result);
     return ResponseManager.success(output);
   }
 
@@ -112,7 +112,7 @@ export class CategoryResolver {
       );
     const result = await this.queryBus.execute(query);
     const output =
-      CategoryPresentationMapper.entityToQueryCategoryByIdOutput(result);
+      CategoryPresentationMapper.readModelToQueryCategoryByIdOutput(result);
     return ResponseManager.success(output);
   }
 }

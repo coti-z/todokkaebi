@@ -1,0 +1,53 @@
+import { Transactional } from '@libs/database';
+import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
+import { CacheEvict } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
+import { RedisService } from '@libs/redis';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { DeleteCategoryCommand } from '@project/application/port/in/command/category/delete-category.command';
+import { CategoryService } from '@project/application/service/category.service';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
+import { ProjectService } from '@project/application/service/project.service';
+import { Category } from '@project/domain/entity/category.entity';
+
+@CommandHandler(DeleteCategoryCommand)
+export class DeleteCategoryHandler
+  implements ICommandHandler<DeleteCategoryCommand>
+{
+  constructor(
+    @Inject(TransactionManagerSymbol)
+    private readonly transactionManager: ITransactionManager,
+
+    private readonly redisService: RedisService,
+    private readonly projectService: ProjectService,
+    private readonly categoryService: CategoryService,
+
+    private readonly projectMembershipService: ProjectMembershipService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+  ) {}
+
+  @CacheEvict({
+    keys: args => [`entity:category:${args[0].categoryId}`],
+    timing: 'after',
+  })
+  @Transactional()
+  async execute(command: DeleteCategoryCommand): Promise<Category> {
+    try {
+      const project = await this.projectService.queryProjectByCategoryId({
+        categoryId: command.categoryId,
+      });
+      await this.projectMembershipService.isProjectMember({
+        userId: command.userId,
+        projectId: project.id,
+      });
+      return await this.categoryService.deleteCategory({
+        reqUserId: command.userId,
+        id: command.categoryId,
+      });
+    } catch (error) {
+      this.errorHandlingStrategy.handleError(error, command.context);
+    }
+  }
+}

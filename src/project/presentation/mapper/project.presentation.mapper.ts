@@ -1,6 +1,5 @@
-import { Project } from '@project/domain/entity/project.entity';
-import { ProjectByIdQuery } from '@project/application/query/project-by-id.query';
-import { ProjectsByUserIdQuery } from '@project/application/query/projects-by-userid.query';
+import { ProjectByIdQuery } from '@project/application/port/in/query/project/project-by-id.query';
+import { ProjectsByUserIdQuery } from '@project/application/port/in/query/project/projects-by-userid.query';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
 import { CategoryPresentationMapper } from '@project/presentation/mapper/category.presentation.mapper';
 import { ProjectInvitationPresentationMapper } from '@project/presentation/mapper/project-invitation.presentation.mapper';
@@ -22,33 +21,34 @@ import { CreateProjectCommand } from '@project/application/port/in/command/unti-
 import { DeleteProjectCommand } from '@project/application/port/in/command/unti-project/delete-project.command';
 import { UpdateProjectCommand } from '@project/application/port/in/command/unti-project/update-project.command';
 import { RequestContext } from '@libs/exception';
+import { ProjectReadModel } from '@project/application/dto/project-read.model';
 
 export class ProjectPresentationMapper {
-  static entityToObjectType(entity: Project): ProjectType {
-    const categoriesType = CategoryPresentationMapper.entitiesToObjectType(
-      entity.categories,
+  static readModelToObjectType(readModel: ProjectReadModel): ProjectType {
+    const categoriesType = CategoryPresentationMapper.readModelsToObjectType(
+      readModel.categories,
     );
     const invitationsType =
-      ProjectInvitationPresentationMapper.entitiesToObjectType(
-        entity.projectInvitations,
+      ProjectInvitationPresentationMapper.readModelsToObjectType(
+        readModel.projectInvitations,
       );
     const membershipsType =
-      ProjectMembershipPresentationMapper.entitiesToObjectType(
-        entity.projectMemberships,
+      ProjectMembershipPresentationMapper.readModelsToObjectType(
+        readModel.projectMemberships,
       );
     return {
+      id: readModel.id,
       projectInvitations: invitationsType,
       memberships: membershipsType,
       categories: categoriesType,
-      name: entity.name,
-      adminId: entity.adminId,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
+      name: readModel.name,
+      adminId: readModel.adminId,
+      createdAt: new Date(readModel.createdAt),
+      updatedAt: new Date(readModel.updatedAt),
     };
   }
-  static entitiesToObjectType(entities: Project[]): ProjectType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
+  static entitiesToObjectType(entities: ProjectReadModel[]): ProjectType[] {
+    return entities.map(readModel => this.readModelToObjectType(readModel));
   }
   static toCreateProjectCommand(
     input: CreateProjectInput,
@@ -95,32 +95,40 @@ export class ProjectPresentationMapper {
     return new ProjectsByUserIdQuery(userId, context);
   }
 
-  static createProjectToOutput(entity: Project): CreateProjectOutput {
+  static createProjectToOutput(
+    readModel: ProjectReadModel,
+  ): CreateProjectOutput {
     return {
-      name: entity.name,
-      adminId: entity.adminId,
-      id: entity.id,
+      name: readModel.name,
+      adminId: readModel.adminId,
+      id: readModel.id,
     };
   }
 
-  static deleteProjectToOutput(entity: Project): DeleteProjectOutput {
+  static deleteProjectToOutput(
+    readModel: ProjectReadModel,
+  ): DeleteProjectOutput {
     return {
-      id: entity.id,
+      id: readModel.id,
     };
   }
-  static updateProjectToOutput(entity: Project): UpdateProjectOutput {
+  static updateProjectToOutput(
+    readModel: ProjectReadModel,
+  ): UpdateProjectOutput {
     return {
-      name: entity.name,
-      adminId: entity.adminId,
-      id: entity.id,
+      name: readModel.name,
+      adminId: readModel.adminId,
+      id: readModel.id,
     };
   }
 
-  static queryProjectToOutput(entity: Project): QueryProjectOutput {
-    return this.entityToObjectType(entity);
+  static queryProjectToOutput(readModel: ProjectReadModel): QueryProjectOutput {
+    return this.readModelToObjectType(readModel);
   }
 
-  static queryProjectsToOutput(entities: Project[]): QueryProjectsOutput {
+  static queryProjectsToOutput(
+    entities: ProjectReadModel[],
+  ): QueryProjectsOutput {
     return {
       projects: this.entitiesToObjectType(entities),
     };

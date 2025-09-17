@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
@@ -25,9 +23,9 @@ type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
 export class Project extends BaseEntity<ProjectProps> {
   private _adminId: string;
   private _name: string;
-  private _categories?: Category[];
-  private _projectInvitations?: ProjectInvitation[];
-  private _projectMemberships?: ProjectMembership[];
+  private _categories: Category[];
+  private _projectInvitations: ProjectInvitation[];
+  private _projectMemberships: ProjectMembership[];
 
   private constructor(props: ProjectProps) {
     super(props);
@@ -35,29 +33,9 @@ export class Project extends BaseEntity<ProjectProps> {
     this._adminId = props.adminId;
     this._name = props.name;
 
-    this._categories = props.categories;
-    this._projectInvitations = props.projectInvitations;
-    this._projectMemberships = props.memberships;
-  }
-
-  get adminId(): string {
-    return this._adminId;
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  get projectMemberships(): ProjectMembership[] {
-    return this._projectMemberships ? this._projectMemberships : [];
-  }
-
-  get categories(): Category[] {
-    return this._categories || [];
-  }
-
-  get projectInvitations(): ProjectInvitation[] {
-    return this._projectInvitations || [];
+    this._categories = props.categories || [];
+    this._projectInvitations = props.projectInvitations || [];
+    this._projectMemberships = props.memberships || [];
   }
 
   static create(props: CreateProjectProps): Project {
@@ -87,6 +65,26 @@ export class Project extends BaseEntity<ProjectProps> {
       memberships: props.memberships,
       adminId: props.adminId,
     });
+  }
+
+  get adminId(): string {
+    return this._adminId;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get projectMemberships(): ProjectMembership[] {
+    return this._projectMemberships;
+  }
+
+  get categories(): Category[] {
+    return this._categories;
+  }
+
+  get projectInvitations(): ProjectInvitation[] {
+    return this._projectInvitations;
   }
 
   changeName(name: string) {

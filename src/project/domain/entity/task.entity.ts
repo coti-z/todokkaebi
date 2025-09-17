@@ -1,6 +1,4 @@
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
-import { v4 as uuidv4 } from 'uuid';
-import { pickBy } from 'lodash';
 import {
   BaseEntity,
   BaseEntityProps,

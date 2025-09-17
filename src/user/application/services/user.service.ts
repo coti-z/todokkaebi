@@ -1,3 +1,4 @@
+import { Lock } from '@libs/decorators';
 import { ApplicationException, ErrorCode } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';

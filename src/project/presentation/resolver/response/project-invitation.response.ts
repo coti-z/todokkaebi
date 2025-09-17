@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 import {
   AcceptProjectInvitationOutput,
-  CreateaProjectInvitationOutput,
+  CreateProjectInvitationOutput,
   RejectProjectInvitationOutput,
   UpdateProjectInvitationOutput,
 } from '../output/project-invitation.output';
@@ -9,7 +9,7 @@ import { ApiResponseOf } from '@libs/response';
 
 @ObjectType()
 export class CreateProjectInvitationResponse extends ApiResponseOf(
-  CreateaProjectInvitationOutput,
+  CreateProjectInvitationOutput,
 ) {}
 
 @ObjectType()

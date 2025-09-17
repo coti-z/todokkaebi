@@ -1,5 +1,4 @@
-import { TaskByIdQuery } from '@project/application/query/task-by-id.query';
-import { Task } from '@project/domain/entity/task.entity';
+import { TaskByIdQuery } from '@project/application/port/in/query/task/task-by-id.query';
 import { TaskType } from '@project/presentation/resolver/type/task.type';
 import {
   CreateTaskInput,
@@ -15,31 +14,33 @@ import {
   QueryTaskByIdOutput,
   UpdateTaskOutput,
 } from '../resolver/output/task.output';
-import { TasksByCategoryIdQuery } from '@project/application/query/task-by-categoryid.query';
+import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
 import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
 import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
 import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
 import { RequestContext } from '@libs/exception';
+import { TaskReadModel } from '@project/application/dto/task-read.model';
 
 export class TaskPresentationMapper {
-  static entityToObjectType(entity: Task): TaskType {
+  static readModelToObjectType(readModel: TaskReadModel): TaskType {
     return {
-      actualEndDate: entity.actualEndDate,
-      actualStartDate: entity.actualStartDate,
-      categoryId: entity.categoryId,
-      check: entity.check,
-      endDate: entity.endDate,
-      createdAt: entity.createdAt,
-      startDate: entity.startDate,
-      taskStatus: entity.taskStatus,
-      title: entity.title,
-      updatedAt: entity.updatedAt,
-      id: entity.id,
+      actualEndDate: readModel.actualEndDate,
+      actualStartDate: readModel.actualStartDate,
+      categoryId: readModel.categoryId,
+      check: readModel.check,
+      title: readModel.title,
+      id: readModel.id,
+      taskStatus: readModel.taskStatus,
+      endDate: new Date(readModel.endDate),
+      createdAt: new Date(readModel.createdAt),
+      startDate: new Date(readModel.startDate),
+      updatedAt: new Date(readModel.updatedAt),
     };
   }
 
-  static entitiesToObjectType(entities: Task[]): TaskType[] {
-    return entities.map(entity => this.entityToObjectType(entity));
+  static readModelsToObjectType(readModels: TaskReadModel[]): TaskType[] {
+    if (!readModels) return [];
+    return readModels.map(readModel => this.readModelToObjectType(readModel));
   }
 
   static createInputToCreateTaskCommand(
@@ -98,26 +99,34 @@ export class TaskPresentationMapper {
     return new TasksByCategoryIdQuery(input.categoryId, reqUserId, context);
   }
 
-  static entityToCreateTaskOutput(entity: Task): CreateTaskOutput {
-    return this.entityToObjectType(entity);
+  static readModelToCreateTaskOutput(
+    readModel: TaskReadModel,
+  ): CreateTaskOutput {
+    return this.readModelToObjectType(readModel);
   }
-  static entityToUpdateTaskOutput(entity: Task): UpdateTaskOutput {
-    return this.entityToObjectType(entity);
-  }
-
-  static entityToQueryTaskByIdOutput(entity: Task): QueryTaskByIdOutput {
-    return this.entityToObjectType(entity);
-  }
-
-  static entityToDeleteTaskOutput(entity: Task): DeleteTaskOutput {
-    return this.entityToObjectType(entity);
+  static readModelToUpdateTaskOutput(
+    readModel: TaskReadModel,
+  ): UpdateTaskOutput {
+    return this.readModelToObjectType(readModel);
   }
 
-  static entitiesToQueryTasksByCategoryIdOutput(
-    entities: Task[],
+  static readModelToQueryTaskByIdOutput(
+    readModel: TaskReadModel,
+  ): QueryTaskByIdOutput {
+    return this.readModelToObjectType(readModel);
+  }
+
+  static readModelToDeleteTaskOutput(
+    readModel: TaskReadModel,
+  ): DeleteTaskOutput {
+    return this.readModelToObjectType(readModel);
+  }
+
+  static readModelsToQueryTasksByCategoryIdOutput(
+    readModels: TaskReadModel[],
   ): QueryTaskByCategoryIdOutput {
     return {
-      tasks: this.entitiesToObjectType(entities),
+      tasks: this.readModelsToObjectType(readModels),
     };
   }
 }

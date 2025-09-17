@@ -19,13 +19,6 @@ export class BasicAuthResolver {
     return 'OK';
   }
   @Mutation(() => ApiResponseOfLoginOutput)
-  @RateLimit({
-    limit: 5,
-    window: 900,
-    blockDuration: 1800,
-    key: args => `login:${args[1].input.email}`,
-    errorMessage: '로그인 시도 횟수를 초과했습니다. 30분 후 다시 시도해주세요.',
-  })
   async basicLogin(
     @Args('input') input: LoginInput,
     @Context() gqlContext: any,

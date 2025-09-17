@@ -18,7 +18,7 @@ import { ResponseManager } from '@libs/response';
 import { RequestContextExtractor } from '@libs/exception';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { RateLimit, TokenInfo } from '@libs/decorators';
+import { TokenInfo } from '@libs/decorators';
 import { JwtPayloadWithToken } from '@libs/jwt';
 
 @Resolver(() => ProjectInvitationType)
@@ -42,7 +42,7 @@ export class ProjectInvitationResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      ProjectInvitationPresentationMapper.entityToCreateProjectInvitationOutput(
+      ProjectInvitationPresentationMapper.readModelToCreateProjectInvitationOutput(
         result,
       );
     return ResponseManager.success(output);
@@ -65,7 +65,7 @@ export class ProjectInvitationResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      ProjectInvitationPresentationMapper.entityToUpdateProjectInvitationOutput(
+      ProjectInvitationPresentationMapper.readModelToUpdateProjectInvitationOutput(
         result,
       );
 
@@ -90,7 +90,7 @@ export class ProjectInvitationResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      ProjectInvitationPresentationMapper.entityToAcceptProjectInvitationOutput(
+      ProjectInvitationPresentationMapper.readModelToAcceptProjectInvitationOutput(
         result,
       );
     return ResponseManager.success(output);
@@ -113,7 +113,7 @@ export class ProjectInvitationResolver {
       );
     const result = await this.commandBus.execute(command);
     const output =
-      ProjectInvitationPresentationMapper.entityToRejectProjectInvitationOutput(
+      ProjectInvitationPresentationMapper.readModelToRejectProjectInvitationOutput(
         result,
       );
     return ResponseManager.success(output);
