@@ -20,7 +20,7 @@ export let options = {
       startVUs: 0,
       stages: [
         { duration: '10s', target: 100 }, // Ramp up to 100 users
-        { duration: '2m', target: 500 }, // Scale to 300 users
+        { duration: '30s', target: 500 }, // Scale to 300 users
         { duration: '20s', target: 0 }, // Ramp down
       ],
       gracefulRampDown: '10s',
@@ -33,7 +33,7 @@ export let options = {
       startVUs: 0,
       stages: [
         { duration: '30s', target: 50 }, // Ramp up to 50 users
-        { duration: '1m', target: 200 }, // Scale to 200 users
+        { duration: '1m', target: 1000 }, // Scale to 200 users
         { duration: '20s', target: 0 }, // Ramp down
       ],
       gracefulRampDown: '10s',

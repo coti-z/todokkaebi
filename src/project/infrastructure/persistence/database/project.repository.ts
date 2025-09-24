@@ -1,5 +1,8 @@
 import { Project } from '@project/domain/entity/project.entity';
-import { ProjectInfraMapper } from '@project/infrastructure/mapper/project.infrastructure.mapper';
+import {
+  ProjectInfraMapper,
+  ProjectRecord,
+} from '@project/infrastructure/mapper/project.infrastructure.mapper';
 import { IProjectRepository } from '@project/application/port/out/project-repository.port';
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from '@libs/database';
@@ -52,7 +55,7 @@ export class ProjectRepositoryImpl
 
   async findProjectsByUserId(userId: string): Promise<Project[]> {
     const client = this.getPrismaClient();
-    const projects = await client.project.findMany({
+    /*     const projects = await client.project.findMany({
       where: {
         OR: [
           { adminId: userId },
@@ -61,8 +64,20 @@ export class ProjectRepositoryImpl
           },
         ],
       },
-    });
+    })  return ProjectInfraMapper.projectsToDomain(projects);
+    */
 
+    const projects = await client.$queryRaw<ProjectRecord[]>`
+      (
+        SELECT p.* FROM Project p 
+        WHERE p.adminId = ${userId}
+      ) UNION
+      (
+        SELECT p.* FROM Project p
+        INNER JOIN ProjectMembership pm ON pm.projectId = p.id
+        where pm.userId = ${userId}
+      )
+    `;
     return ProjectInfraMapper.projectsToDomain(projects);
   }
   async deleteProject(entity: Project): Promise<void> {

@@ -32,6 +32,8 @@ model Users {
   oAuthProviders      OAuthProvider[]
   credentials         UserCredentials?
 
+  @@index([id])
+  @@index([email])
   @@index([nickname])
 }
 
@@ -48,6 +50,10 @@ model Project {
 
   // 관계 설정 - 이것도 relation 이름 명시해야 함
   admin Users @relation("ProjectAdmin", fields: [adminId], references: [id])
+
+  // 관리자 조회를 위한 인덱스
+  @@index([adminId])
+  @@index([adminId, createdAt])
 }
 
 model ProjectMembership {
@@ -59,6 +65,9 @@ model ProjectMembership {
   role      MembershipRole @default(MEMBER)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+
+  @@unique([userId, projectId])
+  @@index([projectId, userId])
 }
 
 model ProjectInvitation {
@@ -73,6 +82,8 @@ model ProjectInvitation {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
 
+  @@index([id])
+  @@index([projectId])
   @@index([projectId, inviteeUserId])
 }
 
@@ -88,6 +99,7 @@ model Tokens {
   updatedAt             DateTime @updatedAt
   refreshTokenExpiresAt DateTime
 
+  @@index([id])
   @@index([isRevoked, refreshTokenExpiresAt])
 }
 
@@ -123,6 +135,8 @@ model Category {
   tasks     Task[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([projectId])
 }
 
 model Task {

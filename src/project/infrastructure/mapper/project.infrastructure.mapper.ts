@@ -12,7 +12,7 @@ import {
 } from '@project/infrastructure/mapper/project-membership.infrastructure';
 import { Project } from '@project/domain/entity/project.entity';
 
-interface ProjectRecord {
+export interface ProjectRecord {
   id: string;
   name: string;
   adminId: string;
