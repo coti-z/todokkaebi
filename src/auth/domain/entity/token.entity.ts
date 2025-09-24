@@ -1,7 +1,7 @@
 import { DomainException } from '@libs/exception';
 import { ErrorCode } from '@libs/exception';
 import { v4 as uuid } from 'uuid';
-interface TokenProps {
+export interface TokenProps {
   userId: string;
   accessToken: string;
   refreshToken: string;
@@ -18,7 +18,7 @@ interface TokenPropsFromPersistence {
   refreshTokenExpiresAt: Date;
 }
 export class Token {
-  constructor(
+  private constructor(
     public readonly id: string,
     public readonly userId: string,
     private _accessToken: string,
@@ -26,7 +26,7 @@ export class Token {
     private _isRevoked: boolean,
     private _createdAt: Date,
     private _updatedAt: Date,
-    private _refreshTokenExpiresAt: Date
+    private _refreshTokenExpiresAt: Date,
   ) {}
 
   static create(props: TokenProps): Token {
@@ -86,6 +86,7 @@ export class Token {
     this._updatedAt = new Date();
   }
   isExpired(): boolean {
+    if (this._isRevoked) return true;
     return new Date() > this._refreshTokenExpiresAt;
   }
 }

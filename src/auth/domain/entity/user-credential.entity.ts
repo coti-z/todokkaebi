@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-interface UserCredentialProps {
+export interface UserCredentialProps {
   userId: string;
   email: string;
   passwordHash: string;

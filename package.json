@@ -105,8 +105,7 @@
     "roots": [
       "<rootDir>/src",
       "<rootDir>/test",
-      "<rootDir>/libs/",
-      "<rootDir>/apps/"
+      "<rootDir>/libs/"
     ],
     "testRegex": ".*\\.(spec|e2e-spec)\\.ts$",
     "transform": {
@@ -117,12 +116,30 @@
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
+      "^@user/(.*)$": "<rootDir>/src/user/$1",
+      "^@auth/(.*)$": "<rootDir>/src/auth/$1",
+      "^@project/(.*)$": "<rootDir>/src/project/$1",
+      "^@libs/jwt$": "<rootDir>/libs/jwt/src",
+      "^@libs/exception$": "<rootDir>/libs/exception/src",
+      "^@libs/logger$": "<rootDir>/libs/logger/src",
+      "^@libs/slack$": "<rootDir>/libs/slack/src",
+      "^@libs/filter$": "<rootDir>/libs/filter/src",
+      "^@libs/interceptor$": "<rootDir>/libs/interceptor/src",
+      "^@libs/database$": "<rootDir>/libs/database/src",
+      "^@libs/response$": "<rootDir>/libs/response/src",
+      "^@libs/common$": "<rootDir>/libs/common/src",
+      "^@libs/test$": "<rootDir>/libs/test/src",
+      "^@libs/grpc$": "<rootDir>/libs/grpc/src",
+      "^@libs/token$": "<rootDir>/libs/token/src",
+      "^@libs/token/(.*)$": "<rootDir>/libs/token/src/$1",
+      "^@libs/redis$": "<rootDir>/libs/redis/src",
+      "^@libs/redis/(.*)$": "<rootDir>/libs/redis/src/$1",
+      "^@libs/decorators$": "<rootDir>/libs/decorators/src",
+      "^@libs/decorators/(.*)$": "<rootDir>/libs/decorators/src/$1",
       "^libs/decorators(|/.*)$": "<rootDir>/libs/decorators/src/$1",
       "^libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@libs/test(|/.*)$": "<rootDir>/libs/test/src/$1",
-      "^@libs/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
-      "^@libs/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
-      "^@app/token(|/.*)$": "<rootDir>/libs/token/src/$1"
+      "@app/token/(.*)": "<rootDir>/../libs/token/src/$1",
+      "@app/token": "<rootDir>/../libs/token/src"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
