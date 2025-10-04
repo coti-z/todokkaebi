@@ -3,19 +3,15 @@ import {
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { CacheInterceptor } from '@libs/decorators';
 import { DecoratorsModule } from '@libs/decorators/decorators.module';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisModule } from '@libs/redis';
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ChangeCategoryNameHandler } from '@project/application/handler/command/category/change-category-name.handler';
 import { CreateCategoryHandler } from '@project/application/handler/command/category/create-category.handler';
 import { DeleteCategoryHandler } from '@project/application/handler/command/category/delete-category.handler';
-import { AcceptProjectInvitationCommandHandler } from '@project/application/handler/command/project-invitation/accept-project-invitation-command.handler';
 import { CreateProjectInvitationCommandHandler } from '@project/application/handler/command/project-invitation/create-project-invitation-command.handler';
-import { RejectProjectInvitationCommandHandler } from '@project/application/handler/command/project-invitation/reject-project-invitation-command.handler';
 import { UpdateProjectInvitationCommandHandler } from '@project/application/handler/command/project-invitation/update-project-invitation-command.handler';
 import { CreateTaskHandler } from '@project/application/handler/command/task/create-task.handler';
 import { DeleteTaskCommandHandler } from '@project/application/handler/command/task/delete-task-command.handler';
@@ -26,7 +22,7 @@ import { UpdateProjectHandler } from '@project/application/handler/command/unit-
 import { CategoryByIdHandler } from '@project/application/handler/query/category-by-id-query.handler';
 import { ProjectByIdQueryHandler } from '@project/application/handler/query/project-by-id-query.handler';
 import { ProjectsByUserIdQueryHandler } from '@project/application/handler/query/projects-by-userid-query.handler';
-import { TasksByCategoryIdQueryHandler } from '@project/application/handler/query/task-by-category-id-query.handler';
+import { TasksByCategoryIdQueryHandler } from '@project/application/handler/query/tasks-by-category-id-query.handler';
 import { TaskByIdQueryHandler } from '@project/application/handler/query/task-by-id-query.handler';
 import { CategoryService } from '@project/application/service/category.service';
 import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
@@ -58,9 +54,6 @@ import { ProjectInfrastructureModule } from '@project/infrastructure/project.inf
     DeleteCategoryHandler,
     DeleteTaskCommandHandler,
     DeleteProjectHandler,
-
-    RejectProjectInvitationCommandHandler,
-    AcceptProjectInvitationCommandHandler,
 
     CategoryByIdHandler,
     ProjectByIdQueryHandler,

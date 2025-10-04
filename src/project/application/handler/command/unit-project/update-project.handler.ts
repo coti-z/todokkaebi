@@ -11,6 +11,7 @@ import {
 } from '@libs/database';
 import { CacheEvict } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
 
 @Injectable()
 @CommandHandler(UpdateProjectCommand)
@@ -32,13 +33,25 @@ export class UpdateProjectHandler
   @Transactional()
   async execute(command: UpdateProjectCommand): Promise<Project> {
     try {
-      return await this.projectService.updateProject({
-        name: command.projectName,
-        id: command.projectId,
-        adminId: command.userId,
-      });
+      await this.authorize(command.projectId, command.userId);
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async authorize(projectId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectById({
+      id: projectId,
+    });
+
+    ProjectLifeCyclePolicy.canChangeProjectName(project, reqUserId);
+  }
+
+  private async process(command: UpdateProjectCommand): Promise<Project> {
+    return await this.projectService.updateProject({
+      id: command.projectId,
+      name: command.projectName,
+    });
   }
 }

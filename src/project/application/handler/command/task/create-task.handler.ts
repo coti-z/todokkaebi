@@ -7,6 +7,7 @@ import { CreateTaskCommand } from '@project/application/port/in/command/task/cre
 import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
 import { Transactional } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @Injectable()
 @CommandHandler(CreateTaskCommand)
@@ -22,20 +23,26 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
   @Transactional()
   async execute(command: CreateTaskCommand): Promise<Task> {
     try {
-      const project = await this.projectService.queryProjectByCategoryId({
-        categoryId: command.categoryId,
-      });
-      return await this.taskService.storeTask({
-        categoryId: command.categoryId,
-
-        endDate: command.endDate,
-        project: project,
-        reqUserId: command.userId,
-        startDate: command.startDate,
-        title: command.title,
-      });
+      await this.authorize(command.categoryId, command.userId);
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async authorize(categoryId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectByCategoryId({
+      categoryId,
+    });
+    TaskWorkflowPolicy.canAdd(project, reqUserId);
+  }
+
+  private async process(command: CreateTaskCommand): Promise<Task> {
+    return await this.taskService.storeTask({
+      categoryId: command.categoryId,
+      endDate: command.endDate,
+      startDate: command.startDate,
+      title: command.title,
+    });
   }
 }

@@ -13,7 +13,7 @@ export type CategoryMutableProps = {
 
 export type CategoryProps = CategoryMutableProps & BaseEntityProps;
 
-type CreateCategoryProps = Omit<
+export type CreateCategoryProps = Omit<
   CategoryProps,
   'id' | 'createdAt' | 'updatedAt' | 'tasks'
 >;

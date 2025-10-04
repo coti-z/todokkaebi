@@ -13,7 +13,6 @@ import {
   TaskRepositorySymbol,
 } from '../port/out/task-repository.port';
 import { Task } from '@project/domain/entity/task.entity';
-import { TaskPolicyLogic } from '@project/domain/logic/task-policy.logic';
 
 import { ApplicationException, ErrorCode } from '@libs/exception';
 
@@ -25,7 +24,6 @@ export class TaskService {
   ) {}
 
   async storeTask(params: StoreTaskParams): Promise<Task> {
-    TaskPolicyLogic.canCreateTask(params.project, params.reqUserId);
     const task = Task.create({
       categoryId: params.categoryId,
       endDate: params.endDate,
@@ -43,12 +41,13 @@ export class TaskService {
     if (!task) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    TaskPolicyLogic.updateTask(
-      omitBy(params.updateDataParams, isUndefined),
-      params.project,
-      params.reqUserId,
-      task,
-    );
+    task.update({
+      title: params.updateDataParams.title,
+      categoryId: params.updateDataParams.categoryId,
+      check: params.updateDataParams.check,
+      taskStatus: params.updateDataParams.taskStatus,
+    });
+
     await this.taskRepo.updateTask(task);
     return task;
   }
@@ -63,7 +62,6 @@ export class TaskService {
   }
 
   async queryTaskById(params: QueryTaskByIdParams): Promise<Task> {
-    TaskPolicyLogic.canQueryTask(params.project, params.reqUserId);
     const task = await this.taskRepo.queryTaskByTaskId(params.id);
 
     if (!task) {
@@ -75,7 +73,6 @@ export class TaskService {
   async queryTasksByCategoryId(
     params: QueryTasksByCategoryIdParams,
   ): Promise<Task[]> {
-    TaskPolicyLogic.canQueryTaskByCategoryId(params.project, params.reqUserId);
     const tasks = await this.taskRepo.queryTaskByCategoryId(params.categoryId);
     return tasks;
   }

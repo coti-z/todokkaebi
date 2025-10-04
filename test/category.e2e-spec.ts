@@ -11,19 +11,19 @@ import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
 import {
   CATEGORY_MUTATIONS,
   CATEGORY_QUERIES,
-} from 'test/graphql/category.graphql';
-import { PROJECT_MUTATIONS } from 'test/graphql/project.graphql';
-import { USER_MUTATIONS } from 'test/graphql/user.graphql';
-import { GraphqlRequestHelper } from 'test/helpers/graphql-request.helper';
-import { LoginResponse } from 'test/types/auth-response.types';
+} from './graphql/category.graphql';
+import { PROJECT_MUTATIONS } from './graphql/project.graphql';
+import { USER_MUTATIONS } from './graphql/user.graphql';
+import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
+import { LoginResponse } from './types/auth-response.types';
 import {
   ChangeCategoryNameResponse,
   CreateCategoryResponse,
   DeleteCategoryResponse,
   QueryCategoryByIdResponse,
-} from 'test/types/category-response.types';
-import { CreateProjectResponse } from 'test/types/project-response.types';
-import { CreateUserResponse } from 'test/types/user-response.types';
+} from './types/category-response.types';
+import { CreateProjectResponse } from './types/project-response.types';
+import { CreateUserResponse } from './types/user-response.types';
 import { v4 as uuid } from 'uuid';
 
 describe('Category Resolver (e2e)', () => {

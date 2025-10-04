@@ -11,6 +11,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProjectCommand } from '@project/application/port/in/command/unti-project/delete-project.command';
 import { ProjectService } from '@project/application/service/project.service';
 import { Project } from '@project/domain/entity/project.entity';
+import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
 
 @Injectable()
 @CommandHandler(DeleteProjectCommand)
@@ -32,13 +33,24 @@ export class DeleteProjectHandler
   })
   @Transactional()
   async execute(command: DeleteProjectCommand): Promise<Project> {
+    await this.authorize(command.projectId, command.adminId);
+    return await this.process(command);
     try {
-      return await this.projectService.deleteProject({
-        adminId: command.adminId,
-        id: command.projectId,
-      });
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async authorize(projectId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectById({
+      id: projectId,
+    });
+    ProjectLifeCyclePolicy.canDeleteProject(project, reqUserId);
+  }
+
+  private async process(command: DeleteProjectCommand) {
+    return await this.projectService.deleteProject({
+      id: command.projectId,
+    });
   }
 }

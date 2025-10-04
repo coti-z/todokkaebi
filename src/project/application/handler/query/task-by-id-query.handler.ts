@@ -6,6 +6,7 @@ import { TaskReadModel } from '@project/application/dto/task-read.model';
 import { TaskApplicationMapper } from '@project/application/mapper/task.application.mapper';
 import { Cache } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @QueryHandler(TaskByIdQuery)
 export class TaskByIdQueryHandler implements IQueryHandler<TaskByIdQuery> {
@@ -21,15 +22,19 @@ export class TaskByIdQueryHandler implements IQueryHandler<TaskByIdQuery> {
     ttl: 300,
   })
   async execute(query: TaskByIdQuery): Promise<TaskReadModel> {
+    await this.authorize(query.id, query.userId);
+    return await this.process(query);
+  }
+  private async authorize(taskId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectByTaskId({
-      taskId: query.id,
+      taskId,
     });
-    const task = await this.taskService.queryTaskById({
-      id: query.id,
-      project: project,
-      reqUserId: query.userId,
-    });
+    TaskWorkflowPolicy.canQuery(project, reqUserId);
+  }
 
-    return TaskApplicationMapper.entityToTaskReadModel(task);
+  private async process(query: TaskByIdQuery): Promise<TaskReadModel> {
+    return await this.taskService.queryTaskById({
+      id: query.id,
+    });
   }
 }

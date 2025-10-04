@@ -19,13 +19,15 @@ export class ProjectsByUserIdQueryHandler
 
   async execute(query: ProjectsByUserIdQuery): Promise<ProjectReadModel[]> {
     try {
-      const projects = await this.projectService.queryProjects({
-        userId: query.userId,
-      });
-
-      return ProjectApplicationMapper.entitiesToProjectReadModels(projects);
+      return await this.process(query);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, query.context);
     }
+  }
+  private async process(query: ProjectsByUserIdQuery) {
+    const projects = await this.projectService.queryProjects({
+      userId: query.userId,
+    });
+    return ProjectApplicationMapper.entitiesToProjectReadModels(projects);
   }
 }

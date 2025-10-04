@@ -8,6 +8,7 @@ import { CategoryReadModel } from '@project/application/dto/category-read.model'
 import { CategoryApplicationMapper } from '@project/application/mapper/category.application.mapper';
 import { Cache } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
 
 @QueryHandler(CategoryByIdQuery)
 @Injectable()
@@ -27,19 +28,26 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
   })
   async execute(query: CategoryByIdQuery): Promise<CategoryReadModel> {
     try {
-      await this.projectService.isProjectOwnerByCategoryId({
-        id: query.categoryId,
-        reqUserId: query.userId,
-      });
-
-      const category = await this.categoryService.queryCategoryById({
-        id: query.categoryId,
-        reqUserId: query.userId,
-      });
-
-      return CategoryApplicationMapper.entityToCategoryReadModel(category);
+      await this.authorize(query.categoryId, query.userId);
+      return await this.process(query);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, query.context);
     }
+  }
+
+  private async authorize(categoryId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectByCategoryId({
+      categoryId,
+    });
+
+    CategoryOrganizationPolicy.canQueryCategory(project, reqUserId);
+  }
+
+  private async process(query: CategoryByIdQuery): Promise<CategoryReadModel> {
+    const category = await this.categoryService.queryCategoryById({
+      id: query.categoryId,
+    });
+
+    return CategoryApplicationMapper.entityToCategoryReadModel(category);
   }
 }

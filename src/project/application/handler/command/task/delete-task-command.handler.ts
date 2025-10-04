@@ -13,6 +13,7 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { CacheEvict } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 @CommandHandler(DeleteTaskCommand)
 export class DeleteTaskCommandHandler
   implements ICommandHandler<DeleteTaskCommand>
@@ -35,19 +36,24 @@ export class DeleteTaskCommandHandler
   @Transactional()
   async execute(command: DeleteTaskCommand): Promise<Task> {
     try {
-      const project = await this.projectService.queryProjectByTaskId({
-        taskId: command.id,
-      });
-      await this.projectMembershipService.isProjectMember({
-        projectId: project.id,
-        userId: command.reqUserId,
-      });
-      return await this.taskService.deleteTask({
-        id: command.id,
-        reqUserId: command.reqUserId,
-      });
+      await this.authorize(command.id, command.reqUserId);
+      return this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+  private async authorize(taskId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectByTaskId({
+      taskId,
+    });
+    TaskWorkflowPolicy.canRemove(project, reqUserId);
+  }
+
+  private async process(command: DeleteTaskCommand): Promise<Task> {
+    const task = await this.taskService.deleteTask({
+      id: command.id,
+    });
+
+    return task;
   }
 }

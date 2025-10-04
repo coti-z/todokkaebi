@@ -7,14 +7,14 @@ import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
-import { USER_MUTATIONS } from 'test/graphql/user.graphql';
-import { GraphqlRequestHelper } from 'test/helpers/graphql-request.helper';
+import { AUTH_MUTATIONS } from './graphql/auth.graphql';
+import { USER_MUTATIONS } from './graphql/user.graphql';
+import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
 import {
   LoginResponse,
   LogoutResponse,
   ReissueTokenResponse,
-} from 'test/types/auth-response.types';
+} from './types/auth-response.types';
 import { v4 as uuid } from 'uuid';
 
 describe('Auth Resolver (e2e)', () => {

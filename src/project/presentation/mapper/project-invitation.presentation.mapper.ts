@@ -1,9 +1,7 @@
 import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 import {
-  AcceptProjectInvitationInput,
   CreateProjectInvitationInput,
-  RejectProjectInvitationInput,
-  type UpdateProjectInvitationInput,
+  UpdateProjectInvitationStatusInput,
 } from '../resolver/input/project-invitation.input';
 import {
   AcceptProjectInvitationOutput,
@@ -58,7 +56,7 @@ export class ProjectInvitationPresentationMapper {
   }
 
   static updateProjectInvitationInputToCommand(
-    input: UpdateProjectInvitationInput,
+    input: UpdateProjectInvitationStatusInput,
     reqUserId: string,
     context: RequestContext,
   ): UpdateProjectInvitationCommand {
@@ -68,22 +66,6 @@ export class ProjectInvitationPresentationMapper {
       input.status,
       context,
     );
-  }
-
-  static acceptProjectInvitationInputToCommand(
-    input: AcceptProjectInvitationInput,
-    reqUserId: string,
-    context: RequestContext,
-  ): AcceptProjectInvitationCommand {
-    return new AcceptProjectInvitationCommand(input.id, reqUserId, context);
-  }
-
-  static rejectProjectInvitationInputToCommand(
-    input: RejectProjectInvitationInput,
-    reqUserId: string,
-    context: RequestContext,
-  ): RejectProjectInvitationCommand {
-    return new RejectProjectInvitationCommand(input.id, reqUserId, context);
   }
 
   /* -------------------------------------------------------------------------- */

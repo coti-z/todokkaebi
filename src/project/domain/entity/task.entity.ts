@@ -24,7 +24,7 @@ type TaskProps = BaseEntityProps & TaskMutableProps;
 /**
  * 새 Task를 만들 때 필요한 필드. 기본값으로 처리되는 것은 제외.
  */
-type CreateTaskProps = Omit<
+export type CreateTaskProps = Omit<
   TaskProps,
   | 'id'
   | 'createdAt'

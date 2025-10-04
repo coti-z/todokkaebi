@@ -7,7 +7,6 @@ export class UpdateProjectInvitationCommand implements ICommand {
     public readonly id: string,
     public readonly reqUserId: string,
     public readonly status: InvitationStatus,
-
     public readonly context: RequestContext,
   ) {}
 }

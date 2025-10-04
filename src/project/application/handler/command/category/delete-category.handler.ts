@@ -10,7 +10,12 @@ import { CategoryService } from '@project/application/service/category.service';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { Category } from '@project/domain/entity/category.entity';
+import { Project } from '@project/domain/entity/project.entity';
+import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
 
+/**
+ * 카테고리 삭제 핸들러
+ */
 @CommandHandler(DeleteCategoryCommand)
 export class DeleteCategoryHandler
   implements ICommandHandler<DeleteCategoryCommand>
@@ -35,19 +40,24 @@ export class DeleteCategoryHandler
   @Transactional()
   async execute(command: DeleteCategoryCommand): Promise<Category> {
     try {
-      const project = await this.projectService.queryProjectByCategoryId({
-        categoryId: command.categoryId,
-      });
-      await this.projectMembershipService.isProjectMember({
-        userId: command.userId,
-        projectId: project.id,
-      });
-      return await this.categoryService.deleteCategory({
-        reqUserId: command.userId,
-        id: command.categoryId,
-      });
+      await this.authorize(command.categoryId, command.userId);
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async authorize(categoryId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectByCategoryId({
+      categoryId,
+    });
+
+    CategoryOrganizationPolicy.canDeleteCategory(project, reqUserId);
+  }
+
+  private async process(command: DeleteCategoryCommand): Promise<Category> {
+    return await this.categoryService.deleteCategory({
+      id: command.categoryId,
+    });
   }
 }

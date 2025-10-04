@@ -5,6 +5,7 @@ import { TaskService } from '@project/application/service/task.service';
 import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
 import { TaskReadModel } from '@project/application/dto/task-read.model';
 import { TaskApplicationMapper } from '@project/application/mapper/task.application.mapper';
+import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @Injectable()
 @QueryHandler(TasksByCategoryIdQuery)
@@ -17,16 +18,20 @@ export class TasksByCategoryIdQueryHandler
   ) {}
 
   async execute(query: TasksByCategoryIdQuery): Promise<TaskReadModel[]> {
+    await this.authorize(query.categoryId, query.userId);
+    return await this.process(query);
+  }
+  private async authorize(categoryId: string, reqUserId: string) {
     const project = await this.projectService.queryProjectByCategoryId({
-      categoryId: query.categoryId,
+      categoryId,
     });
+    TaskWorkflowPolicy.canQuery(project, reqUserId);
+  }
 
+  private async process(query: TasksByCategoryIdQuery) {
     const tasks = await this.taskService.queryTasksByCategoryId({
-      project,
       categoryId: query.categoryId,
-      reqUserId: query.userId,
     });
-
     return TaskApplicationMapper.tasksToTaskReadModels(tasks);
   }
 }

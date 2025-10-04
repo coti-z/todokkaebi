@@ -18,7 +18,7 @@ type ProjectMembershipProps = ProjectMembershipImmutableProps &
   ProjectMembershipMutableProps &
   BaseEntityProps;
 
-type CreateProjectMembershipProps = Omit<
+export type CreateProjectMembershipProps = Omit<
   ProjectMembershipProps,
   'id' | 'updatedAt' | 'createdAt'
 >;

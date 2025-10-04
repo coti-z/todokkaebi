@@ -8,24 +8,24 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '@project/project.module';
 import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
-import { CATEGORY_MUTATIONS } from 'test/graphql/category.graphql';
-import { PROJECT_MUTATIONS } from 'test/graphql/project.graphql';
-import { TASK_MUTATIONS, TASK_QUERIES } from 'test/graphql/task.graphql';
-import { USER_MUTATIONS } from 'test/graphql/user.graphql';
-import { GraphqlRequestHelper } from 'test/helpers/graphql-request.helper';
-import { TimeHelper } from 'test/helpers/time.helper';
-import { LoginResponse } from 'test/types/auth-response.types';
-import { CreateCategoryResponse } from 'test/types/category-response.types';
-import { CreateProjectResponse } from 'test/types/project-response.types';
+import { AUTH_MUTATIONS } from './graphql/auth.graphql';
+import { CATEGORY_MUTATIONS } from './graphql/category.graphql';
+import { PROJECT_MUTATIONS } from './graphql/project.graphql';
+import { TASK_MUTATIONS, TASK_QUERIES } from './graphql/task.graphql';
+import { USER_MUTATIONS } from './graphql/user.graphql';
+import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
+import { TimeHelper } from './helpers/time.helper';
+import { LoginResponse } from './types/auth-response.types';
+import { CreateCategoryResponse } from './types/category-response.types';
+import { CreateProjectResponse } from './types/project-response.types';
 import {
   CreateTaskResponse,
   DeleteTaskResponse,
   QueryTaskByIdResponse,
   QueryTasksByCategoryIdResponse,
   UpdateTaskResponse,
-} from 'test/types/task-response.types';
-import { CreateUserResponse } from 'test/types/user-response.types';
+} from './types/task-response.types';
+import { CreateUserResponse } from './types/user-response.types';
 import { v4 as uuid } from 'uuid';
 
 describe('Task Resolver (e2e)', () => {

@@ -10,14 +10,14 @@ import { v4 as uuid } from 'uuid';
 import { LoggerModule } from '@libs/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLExceptionFilter } from '@libs/filter';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
-import { HealthCheckResponse } from 'test/types/common.types';
+import { AUTH_MUTATIONS } from './graphql/auth.graphql';
+import { HealthCheckResponse } from './types/common.types';
 import {
   CreateUserResponse,
   DeleteUserResponse,
   UpdateUserResponse,
-} from 'test/types/user-response.types';
-import { LoginResponse } from 'test/types/auth-response.types';
+} from './types/user-response.types';
+import { LoginResponse } from './types/auth-response.types';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;

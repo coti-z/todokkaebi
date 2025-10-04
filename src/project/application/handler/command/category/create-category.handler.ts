@@ -12,32 +12,45 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Inject } from '@nestjs/common';
+import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
+import { ProjectService } from '@project/application/service/project.service';
 
+/**
+ * 카테고리 생성 핸들러
+ */
 @CommandHandler(CreateCategoryCommand)
 export class CreateCategoryHandler
   implements ICommandHandler<CreateCategoryCommand>
 {
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly projectMembershipService: ProjectMembershipService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
+    private readonly projectService: ProjectService,
   ) {}
 
   @Transactional()
   async execute(command: CreateCategoryCommand): Promise<Category> {
     try {
-      this.projectMembershipService.isProjectMember({
-        projectId: command.projectId,
-        userId: command.userId,
-      });
-      return await this.categoryService.createCategory({
-        name: command.name,
-        projectId: command.projectId,
-      });
+      await this.authorize(command.projectId, command.userId);
+      return this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async authorize(projectId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectById({
+      id: projectId,
+    });
+    CategoryOrganizationPolicy.canCreateCategory(project, reqUserId);
+  }
+
+  private async process(command: CreateCategoryCommand) {
+    return await this.categoryService.createCategory({
+      name: command.name,
+      projectId: command.projectId,
+    });
   }
 }

@@ -1,18 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  AcceptProjectInvitationParams,
-  RejectProjectInvitationParams,
   type CreateProjectInvitationParams,
   type UpdateProjectInvitationParams,
 } from '@project/application/param/project-invitation.params';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
-import { ProjectInvitationLogic } from '@project/domain/logic/project-invitation.logic';
 import {
   IProjectInvitationRepository,
   ProjectInvitationRepositorySymbol,
 } from '../port/out/project-invitation-repository.port';
-import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
 import { ApplicationException, ErrorCode } from '@libs/exception';
+import { FindProjectInvitationByIdParams } from '@project/application/param/find-project-inviation-by-id.param';
 
 @Injectable()
 export class ProjectInvitationService {
@@ -24,11 +21,11 @@ export class ProjectInvitationService {
   async createProjectInvitation(
     params: CreateProjectInvitationParams,
   ): Promise<ProjectInvitation> {
-    ProjectInvitationLogic.canProjectInvitation(
-      params.project,
-      params.inviterUserId,
-    );
-    const projectInvitation = ProjectInvitation.create(params);
+    const projectInvitation = ProjectInvitation.create({
+      inviteeUserId: params.inviteeUserId,
+      inviterUserId: params.inviterUserId,
+      projectId: params.projectId,
+    });
     await this.projectInvitationRepo.storeProjectInvitation(projectInvitation);
     return projectInvitation;
   }
@@ -42,49 +39,20 @@ export class ProjectInvitationService {
     if (!projectInvitation) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
+    projectInvitation.changeInvitationStatus(params.status);
 
-    ProjectInvitationLogic.updateProjectInviationStatus(
-      projectInvitation,
-      params.status,
-      params.reqUserId,
-    );
     await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
     return projectInvitation;
   }
 
-  async acceptProjectInvitation(
-    params: AcceptProjectInvitationParams,
+  async findProjectInvitationById(
+    params: FindProjectInvitationByIdParams,
   ): Promise<ProjectInvitation> {
     const projectInvitation =
       await this.projectInvitationRepo.findProjectInvitationById(params.id);
     if (!projectInvitation) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    ProjectInvitationLogic.acceptProjectInvitation(
-      projectInvitation,
-      InvitationStatus.ACCEPTED,
-      params.reqUserId,
-    );
-    await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
-    return projectInvitation;
-  }
-
-  async rejectProjectInvitation(
-    params: RejectProjectInvitationParams,
-  ): Promise<ProjectInvitation> {
-    const projectInvitation =
-      await this.projectInvitationRepo.findProjectInvitationById(params.id);
-
-    if (!projectInvitation) {
-      throw new ApplicationException(ErrorCode.NOT_FOUND);
-    }
-
-    ProjectInvitationLogic.rejectProjectInvitation(
-      projectInvitation,
-      InvitationStatus.REJECTED,
-      params.reqUserId,
-    );
-    await this.projectInvitationRepo.updateProjectInvitation(projectInvitation);
     return projectInvitation;
   }
 }

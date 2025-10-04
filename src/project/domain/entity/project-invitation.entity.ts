@@ -35,6 +35,7 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
 
     this._projectId = props.projectId;
     this._inviterUserId = props.inviterUserId;
+    this._inviteeUserId = props.inviteeUserId;
     this._invitationStatus = props.status;
   }
   get projectId(): string {
@@ -61,6 +62,16 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
   }
 
   static create(props: CreateProjectInvitationProps): ProjectInvitation {
+    if (!props) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    if (!props.projectId || !props.inviteeUserId || !props.inviterUserId) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+
+    if (props.inviteeUserId === props.inviterUserId) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
     const id = this.generateUuid();
     const now = this.generateTimestamp();
     const newStatus = InvitationStatus.PENDING;

@@ -1,6 +1,7 @@
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
+import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 
 import { DomainException, ErrorCode } from '@libs/exception';
 
@@ -18,7 +19,10 @@ type ProjectMutableProps = {
 };
 
 type ProjectProps = BaseEntityProps & ProjectMutableProps;
-type CreateProjectProps = Omit<ProjectProps, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateProjectProps = Omit<
+  ProjectProps,
+  'id' | 'createdAt' | 'updatedAt'
+>;
 
 export class Project extends BaseEntity<ProjectProps> {
   private _adminId: string;
@@ -87,6 +91,10 @@ export class Project extends BaseEntity<ProjectProps> {
     return this._projectInvitations;
   }
 
+  addCategory(category: Category) {
+    this._categories.push(category);
+    this.updateTimestamp();
+  }
   changeName(name: string) {
     if (!name) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
@@ -101,5 +109,34 @@ export class Project extends BaseEntity<ProjectProps> {
     }
     this._adminId = id;
     this.updateTimestamp();
+  }
+
+  // Authorization helper methods
+  isAdmin(userId: string): boolean {
+    return this._adminId === userId;
+  }
+
+  isMember(userId: string): boolean {
+    return this._projectMemberships.some(
+      membership => membership.userId === userId
+    );
+  }
+
+  isOwner(userId: string): boolean {
+    const membership = this._projectMemberships.find(
+      m => m.userId === userId
+    );
+    return membership?.role === MembershipRole.OWNER;
+  }
+
+  getMembershipRole(userId: string): MembershipRole | null {
+    const membership = this._projectMemberships.find(
+      m => m.userId === userId
+    );
+    return membership?.role || null;
+  }
+
+  hasAccessPermission(userId: string): boolean {
+    return this.isAdmin(userId) || this.isMember(userId);
   }
 }

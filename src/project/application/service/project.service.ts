@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import {
   CreateProjectParams,
   DeleteProjectParams,
@@ -15,11 +14,7 @@ import {
   ProjectRepositorySymbol,
 } from '@project/application/port/out/project-repository.port';
 import { Project } from '@project/domain/entity/project.entity';
-import { ProjectPolicyLogic } from '@project/domain/logic/project-policy.logic';
-
 import { ApplicationException, ErrorCode } from '@libs/exception';
-import { Cache, CacheEvict } from '@libs/decorators';
-import { RedisService } from '@libs/redis';
 
 @Injectable()
 export class ProjectService {
@@ -42,11 +37,7 @@ export class ProjectService {
     if (!project) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    if (project.adminId !== param.adminId) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
-    }
     await this.projectRepo.deleteProject(project);
-
     return project;
   }
 
@@ -55,15 +46,13 @@ export class ProjectService {
     if (!project) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    if (param.name) {
-      ProjectPolicyLogic.changeProjectName(project, param.adminId, param.name);
-    }
+    project.changeName(param.name);
 
     await this.projectRepo.updateProject(project);
     return project;
   }
 
-  async queryProject(param: QueryProjectParams): Promise<Project> {
+  async queryProjectById(param: QueryProjectParams): Promise<Project> {
     const project = await this.projectRepo.findProjectById(param.id);
     if (!project) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
@@ -95,17 +84,5 @@ export class ProjectService {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
     return project;
-  }
-
-  async isProjectOwnerByCategoryId(
-    params: ValidateOwnerByCategoryIdParams,
-  ): Promise<void> {
-    const project = await this.projectRepo.findProjectByCategoryId(params.id);
-    if (!project) {
-      throw new ApplicationException(ErrorCode.NOT_FOUND);
-    }
-    if (project.adminId !== params.reqUserId) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
-    }
   }
 }

@@ -11,6 +11,8 @@ import {
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { CacheEvict } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+import { Task } from '@project/domain/entity/task.entity';
+import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @Injectable()
 @CommandHandler(UpdateTaskCommand)
@@ -33,29 +35,34 @@ export class UpdateTaskCommandHandler
     timing: 'after',
   })
   @Transactional()
-  async execute(command: UpdateTaskCommand): Promise<any> {
+  async execute(command: UpdateTaskCommand): Promise<Task> {
     try {
-      const project = await this.projectService.queryProjectByTaskId({
-        taskId: command.id,
-      });
-
-      return await this.taskService.updateTask({
-        updateDataParams: {
-          id: command.id,
-          categoryId: command.categoryId,
-          check: command.check,
-          title: command.title,
-          taskStatus: command.status,
-          actualStartDate: command.actualStartDate,
-          actualEndDate: command.actualEndDate,
-          startDate: command.startDate,
-          endDate: command.endDate,
-        },
-        reqUserId: command.reqUserId,
-        project: project,
-      });
+      await this.authorize(command.id, command.reqUserId);
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+  private async authorize(taskId: string, reqUserId: string) {
+    const project = await this.projectService.queryProjectByTaskId({
+      taskId,
+    });
+    TaskWorkflowPolicy.canChangeStatus(project, reqUserId);
+  }
+
+  private async process(command: UpdateTaskCommand): Promise<Task> {
+    return await this.taskService.updateTask({
+      updateDataParams: {
+        id: command.id,
+        categoryId: command.categoryId,
+        check: command.check,
+        title: command.title,
+        taskStatus: command.status,
+        actualStartDate: command.actualStartDate,
+        actualEndDate: command.actualEndDate,
+        startDate: command.startDate,
+        endDate: command.endDate,
+      },
+    });
   }
 }

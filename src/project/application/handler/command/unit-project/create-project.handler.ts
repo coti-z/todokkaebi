@@ -11,6 +11,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
 
 @Injectable()
 @CommandHandler(CreateProjectCommand)
@@ -28,19 +29,23 @@ export class CreateProjectHandler
   @Transactional()
   async execute(command: CreateProjectCommand): Promise<Project> {
     try {
-      const project = await this.projectService.createProject({
-        name: command.name,
-        adminId: command.userId,
-      });
-      await this.projectMembershipService.enrollProjectMembership({
-        projectId: project.id,
-        role: MembershipRole.OWNER,
-        userId: command.userId,
-      });
-
-      return project;
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  private async process(command: CreateProjectCommand): Promise<Project> {
+    const project = await this.projectService.createProject({
+      name: command.name,
+      adminId: command.userId,
+    });
+    await this.projectMembershipService.enrollProjectMembership({
+      projectId: project.id,
+      role: MembershipRole.OWNER,
+      userId: command.userId,
+    });
+
+    return project;
   }
 }

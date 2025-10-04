@@ -2,10 +2,8 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { ProjectInvitationPresentationMapper } from '../mapper/project-invitation.presentation.mapper';
 import {
-  AcceptProjectInvitationInput,
   CreateProjectInvitationInput,
-  RejectProjectInvitationInput,
-  UpdateProjectInvitationInput,
+  UpdateProjectInvitationStatusInput,
 } from './input/project-invitation.input';
 import {
   AcceptProjectInvitationResponse,
@@ -50,8 +48,8 @@ export class ProjectInvitationResolver {
 
   @Mutation(() => UpdateProjectInvitationResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
-  async updateProjectInvitation(
-    @Args('input') input: UpdateProjectInvitationInput,
+  async updateProjectInvitationStatus(
+    @Args('input') input: UpdateProjectInvitationStatusInput,
     @TokenInfo() payload: JwtPayloadWithToken,
     @Context() gqlContext: any,
   ): Promise<UpdateProjectInvitationResponse> {
@@ -69,53 +67,6 @@ export class ProjectInvitationResolver {
         result,
       );
 
-    return ResponseManager.success(output);
-  }
-
-  @Mutation(() => AcceptProjectInvitationResponse)
-  @UseGuards(JwtAuthWithAccessTokenGuard)
-  async acceptProjectInvitation(
-    @Args('input') input: AcceptProjectInvitationInput,
-    @TokenInfo() payload: JwtPayloadWithToken,
-    @Context() gqlContext: any,
-  ): Promise<AcceptProjectInvitationResponse> {
-    const requestContext =
-      RequestContextExtractor.fromGraphQLContext(gqlContext);
-
-    const command =
-      ProjectInvitationPresentationMapper.acceptProjectInvitationInputToCommand(
-        input,
-        payload.userId,
-        requestContext,
-      );
-    const result = await this.commandBus.execute(command);
-    const output =
-      ProjectInvitationPresentationMapper.readModelToAcceptProjectInvitationOutput(
-        result,
-      );
-    return ResponseManager.success(output);
-  }
-
-  @Mutation(() => RejectProjectInvitationResponse)
-  @UseGuards(JwtAuthWithAccessTokenGuard)
-  async rejectProjectInvitation(
-    @Args('input') input: RejectProjectInvitationInput,
-    @TokenInfo() payload: JwtPayloadWithToken,
-    @Context() gqlContext: any,
-  ): Promise<RejectProjectInvitationResponse> {
-    const requestContext =
-      RequestContextExtractor.fromGraphQLContext(gqlContext);
-    const command =
-      ProjectInvitationPresentationMapper.rejectProjectInvitationInputToCommand(
-        input,
-        payload.userId,
-        requestContext,
-      );
-    const result = await this.commandBus.execute(command);
-    const output =
-      ProjectInvitationPresentationMapper.readModelToRejectProjectInvitationOutput(
-        result,
-      );
     return ResponseManager.success(output);
   }
 }
