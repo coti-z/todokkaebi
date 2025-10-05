@@ -14,6 +14,8 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { Lock, RateLimit } from '@libs/decorators';
 import { PasswordPolicy } from '@auth/domain/policy/password-policy';
+import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
+import { BcryptPasswordHasherAdapter } from '@auth/infrastructure/adapter/password-hasher.adapter';
 @Injectable()
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
@@ -25,6 +27,9 @@ export class BasicLoginHandler implements ICommandHandler {
 
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
+
+    @Inject(PASSWORD_HASHER_OUTBOUND_PORT)
+    private passwordHasher: BcryptPasswordHasherAdapter,
   ) {}
 
   @Lock({
@@ -46,7 +51,11 @@ export class BasicLoginHandler implements ICommandHandler {
     const credential = await this.userAuthService.findCredentialByEmail({
       email,
     });
-    PasswordPolicy.validateSamePassword(password, credential.passwordHash);
+    const hashedPassword = await this.passwordHasher.hash(password);
+    PasswordPolicy.validateSamePassword(
+      hashedPassword,
+      credential.passwordHash,
+    );
   }
 
   async process(command: BasicLoginCommand): Promise<Token> {

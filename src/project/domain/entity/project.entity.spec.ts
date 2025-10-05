@@ -1,5 +1,4 @@
 import { CreateProjectProps, Project } from '@project/domain/entity/project.entity';
-
 describe('project entity', () => {
   describe('constructor', () => {
     const projectData: CreateProjectProps = {

@@ -21,16 +21,16 @@ export class DeleteCategoryHandler
   implements ICommandHandler<DeleteCategoryCommand>
 {
   constructor(
+    private readonly projectService: ProjectService,
+    private readonly categoryService: CategoryService,
+
+    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
 
     private readonly redisService: RedisService,
-    private readonly projectService: ProjectService,
-    private readonly categoryService: CategoryService,
-
     private readonly projectMembershipService: ProjectMembershipService,
-
-    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
   ) {}
 
   @CacheEvict({

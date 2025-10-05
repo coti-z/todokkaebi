@@ -16,7 +16,6 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 import { CacheEvict } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
 import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
-import { Project } from '@project/domain/entity/project.entity';
 
 /**
  * 카테고리 이름 변경 핸들러
@@ -63,7 +62,6 @@ export class ChangeCategoryNameHandler
     return await this.categoryService.changeName({
       id: command.categoryId,
       name: command.name,
-      reqUserId: command.userId,
     });
   }
 }

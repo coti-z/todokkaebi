@@ -1,11 +1,10 @@
 import { v4 as uuid } from 'uuid';
-import * as bcrypt from 'bcrypt';
 import { DomainException, ErrorCode } from '@libs/exception';
 
-interface UserProps {
+export interface CreateUserProps {
   email: string;
   nickname: string;
-  password: string;
+  hashedPassword: string;
   birthday?: Date;
 }
 interface ChangeProfileArgs {
@@ -61,17 +60,14 @@ export class User {
     return this._hashedPassword;
   }
 
-  static async create(props: UserProps): Promise<User> {
+  static create(props: CreateUserProps): User {
     const now = new Date();
-    this.validatePassword(props.password);
-
-    const hashedPassword = await bcrypt.hash(props.password, 12);
 
     return new User(
       uuid(),
       props.email,
       props.nickname,
-      hashedPassword,
+      props.hashedPassword,
       now,
       now,
       props.birthday,
@@ -92,12 +88,6 @@ export class User {
     }
     if (nickname.length < 2 || nickname.length > 50) {
       throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
-    }
-  }
-
-  private static validatePassword(password: string): void {
-    if (password.length < 4) {
-      throw new DomainException(ErrorCode.INVALID_PASSWORD_FORMAT);
     }
   }
 

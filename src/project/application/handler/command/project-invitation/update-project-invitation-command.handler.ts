@@ -72,7 +72,6 @@ export class UpdateProjectInvitationCommandHandler
     const projectInvitation =
       await this.projectInvitationService.updateProjectInvitation({
         id: command.id,
-        reqUserId: command.reqUserId,
         status: command.status,
       });
 

@@ -1,4 +1,3 @@
-import { Lock } from '@libs/decorators';
 import { ApplicationException, ErrorCode } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
@@ -9,12 +8,19 @@ import {
   UserRepositorySymbol,
 } from '@user/application/port/out/user-repository.port';
 import { User } from '@user/domain/entity/user.entity';
+import {
+  PasswordHasherOutboundPort,
+  PASSWORD_HASHER_OUTBOUND_PORT,
+} from '@auth/application/port/out/password-hasher.port';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(UserRepositorySymbol)
     private readonly userRepository: IUserRepository,
+
+    @Inject(PASSWORD_HASHER_OUTBOUND_PORT)
+    private readonly passwordHasher: PasswordHasherOutboundPort,
   ) {}
 
   async createUser(param: CreateUserParam): Promise<User> {
@@ -24,13 +30,19 @@ export class UserService {
     if (user) {
       throw new ApplicationException(ErrorCode.USER_ALREADY_EXISTS);
     }
-    const newUser = await User.create({
+
+    // 1. 비밀번호 해싱 (Infrastructure 계층 사용)
+    const hashedPassword = await this.passwordHasher.hash(param.password);
+
+    // 2. 도메인 엔티티 생성 (순수)
+    const newUser = User.create({
       nickname: param.nickname,
       email: param.email,
-      password: param.password,
+      hashedPassword: hashedPassword,
       birthday: param.birthday,
     });
 
+    // 3. 저장
     await this.userRepository.createUser(newUser);
     return newUser;
   }

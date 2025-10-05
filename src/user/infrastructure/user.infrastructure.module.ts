@@ -8,6 +8,8 @@ import {
 } from '@user/infrastructure/adapter/grpc/options/user-grpc-client.options';
 import { DatabaseModule } from '@libs/database';
 import { AuthMicroservice } from '@libs/grpc';
+import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
+import { BcryptPasswordHasherAdapter } from '@user/infrastructure/adapter/password-hasher.adapter';
 
 @Module({
   imports: [
@@ -25,6 +27,10 @@ import { AuthMicroservice } from '@libs/grpc';
     ]),
   ],
   providers: [
+    {
+      provide: PASSWORD_HASHER_OUTBOUND_PORT,
+      useClass: BcryptPasswordHasherAdapter,
+    },
     {
       provide: UserRepositorySymbol,
       useClass: UserRepositoryImpl,

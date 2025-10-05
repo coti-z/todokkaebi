@@ -8,6 +8,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 import { JwtAuthWithRefreshTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-refresh-token.guard';
 import { JwtTokenModule } from '@libs/jwt';
+import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
+import { BcryptPasswordHasherAdapter } from '@auth/infrastructure/adapter/password-hasher.adapter';
 
 @Module({
   imports: [DatabaseModule, CqrsModule, JwtTokenModule],
@@ -20,6 +22,10 @@ import { JwtTokenModule } from '@libs/jwt';
       provide: TokenRepositorySymbol,
       useClass: TokenRepositoryImpl,
     },
+    {
+      provide: PASSWORD_HASHER_OUTBOUND_PORT,
+      useClass: BcryptPasswordHasherAdapter,
+    },
 
     JwtAuthWithAccessTokenGuard,
     JwtAuthWithRefreshTokenGuard,
@@ -27,6 +33,7 @@ import { JwtTokenModule } from '@libs/jwt';
   exports: [
     UserCredentialRepositorySymbol,
     TokenRepositorySymbol,
+    PASSWORD_HASHER_OUTBOUND_PORT,
     JwtAuthWithAccessTokenGuard,
     JwtAuthWithRefreshTokenGuard,
   ],
