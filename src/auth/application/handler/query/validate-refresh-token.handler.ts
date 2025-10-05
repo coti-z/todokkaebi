@@ -23,7 +23,7 @@ export class ValidateRefreshTokenHandler implements IQueryHandler {
   @Transactional()
   async execute(query: ValidateRefreshTokenQuery): Promise<any> {
     try {
-      await this.tokenService.isRevokeRefreshToken(query.refreshToken);
+      await this.tokenService.validateRefreshTokenNotRevoke(query.refreshToken);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, query.context);
     }

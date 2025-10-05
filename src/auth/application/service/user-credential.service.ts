@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ValidateUserParams } from '@auth/application/dto/params/validate-user.param';
 import { UpdateCredentialParam } from '@auth/application/dto/params/update-credential.param';
 import {
+  FindUserCredentialByEmailArgs,
   IUserCredentialRepository,
   UserCredentialRepositorySymbol,
 } from '@auth/application/port/out/user-credential-repository.port';
@@ -9,7 +10,7 @@ import { CreateUserCredentialParam } from '@auth/application/dto/params/create-u
 import { UserCredential } from '@auth/domain/entity/user-credential.entity';
 import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
 import { ApplicationException, ErrorCode } from '@libs/exception';
-import { PasswordPolicy } from '@auth/domain/policy/password-policy';
+import { FindCredentialByUserIdParam } from '@auth/application/dto/params/find-token-by-userid.param';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.
@@ -91,28 +92,16 @@ export class UserCredentialService {
     });
   }
 
-  /**
-   * 사용자의 패스워드를 비교하여 검증합니다.
-   *
-   * @param params - 검증에 필요한 정보를 담은 파라미터
-   * @throws {ErrorCode.UNAUTHORIZED} 자격정보가 존재하지 않거나 일치하지 않는 경우
-   */
-
-  async validatePassword(params: ValidateUserParams): Promise<UserCredential> {
-    // 1. DB에서 유저 도메인을 가져오고
+  async findCredentialByEmail(
+    param: FindCredentialByUserIdParam,
+  ): Promise<UserCredential> {
     const userCredential =
       await this.userCredentialRepository.findUserCredentialsByEmail({
-        email: params.email,
+        email: param.email,
       });
-
     if (!userCredential) {
-      throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+      throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-
-    await PasswordPolicy.validateSamePassword(
-      params.password,
-      userCredential.passwordHash,
-    );
 
     return userCredential;
   }

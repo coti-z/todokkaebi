@@ -11,8 +11,6 @@ import {
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { TokenRepositoryImpl } from '@auth/infrastructure/persistence/token.repository';
-import { TokenRepositorySymbol } from '@auth/application/port/out/token-repository.port';
 import { TokenService } from '@auth/application/service/token.service';
 import { ValidateAccessTokenHandler } from '@auth/application/handler/query/validate-access-token.handler';
 import { JwtModule } from '@nestjs/jwt';

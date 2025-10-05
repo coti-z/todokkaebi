@@ -13,6 +13,7 @@ import {
 } from '@libs/database';
 import { Inject, Injectable } from '@nestjs/common';
 import { Lock, RateLimit } from '@libs/decorators';
+import { PasswordPolicy } from '@auth/domain/policy/password-policy';
 @Injectable()
 @CommandHandler(BasicLoginCommand)
 export class BasicLoginHandler implements ICommandHandler {
@@ -34,22 +35,32 @@ export class BasicLoginHandler implements ICommandHandler {
   @Transactional()
   async execute(command: BasicLoginCommand): Promise<Token> {
     try {
-      const credential = await this.userAuthService.validatePassword({
-        email: command.email,
-        password: command.password,
-      });
-
-      const pairToken = await this.tokenByJwtService.generatePairToken({
-        userId: credential.userId,
-      });
-      return this.tokenService.storeToken({
-        accessToken: pairToken.accessToken,
-        refreshToken: pairToken.refreshToken,
-        refreshTokenExpiresAt: pairToken.refreshTokenExpires,
-        userId: credential.userId,
-      });
+      await this.authorize(command.email, command.password);
+      return await this.process(command);
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
+  }
+
+  async authorize(email: string, password: string): Promise<void> {
+    const credential = await this.userAuthService.findCredentialByEmail({
+      email,
+    });
+    PasswordPolicy.validateSamePassword(password, credential.passwordHash);
+  }
+
+  async process(command: BasicLoginCommand): Promise<Token> {
+    const credential = await this.userAuthService.findCredentialByEmail({
+      email: command.email,
+    });
+    const pairToken = await this.tokenByJwtService.generatePairToken({
+      userId: credential.userId,
+    });
+    return this.tokenService.storeToken({
+      accessToken: pairToken.accessToken,
+      refreshToken: pairToken.refreshToken,
+      refreshTokenExpiresAt: pairToken.refreshTokenExpires,
+      userId: credential.userId,
+    });
   }
 }

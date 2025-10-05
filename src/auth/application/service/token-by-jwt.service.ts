@@ -74,10 +74,6 @@ export class TokenByJWTService {
     };
   }
 
-  decodeToken(token: string): JwtDecodedToken {
-    return this.jwtService.decode(token);
-  }
-
   private getExpirationTime(tokenType: TokenEnum) {
     return this.configService.get<string>(
       tokenType === TokenEnum.REFRESH

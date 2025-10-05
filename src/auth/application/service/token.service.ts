@@ -142,31 +142,7 @@ export class TokenService implements TokenValidationInboundPort {
     }
   }
 
-  /**
-   * 엑세스 토큰이 유효한지 확인합니다.
-   *
-   * @param {string} accessToken
-   * @memberof TokenService
-   */
-  async isRevokeAccessToken(accessToken: string) {
-    const token = await this.tokenRepository.findTokenByAccessToken({
-      accessToken,
-    });
-
-    if (!token) {
-      throw new ApplicationException(ErrorCode.INVALID_TOKEN);
-    }
-
-    if (token.isRevoked) {
-      throw new ApplicationException(ErrorCode.TOKEN_EXPIRED);
-    }
-
-    if (token.isExpired()) {
-      throw new ApplicationException(ErrorCode.TOKEN_EXPIRED);
-    }
-  }
-
-  async isRevokeRefreshToken(refreshToken: string) {
+  async validateRefreshTokenNotRevoke(refreshToken: string) {
     const token = await this.tokenRepository.findTokenByRefreshToken({
       refreshToken,
     });
