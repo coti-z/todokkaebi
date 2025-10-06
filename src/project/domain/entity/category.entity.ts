@@ -73,6 +73,9 @@ export class Category extends BaseEntity<CategoryProps> {
   }
 
   addTask(task: Task): void {
+    if (!task) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
     this._tasks.push(task);
     this.updateTimestamp();
   }
@@ -87,10 +90,5 @@ export class Category extends BaseEntity<CategoryProps> {
       this._tasks.splice(index, 1);
       this.updateTimestamp();
     }
-  }
-
-  updateTasks(tasks: Task[]): void {
-    this._tasks.splice(0, this._tasks.length, ...tasks);
-    this.updateTimestamp();
   }
 }

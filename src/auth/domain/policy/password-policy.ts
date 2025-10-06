@@ -1,14 +1,14 @@
 import { DomainException, ErrorCode } from '@libs/exception';
 
 export class PasswordPolicy {
-  static async validateSamePassword(
-    plainPassword: string,
+  static validateSamePassword(
+    requestHashedPassword: string,
     hashedPassword: string,
   ) {
-    if (!plainPassword || !hashedPassword) {
-      throw new DomainException(ErrorCode.UNAUTHORIZED);
+    if (!requestHashedPassword || !hashedPassword) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
     }
-    if (plainPassword !== hashedPassword) {
+    if (requestHashedPassword !== hashedPassword) {
       throw new DomainException(ErrorCode.UNAUTHORIZED);
     }
   }

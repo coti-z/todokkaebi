@@ -10,9 +10,9 @@ import {
   ITaskRepository,
   TaskRepositorySymbol,
 } from '@project/application/port/out/task-repository.port';
-import { ProjectService } from '@project/application/service/project.service';
 import { TaskService } from '@project/application/service/task.service';
 import { Task } from '@project/domain/entity/task.entity';
+import { TaskState } from '@project/domain/value-objects/task-states.vo';
 
 describe('TaskService', () => {
   let service: TaskService;
@@ -77,11 +77,13 @@ describe('TaskService', () => {
       });
 
       const params: UpdateTaskParams = {
-        updateDataParams: {
-          id: task.id,
-          title: 'Updated Title',
-          check: true,
-        },
+        id: task.id,
+        title: 'Updated Title',
+        check: true,
+        categoryId: 'category-456',
+        taskStatus: TaskState.PENDING,
+        endDate: new Date('2025-02-05'),
+        startDate: new Date('2025-02-01'),
       };
 
       taskRepository.queryTaskByTaskId.mockResolvedValue(task);
@@ -91,8 +93,8 @@ describe('TaskService', () => {
       const result = await service.updateTask(params);
 
       // Assert
-      expect(result.title).toBe(params.updateDataParams.title);
-      expect(result.check).toBe(params.updateDataParams.check);
+      expect(result.title).toBe(params.title);
+      expect(result.check).toBe(params.check);
     });
 
     it('should validate dates when updating startDate or endDate', async () => {
@@ -105,11 +107,9 @@ describe('TaskService', () => {
       });
 
       const params: UpdateTaskParams = {
-        updateDataParams: {
-          id: task.id,
-          startDate: new Date('2025-02-01'),
-          endDate: new Date('2025-01-15'),
-        },
+        id: task.id,
+        startDate: new Date('2025-02-01'),
+        endDate: new Date('2025-01-15'),
       };
       taskRepository.queryTaskByTaskId.mockResolvedValue(null);
       try {
@@ -173,13 +173,15 @@ describe('TaskService', () => {
         Task.create({
           categoryId: 'category-123',
           title: 'Task 2',
-          endDate: new Date(),
-          startDate: new Date(),
+          endDate: new Date('2025-03-01'),
+          startDate: new Date('2025-02-01'),
         }),
       ];
       const params: QueryTasksByCategoryIdParams = {
         categoryId: 'category-123',
       };
+
+      taskRepository.queryTaskByCategoryId.mockResolvedValue(tasks);
 
       // Act
       const result = await service.queryTasksByCategoryId(params);
@@ -202,6 +204,37 @@ describe('TaskService', () => {
 
       // Assert
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('deleteTask', () => {
+    it('should delete task with invalid parameter', () => {
+      const taskId = 'task-id-123';
+      const task = Task.create({
+        categoryId: 'category-id-123',
+        endDate: new Date(),
+        startDate: new Date(),
+        title: 'test title',
+      });
+
+      taskRepository.queryTaskByTaskId.mockResolvedValue(task);
+      taskRepository.deleteTaskById.mockResolvedValue(undefined);
+
+      expect(async () => await service.deleteTask({ id: taskId })).not.toThrow();
+    });
+
+    it('should throw ApplicationException(NOT_FOUND) when task is null', async () => {
+      const taskId = null as any;
+      taskRepository.queryTaskByTaskId.mockResolvedValue(taskId);
+
+      try {
+        await service.deleteTask({
+          id: taskId,
+        });
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApplicationException);
+        expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
+      }
     });
   });
 });

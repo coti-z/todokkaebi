@@ -1,3 +1,4 @@
+import { DomainException, ErrorCode } from '@libs/exception';
 import {
   CreateProjectInvitationProps,
   ProjectInvitation,
@@ -21,8 +22,29 @@ describe('ProjectInvitation Entity', () => {
       expect(projectInvitation.status).toBe(InvitationStatus.PENDING);
     });
 
-    it('should throw error with invalid parameters', () => {
-      expect(() => ProjectInvitation.create(null as any)).toThrow();
+    it('should throw DomainException when props is null', () => {
+      const projectInvitationData = null as any;
+      try {
+        ProjectInvitation.create(projectInvitationData);
+      } catch (error) {
+        expect(error).toBeInstanceOf(DomainException);
+        expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+      }
+    });
+
+    it('should throw DomainException when inviteeUserId is same with inviterUserId', () => {
+      const projectInvitationData: CreateProjectInvitationProps = {
+        inviteeUserId: '1234-1234-1234-1234',
+        inviterUserId: '1234-1234-1234-1234',
+        projectId: '1111-1111-1111-1111',
+      };
+
+      try {
+        ProjectInvitation.create(projectInvitationData);
+      } catch (error) {
+        expect(error).toBeInstanceOf(DomainException);
+        expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+      }
     });
   });
   describe('method', () => {
@@ -36,9 +58,22 @@ describe('ProjectInvitation Entity', () => {
       projectInvitation = ProjectInvitation.create(projectInvitationData);
     });
 
-    it('should change status', () => {
-      projectInvitation.changeInvitationStatus(InvitationStatus.ACCEPTED);
-      expect(projectInvitation.status).toBe(InvitationStatus.ACCEPTED);
+    describe('changeInvitationStatus', () => {
+      it('should change status', () => {
+        projectInvitation.changeInvitationStatus(InvitationStatus.ACCEPTED);
+        expect(projectInvitation.status).toBe(InvitationStatus.ACCEPTED);
+      });
+
+      it('should throw DomainException when change status is null', () => {
+        const status = null as any;
+
+        try {
+          projectInvitation.changeInvitationStatus(status);
+        } catch (error) {
+          expect(error).toBeInstanceOf(DomainException);
+          expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+        }
+      });
     });
   });
 });

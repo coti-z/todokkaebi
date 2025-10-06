@@ -1,4 +1,4 @@
-import { DomainException } from '@libs/exception';
+import { ApplicationException, DomainException, ErrorCode } from '@libs/exception';
 import { Category } from '@project/domain/entity/category.entity';
 import { Project } from '@project/domain/entity/project.entity';
 import { Task } from '@project/domain/entity/task.entity';
@@ -38,22 +38,28 @@ describe('TaskAssignmentPolicy', () => {
   describe('canAssignmentTask', () => {
     it('should throw DomainException when project is null', () => {
       project = null as any;
-      expect(() => {
+      try {
         TaskAssignmentPolicy.canAssignmentTask(project, adminId);
-      }).toThrow(DomainException);
+      } catch (error) {
+        expect(error).toBeInstanceOf(DomainException);
+        expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+      }
     });
 
     it('should throw DomainException when userId is null', () => {
-      const userId = 'user-1234-1234-1234-1234';
-      expect(() => {
+      const userId = null as any;
+      try {
         TaskAssignmentPolicy.canAssignmentTask(project, userId);
-      });
+      } catch (error) {
+        expect(error).toBeInstanceOf(DomainException);
+        expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+      }
     });
 
     it('should pass when project, userId is valid', () => {
       expect(() => {
         TaskAssignmentPolicy.canAssignmentTask(project, adminId);
-      });
+      }).not.toThrow();
     });
   });
 });

@@ -9,8 +9,6 @@ export type QueryTaskByIdParams = Pick<Task, 'id'>;
 
 export type QueryTasksByCategoryIdParams = Pick<Task, 'categoryId'>;
 
-export type UpdateTaskParams = {
-  updateDataParams: Partial<TaskMutableProps> & Pick<Task, 'id'>;
-};
+export type UpdateTaskParams = Partial<TaskMutableProps> & Pick<Task, 'id'>;
 
 export type DeleteTaskParams = Pick<Task, 'id'>;

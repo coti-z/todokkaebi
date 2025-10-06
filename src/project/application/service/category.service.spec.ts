@@ -141,7 +141,7 @@ describe('CategoryService', () => {
         await service.changeName(params);
       } catch (error) {
         expect(error).toBeInstanceOf(ApplicationException);
-        expect(error.ErrorCode).toBe(ErrorCode.NOT_FOUND);
+        expect(error.errorCode).toBe(ErrorCode.NOT_FOUND);
       }
     });
   });

@@ -22,6 +22,28 @@ describe('CategoryOrganizationPolicy', () => {
 
     project.addCategory(category);
   });
+  describe('canQueryCategory', () => {
+    it('should throw DomainException when project is null', () => {
+      expect(() => CategoryOrganizationPolicy.canQueryCategory(null as any, 'user-123')).toThrow(
+        DomainException,
+      );
+    });
+
+    it('should throw DomainException when userId is null', () => {
+      const project = {} as Project;
+
+      expect(() => CategoryOrganizationPolicy.canQueryCategory(project, null as any)).toThrow(
+        DomainException,
+      );
+    });
+
+    it('should pass when valid project and userId provided', () => {
+      expect(() =>
+        CategoryOrganizationPolicy.canQueryCategory(project, requestUserId),
+      ).not.toThrow();
+    });
+  });
+
   describe('canDeleteCategory', () => {
     it('should throw DomainException when project is null', () => {
       expect(() => CategoryOrganizationPolicy.canDeleteCategory(null as any, 'user-123')).toThrow(

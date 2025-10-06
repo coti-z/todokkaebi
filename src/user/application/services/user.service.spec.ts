@@ -131,7 +131,7 @@ describe('UserService', () => {
       const param = new UpdateUserParam(
         existingUser.id,
         'new@example.com',
-        'newNick',
+        'newnick',
         new Date('1995-05-05'),
       );
 
@@ -165,7 +165,7 @@ describe('UserService', () => {
       const result = await service.updateUser(param);
 
       // Assert
-      expect(result.nickname).toBe('newNick');
+      expect(result.nickname).toBe(param.nickname);
       expect(result.email).toBe(originalEmail);
       expect(result.birthday).toBe(originalBirthday);
     });

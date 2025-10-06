@@ -15,6 +15,7 @@ import {
 import { Task } from '@project/domain/entity/task.entity';
 
 import { ApplicationException, ErrorCode } from '@libs/exception';
+import { TaskState } from '@project/domain/value-objects/task-states.vo';
 
 @Injectable()
 export class TaskService {
@@ -35,18 +36,49 @@ export class TaskService {
   }
 
   async updateTask(params: UpdateTaskParams): Promise<Task> {
-    const task = await this.taskRepo.queryTaskByTaskId(
-      params.updateDataParams.id,
-    );
+    const task = await this.taskRepo.queryTaskByTaskId(params.id);
     if (!task) {
       throw new ApplicationException(ErrorCode.NOT_FOUND);
     }
-    task.update({
-      title: params.updateDataParams.title,
-      categoryId: params.updateDataParams.categoryId,
-      check: params.updateDataParams.check,
-      taskStatus: params.updateDataParams.taskStatus,
-    });
+
+    if (params.categoryId) {
+      task.changeCategory(params.categoryId);
+    }
+
+    if (params.taskStatus === TaskState.COMPLETE) {
+      task.markAsCompleted();
+    }
+
+    if (params.taskStatus === TaskState.IN_PROGRESS) {
+      task.markAsInProgress();
+    }
+
+    if (params.taskStatus === TaskState.PENDING) {
+      task.markAsPending();
+    }
+
+    if (params.title) {
+      task.changeTitle(params.title);
+    }
+
+    if (params.startDate) {
+      task.reschedule(params.startDate, task.endDate);
+    }
+
+    if (params.endDate) {
+      task.reschedule(task.startDate, params.endDate);
+    }
+
+    if (params.check === true) {
+      task.markAsCompleted();
+    }
+    if (params.check === false) {
+      if (task.startDate > new Date()) {
+        task.markAsPending();
+      } else {
+        task.markAsInProgress();
+      }
+    }
 
     await this.taskRepo.updateTask(task);
     return task;

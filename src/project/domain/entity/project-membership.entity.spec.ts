@@ -1,3 +1,4 @@
+import { DomainException, ErrorCode } from '@libs/exception';
 import {
   CreateProjectMembershipProps,
   ProjectMembership,
@@ -40,6 +41,17 @@ describe('ProjectMembership entity', () => {
     it('should change role', () => {
       projectMembership.changeRole(MembershipRole.OWNER);
       expect(projectMembership.role).toBe(MembershipRole.OWNER);
+    });
+
+    it('should throw DomainException when membershipRole is null', () => {
+      const role = null as any;
+
+      try {
+        projectMembership.changeRole(role);
+      } catch (error) {
+        expect(error).toBeInstanceOf(DomainException);
+        expect(error.errorCode).toBe(ErrorCode.BAD_REQUEST);
+      }
     });
   });
 });

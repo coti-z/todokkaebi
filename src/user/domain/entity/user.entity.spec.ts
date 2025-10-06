@@ -9,7 +9,7 @@ describe('user entity', () => {
         hashedPassword: 'hashed_password',
       };
 
-      const user = await User.create(userPropsDate);
+      const user = User.create(userPropsDate);
 
       expect(user.email).toBe(userPropsDate.email);
       expect(user.nickname).toBe(userPropsDate.nickname);

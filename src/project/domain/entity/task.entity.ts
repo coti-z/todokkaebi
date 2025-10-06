@@ -11,8 +11,6 @@ export type TaskMutableProps = {
   taskStatus: TaskState;
   startDate: Date;
   endDate: Date;
-  actualStartDate: Date;
-  actualEndDate?: Date;
 };
 
 /**
@@ -54,8 +52,6 @@ export class Task extends BaseEntity<TaskProps> {
     this._taskStatus = props.taskStatus;
     this._startDate = props.startDate;
     this._endDate = props.endDate;
-    this._actualEndDate = props.actualEndDate;
-    this._actualStartDate = props.actualStartDate;
   }
 
   // ----- GETTERS -----
@@ -106,7 +102,7 @@ export class Task extends BaseEntity<TaskProps> {
     const defaultCheck = false;
 
     // 필요하다면, startDate/endDate Validation 등을 여기에 추가
-    Task.validateDates(props.startDate, props.endDate);
+    this.validateDates(props.startDate, props.endDate);
 
     return new Task({
       id: id,
@@ -116,50 +112,45 @@ export class Task extends BaseEntity<TaskProps> {
       taskStatus: defaultStatus,
       startDate: props.startDate,
       endDate: props.endDate,
-      actualStartDate: props.startDate, // 실제 시작일이 곧 계획된 시작일과 동일하다는 가정
-      actualEndDate: undefined,
       createdAt: now,
       updatedAt: now,
     });
   }
 
-  public update(props: Partial<TaskMutableProps>): void {
-    if (props.categoryId) this._categoryId = props.categoryId;
-    if (props.actualEndDate) this._actualEndDate = props.actualEndDate;
-    if (props.actualStartDate) this._actualStartDate = props.actualStartDate;
-    if (props.endDate) this._endDate = props.endDate;
-    if (props.startDate) this._startDate = props.startDate;
-    if (props.taskStatus) this._taskStatus = props.taskStatus;
-    if (props.title) this._title = props.title;
-    if (props.check) this._check = props.check;
-
-    if (props.startDate || props.endDate) {
-      Task.validateDates(this._startDate, this._endDate);
-    }
+  // ----- DOMAIN METHODS -----
+  markAsPending(): void {
+    this._taskStatus = TaskState.PENDING;
+    this.updateTimestamp();
+  }
+  markAsCompleted(): void {
+    this._check = true;
+    this._taskStatus = TaskState.COMPLETE;
+    this._actualEndDate = new Date();
     this.updateTimestamp();
   }
 
-  /**
-   * 이미 존재하는 Task 엔티티를 복원한다(Reconstitution).
-   * @param props TaskProps
-   */
-  static reconstitute(props: TaskProps): Task {
-    // 복원 시에도 유효성 검증을 해주면 좋다.
-    Task.validateDates(props.startDate, props.endDate);
+  markAsInProgress(): void {
+    this._check = true;
+    this._taskStatus = TaskState.IN_PROGRESS;
+    this._actualStartDate = new Date();
+    this.updateTimestamp();
+  }
 
-    return new Task({
-      actualStartDate: props.actualStartDate,
-      categoryId: props.categoryId,
-      check: props.check,
-      createdAt: props.createdAt,
-      endDate: props.endDate,
-      id: props.id,
-      startDate: props.startDate,
-      taskStatus: props.taskStatus,
-      title: props.title,
-      updatedAt: props.updatedAt,
-      actualEndDate: props.actualEndDate,
-    });
+  changeCategory(categoryId: string): void {
+    this._categoryId = categoryId;
+    this.updateTimestamp();
+  }
+
+  changeTitle(title: string): void {
+    this._title = title;
+    this.updateTimestamp();
+  }
+
+  reschedule(startDate: Date, endDate: Date): void {
+    Task.validateDates(startDate, endDate);
+    this._startDate = startDate;
+    this._endDate = endDate;
+    this.updateTimestamp();
   }
 
   // ----- PRIVATE METHODS -----
