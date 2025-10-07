@@ -1,0 +1,20 @@
+---
+name: ✨ Feature Request
+about: Suggest a new feature
+title: '[FEATURE] '
+labels: enhancement
+assignees: ''
+body:
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: "Describe the solution you'd like"
+      description: 'A clear and concise description of what you want to happen.'
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: 'use case for changing the behavior?'
+      description: 'Describe the motivation or the concrete use case'
+---
