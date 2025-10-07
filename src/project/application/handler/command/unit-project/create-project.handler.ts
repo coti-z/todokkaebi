@@ -1,17 +1,19 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ProjectService } from '@project/application/service/project.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { Project } from '@project/domain/entity/project.entity';
-import { CreateProjectCommand } from '@project/application/port/in/command/unti-project/create-project.command';
-import { ErrorHandlingStrategy } from '@libs/exception';
-import { ProjectMembershipService } from '@project/application/service/project-membership.service';
-import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { CreateProjectCommand } from '@project/application/port/in/command/unti-project/create-project.command';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
+import { ProjectService } from '@project/application/service/project.service';
+import { Project } from '@project/domain/entity/project.entity';
 import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
+import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 
 @Injectable()
 @CommandHandler(CreateProjectCommand)

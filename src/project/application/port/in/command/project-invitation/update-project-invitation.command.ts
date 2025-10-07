@@ -1,5 +1,7 @@
-import { RequestContext } from '@libs/exception';
 import type { ICommand } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
+
 import type { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
 
 export class UpdateProjectInvitationCommand implements ICommand {

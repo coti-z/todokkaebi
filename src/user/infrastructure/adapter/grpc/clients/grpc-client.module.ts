@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { USER_GRPC_CLIENT_SYMBOL } from '@user/infrastructure/adapter/grpc/options/user-grpc-client.options';
 
 @Module({

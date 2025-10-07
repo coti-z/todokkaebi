@@ -1,32 +1,69 @@
 {
+  // =============
+  // typescript
+  // =============
   "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
   "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.suggest.paths": true,
-  "window.zoomLevel": 0,
-  "jest.runAllTestsFirst": false,
-  "jest.autoEnable": false,
-  "jest.runMode": "on-demand",
+  "typescript.preferences.quoteStyle": "single",
+
+  // =============
+  // editor
+  // =============
+
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // =============
+  // ESLint 자동 수정
+  // =============
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["typescript"],
+
+  // =============
+  // formater
+  // =============
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  // prisma 설정
   "[prisma]": {
-  "editor.defaultFormatter": "Prisma.prisma"
+    "editor.defaultFormatter": "Prisma.prisma"
   },
-  "jest.jestCommandLine": "npm run test:unit --",
-  "jest.runMode.config": {
-    "testNamePattern": "",
-    "testPathPattern": ""
-  },
+  // Jest 설정
+  "jest.enable": true,
+  "jest.runMode": "on-demand",
+
   "jest.virtualFolders": [
     {
       "name": "unit",
       "rootPath": ".",
-      "jestCommandLine": "npm run test:unit --",
-      "testNamePattern": "",
+      "jestCommandLine": "npm run test:unit",
       "testPathPattern": ".*\\.spec\\.ts$"
     },
     {
       "name": "e2e",
       "rootPath": ".",
-      "jestCommandLine": "npm run test:e2e --",
-      "testNamePattern": "",
+      "jestCommandLine": "npm run test:e2e",
       "testPathPattern": ".*\\.e2e-spec\\.ts$"
     }
   ]

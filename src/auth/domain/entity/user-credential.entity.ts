@@ -23,19 +23,19 @@ export class UserCredential {
     private _updatedAt: Date,
   ) {}
 
-  get email() {
+  get email(): string {
     return this._email;
   }
 
-  get passwordHash() {
+  get passwordHash(): string {
     return this._passwordHash;
   }
 
-  get createdAt() {
+  get createdAt(): Date {
     return this._createdAt;
   }
 
-  get updatedAt() {
+  get updatedAt(): Date {
     return this._updatedAt;
   }
 

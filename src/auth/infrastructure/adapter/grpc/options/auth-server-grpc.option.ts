@@ -1,6 +1,8 @@
-import { AUTH_PACKAGE_NAME } from '@libs/grpc';
-import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+
+import { GrpcOptions, Transport } from '@nestjs/microservices';
+
+import { AUTH_PACKAGE_NAME } from '@libs/grpc';
 
 export const authGrpcServerOptions: GrpcOptions = {
   transport: Transport.GRPC,

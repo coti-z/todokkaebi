@@ -1,20 +1,21 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
-import { ErrorHandlingStrategy } from '@libs/exception';
-import { TokenService } from '@auth/application/service/token.service';
-import { Token } from '@auth/domain/entity/token.entity';
-import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { Inject, Injectable } from '@nestjs/common';
-import { Lock, RateLimit } from '@libs/decorators';
-import { PasswordPolicy } from '@auth/domain/policy/password-policy';
+import { Lock } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { BasicLoginCommand } from '@auth/application/port/in/commands/basic-login.command';
 import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
+import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import { TokenService } from '@auth/application/service/token.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
+import { Token } from '@auth/domain/entity/token.entity';
+import { PasswordPolicy } from '@auth/domain/policy/password-policy';
 import { BcryptPasswordHasherAdapter } from '@auth/infrastructure/adapter/password-hasher.adapter';
 @Injectable()
 @CommandHandler(BasicLoginCommand)
@@ -51,11 +52,11 @@ export class BasicLoginHandler implements ICommandHandler {
     const credential = await this.userAuthService.findCredentialByEmail({
       email,
     });
-    const hashedPassword = await this.passwordHasher.hash(password);
-    PasswordPolicy.validateSamePassword(
-      hashedPassword,
+    const result = await this.passwordHasher.compare(
+      password,
       credential.passwordHash,
     );
+    PasswordPolicy.validateSamePassword(result);
   }
 
   async process(command: BasicLoginCommand): Promise<Token> {

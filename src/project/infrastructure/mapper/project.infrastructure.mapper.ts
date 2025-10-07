@@ -1,3 +1,4 @@
+import { Project } from '@project/domain/entity/project.entity';
 import {
   CategoryInfraMapper,
   CategoryRecord,
@@ -10,7 +11,6 @@ import {
   ProjectMembershipInfraMapper,
   ProjectMembershipRecord,
 } from '@project/infrastructure/mapper/project-membership.infrastructure';
-import { Project } from '@project/domain/entity/project.entity';
 
 export interface ProjectRecord {
   id: string;

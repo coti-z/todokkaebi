@@ -1,5 +1,6 @@
-import { RequestContext } from '@libs/exception';
 import { IQuery } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
 
 export class CategoryByIdQuery implements IQuery {
   constructor(

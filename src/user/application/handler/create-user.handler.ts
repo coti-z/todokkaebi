@@ -1,17 +1,19 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Injectable } from '@nestjs/common';
-import { UserService } from '@user/application/services/user.service';
-import { User } from '@user/domain/entity/user.entity';
-import { CreateUserCommand } from '@user/application/port/in/create-user.command';
-import { CreateUserParam } from '@user/application/dto/param/create-user.param';
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
-import { Lock } from '@libs/decorators';
+
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
+
+import { CreateUserParam } from '@user/application/dto/param/create-user.param';
+import { CreateUserCommand } from '@user/application/port/in/create-user.command';
+import { UserService } from '@user/application/services/user.service';
+import { User } from '@user/domain/entity/user.entity';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)

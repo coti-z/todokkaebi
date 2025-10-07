@@ -1,16 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Project } from '@project/domain/entity/project.entity';
-import { ProjectService } from '@project/application/service/project.service';
-import { UpdateProjectCommand } from '@project/application/port/in/command/unti-project/update-project.command';
-import { ErrorHandlingStrategy } from '@libs/exception';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
 import { CacheEvict } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisService } from '@libs/redis';
+
+import { UpdateProjectCommand } from '@project/application/port/in/command/unti-project/update-project.command';
+import { ProjectService } from '@project/application/service/project.service';
+import { Project } from '@project/domain/entity/project.entity';
 import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
 
 @Injectable()

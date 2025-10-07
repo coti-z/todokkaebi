@@ -1,15 +1,16 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { BasicLogoutCommand } from '@auth/application/port/in/commands/basic-logout.command';
-import { ErrorHandlingStrategy } from '@libs/exception';
-import { TokenService } from '@auth/application/service/token.service';
-import { Token } from '@auth/domain/entity/token.entity';
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { Inject, Injectable } from '@nestjs/common';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { BasicLogoutCommand } from '@auth/application/port/in/commands/basic-logout.command';
+import { TokenService } from '@auth/application/service/token.service';
+import { Token } from '@auth/domain/entity/token.entity';
 
 @Injectable()
 @CommandHandler(BasicLogoutCommand)

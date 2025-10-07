@@ -18,66 +18,27 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@user/*": [
-        "src/user/*"
-      ],
-      "@auth/*": [
-        "src/auth/*"
-      ],
-      "@project/*": [
-        "src/project/*"
-      ],
-      "@libs/jwt": [
-        "libs/jwt/src"
-      ],
-      "@libs/exception": [
-        "libs/exception/src"
-      ],
-      "@libs/logger": [
-        "libs/logger/src"
-      ],
-      "@libs/slack": [
-        "libs/slack/src"
-      ],
-      "@libs/filter": [
-        "libs/filter/src"
-      ],
-      "@libs/interceptor": [
-        "libs/interceptor/src"
-      ],
-      "@libs/database": [
-        "libs/database/src"
-      ],
-      "@libs/response": [
-        "libs/response/src"
-      ],
-      "@libs/common": [
-        "libs/common/src"
-      ],
-      "@libs/test": [
-        "libs/test/src"
-      ],
-      "@libs/grpc": [
-        "libs/grpc/src"
-      ],
-      "@libs/token": [
-        "libs/token/src"
-      ],
-      "@libs/token/*": [
-        "libs/token/src/*"
-      ],
-      "@libs/redis": [
-        "libs/redis/src"
-      ],
-      "@libs/redis/*": [
-        "libs/redis/src/*"
-      ],
-      "@libs/decorators": [
-        "libs/decorators/src"
-      ],
-      "@libs/decorators/*": [
-        "libs/decorators/src/*"
-      ]
+      "@user/*": ["src/user/*"],
+      "@auth/*": ["src/auth/*"],
+      "@project/*": ["src/project/*"],
+      "@libs/jwt": ["libs/jwt/src"],
+      "@libs/exception": ["libs/exception/src"],
+      "@libs/logger": ["libs/logger/src"],
+      "@libs/slack": ["libs/slack/src"],
+      "@libs/filter": ["libs/filter/src"],
+      "@libs/interceptor": ["libs/interceptor/src"],
+      "@libs/database": ["libs/database/src"],
+      "@libs/response": ["libs/response/src"],
+      "@libs/common": ["libs/common/src"],
+      "@libs/test": ["libs/test/src"],
+      "@libs/grpc": ["libs/grpc/src"],
+      "@libs/token": ["libs/token/src"],
+      "@libs/token/*": ["libs/token/src/*"],
+      "@libs/redis": ["libs/redis/src"],
+      "@libs/redis/*": ["libs/redis/src/*"],
+      "@libs/decorators": ["libs/decorators/src"],
+      "@libs/decorators/*": ["libs/decorators/src/*"],
+      "@test-e2e/*": ["test/*"]
     }
-  },
+  }
 }

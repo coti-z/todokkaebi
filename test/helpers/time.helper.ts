@@ -13,7 +13,10 @@ export class TimeHelper {
 
   static generateTimeRange(): { startTime: Date; endTime: Date } {
     const startTime = this.getRandomFutureDate(7);
-    const endTime = new Date(startTime.getTime() + Math.floor(Math.random() * 7 + 1) * 24 * 60 * 60 * 1000);
+    const endTime = new Date(
+      startTime.getTime() +
+        Math.floor(Math.random() * 7 + 1) * 24 * 60 * 60 * 1000,
+    );
     return { startTime, endTime };
   }
 

@@ -1,4 +1,5 @@
 import { ObjectType, OmitType, PickType } from '@nestjs/graphql';
+
 import { CategoryType } from '@project/presentation/resolver/type/category.type';
 
 @ObjectType()

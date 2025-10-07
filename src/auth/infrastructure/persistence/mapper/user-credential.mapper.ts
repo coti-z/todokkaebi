@@ -21,7 +21,7 @@ export class UserCredentialMapper {
     };
   }
 
-  static toDomain(record: UserCredentialRecord) {
+  static toDomain(record: UserCredentialRecord): UserCredential {
     return UserCredential.fromPersistence({
       id: record.id,
       email: record.email,

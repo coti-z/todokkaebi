@@ -1,4 +1,7 @@
-import { CreateJwtParam } from '@auth/application/dto/params/create-jwt-token.param';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { ApplicationException, ErrorCode } from '@libs/exception';
+
 import { CreateTokenParam } from '@auth/application/dto/params/create-token.param';
 import { ReissuedAccessTokenByTokenParam } from '@auth/application/dto/params/reissue-access-token-by-token.param';
 import { RevokeAccessTokenByAccessToken } from '@auth/application/dto/params/revoke-access-token-by-access-token.param';
@@ -10,8 +13,6 @@ import {
 } from '@auth/application/port/out/token-repository.port';
 import { TokenService } from '@auth/application/service/token.service';
 import { Token } from '@auth/domain/entity/token.entity';
-import { ApplicationException, ErrorCode } from '@libs/exception';
-import { Test, TestingModule } from '@nestjs/testing';
 
 describe('TokenByJWTService', () => {
   let service: TokenService;

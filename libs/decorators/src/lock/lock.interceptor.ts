@@ -1,4 +1,3 @@
-import { RedisService } from '@libs/redis';
 import {
   CallHandler,
   ExecutionContext,
@@ -9,6 +8,9 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+import { RedisService } from '@libs/redis';
+
 import { LOCK_METADATA_KEY, LockOptions } from './lock.decorator';
 
 @Injectable()

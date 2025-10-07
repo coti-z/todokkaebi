@@ -2,28 +2,29 @@ import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { TaskPresentationMapper } from '../mapper/task.presentation.mapper';
+import { TokenInfo } from '@libs/decorators';
+import { RequestContextExtractor } from '@libs/exception';
+import { JwtPayload } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+
+import { TaskPresentationMapper } from '@project/presentation/mapper/task.presentation.mapper';
 import {
   CreateTaskInput,
   DeleteTaskInput,
   QueryTaskByIdInput,
   QueryTasksByCategoryIdInput,
   UpdateTaskInput,
-} from './input/task.input';
+} from '@project/presentation/resolver/input/task.input';
 import {
   CreateTaskResponse,
   DeleteTaskResponse,
   QueryTaskByCategoryIdResponse,
   QueryTaskByIdResponse,
   UpdateTaskResponse,
-} from './response/task.response';
-import { TaskType } from './type/task.type';
-
-import { TokenInfo } from '@libs/decorators';
-import { JwtPayload } from '@libs/jwt';
-import { ResponseManager } from '@libs/response';
-import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { RequestContextExtractor } from '@libs/exception';
+} from '@project/presentation/resolver/response/task.response';
+import { TaskType } from '@project/presentation/resolver/type/task.type';
 
 @Resolver(() => TaskType)
 export class TaskResolver {

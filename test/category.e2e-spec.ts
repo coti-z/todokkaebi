@@ -1,30 +1,35 @@
-import { AuthModule } from '@auth/auth.module';
-import { GraphQLExceptionFilter } from '@libs/filter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectModule } from '@project/project.module';
-import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
+import { v4 as uuid } from 'uuid';
+
+import { GraphQLExceptionFilter } from '@libs/filter';
+
+import { AUTH_MUTATIONS } from '@test-e2e/graphql/auth.graphql';
 import {
   CATEGORY_MUTATIONS,
   CATEGORY_QUERIES,
-} from './graphql/category.graphql';
-import { PROJECT_MUTATIONS } from './graphql/project.graphql';
-import { USER_MUTATIONS } from './graphql/user.graphql';
-import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
-import { LoginResponse } from './types/auth-response.types';
+} from '@test-e2e/graphql/category.graphql';
+import { PROJECT_MUTATIONS } from '@test-e2e/graphql/project.graphql';
+import { USER_MUTATIONS } from '@test-e2e/graphql/user.graphql';
+import { GraphqlRequestHelper } from '@test-e2e/helpers/graphql-request.helper';
+import { LoginResponse } from '@test-e2e/types/auth-response.types';
 import {
   ChangeCategoryNameResponse,
   CreateCategoryResponse,
   DeleteCategoryResponse,
   QueryCategoryByIdResponse,
-} from './types/category-response.types';
-import { CreateProjectResponse } from './types/project-response.types';
-import { CreateUserResponse } from './types/user-response.types';
-import { v4 as uuid } from 'uuid';
+} from '@test-e2e/types/category-response.types';
+import { CreateProjectResponse } from '@test-e2e/types/project-response.types';
+import { CreateUserResponse } from '@test-e2e/types/user-response.types';
+
+import { AuthModule } from '@auth/auth.module';
+
+import { UserModule } from '@user/user.module';
+
+import { ProjectModule } from '@project/project.module';
 
 describe('Category Resolver (e2e)', () => {
   let app: INestApplication;

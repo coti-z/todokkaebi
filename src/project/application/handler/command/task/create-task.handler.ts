@@ -1,12 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import {
+  ITransactionManager,
+  TransactionManagerSymbol,
+  Transactional,
+} from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
 import { ProjectService } from '@project/application/service/project.service';
 import { TaskService } from '@project/application/service/task.service';
 import { Task } from '@project/domain/entity/task.entity';
-import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
-import { ITransactionManager, TransactionManagerSymbol } from '@libs/database';
-import { Transactional } from '@libs/database';
-import { ErrorHandlingStrategy } from '@libs/exception';
 import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @Injectable()

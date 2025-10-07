@@ -1,6 +1,7 @@
-import { TransactionContextStorage } from '@libs/database';
-import { PrismaService } from '@libs/database';
 import { Injectable } from '@nestjs/common';
+
+import { TransactionContextStorage, PrismaService } from '@libs/database';
+
 import { PrismaTransactionClient } from 'libs/database/src/types/client.type';
 
 @Injectable()

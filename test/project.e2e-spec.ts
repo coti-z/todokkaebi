@@ -1,34 +1,38 @@
-import { AuthModule } from '@auth/auth.module';
-import { GraphQLExceptionFilter } from '@libs/filter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectModule } from '@project/project.module';
-import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from 'test/graphql/auth.graphql';
+import { v4 as uuid } from 'uuid';
+
+import { GraphQLExceptionFilter } from '@libs/filter';
+
+import { AUTH_MUTATIONS } from '@test-e2e/graphql/auth.graphql';
 import {
   PROJECT_MUTATIONS,
   PROJECT_QUERIES,
-} from 'test/graphql/project.graphql';
-import { USER_MUTATIONS } from 'test/graphql/user.graphql';
-import { GraphqlRequestHelper } from 'test/helpers/graphql-request.helper';
-import { LoginResponse } from 'test/types/auth-response.types';
+} from '@test-e2e/graphql/project.graphql';
+import { USER_MUTATIONS } from '@test-e2e/graphql/user.graphql';
+import { GraphqlRequestHelper } from '@test-e2e/helpers/graphql-request.helper';
+import { LoginResponse } from '@test-e2e/types/auth-response.types';
 import {
   CreateProjectResponse,
   DeleteProjectResponse,
   QueryProjectResponse,
   QueryProjectsResponse,
   UpdateProjectResponse,
-} from 'test/types/project-response.types';
-import { CreateUserResponse } from 'test/types/user-response.types';
-import { v4 as uuid } from 'uuid';
+} from '@test-e2e/types/project-response.types';
+import { CreateUserResponse } from '@test-e2e/types/user-response.types';
+
+import { AuthModule } from '@auth/auth.module';
+
+import { UserModule } from '@user/user.module';
+
+import { ProjectModule } from '@project/project.module';
 
 describe('Project Resolver (e2e)', () => {
   let app: INestApplication;
   let graphqlHelper: GraphqlRequestHelper;
-  let testUser: { userId: string; accessToken: string };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -131,7 +135,7 @@ describe('Project Resolver (e2e)', () => {
       });
 
       it('should fail create project with invalid token', async () => {
-        const response = await graphqlHelper.mutate<CreateProjectResponse>(
+        const _response = await graphqlHelper.mutate<CreateProjectResponse>(
           PROJECT_MUTATIONS.CREATE_PROJECT,
           {
             input: { name: 'Should Fail Project' },

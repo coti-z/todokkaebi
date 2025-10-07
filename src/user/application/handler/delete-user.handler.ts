@@ -1,16 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
-import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';
-import { UserService } from '@user/application/services/user.service';
-import { User } from '@user/domain/entity/user.entity';
-import { ErrorHandlingStrategy } from '@libs/exception';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
+import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';
+import { UserService } from '@user/application/services/user.service';
+import { User } from '@user/domain/entity/user.entity';
 
 @Injectable()
 @CommandHandler(DeleteUserCommand)

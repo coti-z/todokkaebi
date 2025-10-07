@@ -1,10 +1,10 @@
 // api-response-factory.ts
+import { HttpStatus, Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { HttpStatus } from '@nestjs/common';
-import { ClassType } from 'type-graphql';
+
 import { ApiResponse } from '@libs/response';
 
-export function ApiResponseOf<T extends object>(classRef: ClassType<T>) {
+export function ApiResponseOf<T extends object>(classRef: Type<T>) {
   @ObjectType({ isAbstract: true })
   abstract class ApiResponseHost implements ApiResponse<T> {
     @Field(() => Int)

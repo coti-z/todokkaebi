@@ -1,11 +1,12 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { TaskByIdQuery } from '../../port/in/query/task/task-by-id.query';
-import { TaskService } from '@project/application/service/task.service';
-import { ProjectService } from '@project/application/service/project.service';
-import { TaskReadModel } from '@project/application/dto/task-read.model';
-import { TaskApplicationMapper } from '@project/application/mapper/task.application.mapper';
+
 import { Cache } from '@libs/decorators';
 import { RedisService } from '@libs/redis';
+
+import { TaskReadModel } from '@project/application/dto/task-read.model';
+import { TaskByIdQuery } from '@project/application/port/in/query/task/task-by-id.query';
+import { ProjectService } from '@project/application/service/project.service';
+import { TaskService } from '@project/application/service/task.service';
 import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @QueryHandler(TaskByIdQuery)

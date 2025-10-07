@@ -1,6 +1,6 @@
-import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
+import { CreateProjectMembershipProps } from '@project/domain/entity/project-membership.entity';
 
 export type EnrollProjectMembershipParams = Pick<
-  ProjectMembership,
+  CreateProjectMembershipProps,
   'userId' | 'role' | 'projectId'
 >;

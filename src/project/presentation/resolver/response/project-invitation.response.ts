@@ -1,11 +1,13 @@
 import { ObjectType } from '@nestjs/graphql';
+
+import { ApiResponseOf } from '@libs/response';
+
 import {
   AcceptProjectInvitationOutput,
   CreateProjectInvitationOutput,
   RejectProjectInvitationOutput,
   UpdateProjectInvitationOutput,
-} from '../output/project-invitation.output';
-import { ApiResponseOf } from '@libs/response';
+} from '@project/presentation/resolver/output/project-invitation.output';
 
 @ObjectType()
 export class CreateProjectInvitationResponse extends ApiResponseOf(

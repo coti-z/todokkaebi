@@ -1,23 +1,24 @@
+import { UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
-import { ProjectInvitationPresentationMapper } from '../mapper/project-invitation.presentation.mapper';
+
+import { TokenInfo } from '@libs/decorators';
+import { RequestContextExtractor } from '@libs/exception';
+import { JwtPayloadWithToken } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+
+import { ProjectInvitationPresentationMapper } from '@project/presentation/mapper/project-invitation.presentation.mapper';
 import {
   CreateProjectInvitationInput,
   UpdateProjectInvitationStatusInput,
-} from './input/project-invitation.input';
+} from '@project/presentation/resolver/input/project-invitation.input';
 import {
-  AcceptProjectInvitationResponse,
   CreateProjectInvitationResponse,
-  RejectProjectInvitationResponse,
   UpdateProjectInvitationResponse,
-} from './response/project-invitation.response';
-import { ProjectInvitationType } from './type/project-invitation.type';
-import { ResponseManager } from '@libs/response';
-import { RequestContextExtractor } from '@libs/exception';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { TokenInfo } from '@libs/decorators';
-import { JwtPayloadWithToken } from '@libs/jwt';
+} from '@project/presentation/resolver/response/project-invitation.response';
+import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 
 @Resolver(() => ProjectInvitationType)
 export class ProjectInvitationResolver {

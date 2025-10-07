@@ -1,5 +1,6 @@
 import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
-import { TaskState } from '../type/task.type';
+
+import { TaskState } from '@project/presentation/resolver/type/task.type';
 
 @InputType()
 export class TaskBaseInput {

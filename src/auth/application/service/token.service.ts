@@ -1,3 +1,9 @@
+import { Inject, Injectable } from '@nestjs/common';
+
+import { ApplicationException, ErrorCode } from '@libs/exception';
+
+import { TokenValidationInboundPort } from 'libs/jwt/src/port/token-validation.port';
+
 import { CreateTokenParam } from '@auth/application/dto/params/create-token.param';
 import { ReissuedAccessTokenByTokenParam } from '@auth/application/dto/params/reissue-access-token-by-token.param';
 import { RevokeAccessTokenByAccessToken } from '@auth/application/dto/params/revoke-access-token-by-access-token.param';
@@ -8,9 +14,6 @@ import {
   TokenRepositorySymbol,
 } from '@auth/application/port/out/token-repository.port';
 import { Token } from '@auth/domain/entity/token.entity';
-import { ApplicationException, ErrorCode } from '@libs/exception';
-import { Inject, Injectable } from '@nestjs/common';
-import { TokenValidationInboundPort } from 'libs/jwt/src/port/token-validation.port';
 
 /**
  * 토큰의 유효성 관련 서비스를 제공하는 클래스입니다.

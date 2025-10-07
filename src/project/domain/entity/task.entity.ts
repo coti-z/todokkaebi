@@ -1,4 +1,5 @@
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
+
 import {
   BaseEntity,
   BaseEntityProps,
@@ -11,6 +12,8 @@ export type TaskMutableProps = {
   taskStatus: TaskState;
   startDate: Date;
   endDate: Date;
+  actualStartDate?: Date;
+  actualEndDate?: Date;
 };
 
 /**
@@ -27,10 +30,10 @@ export type CreateTaskProps = Omit<
   | 'id'
   | 'createdAt'
   | 'updatedAt'
-  | 'actualStartDate'
-  | 'actualEndDate'
   | 'taskStatus'
   | 'check'
+  | 'actualStartDate'
+  | 'actualEndDate'
 >;
 
 export class Task extends BaseEntity<TaskProps> {
@@ -114,6 +117,29 @@ export class Task extends BaseEntity<TaskProps> {
       endDate: props.endDate,
       createdAt: now,
       updatedAt: now,
+    });
+  }
+
+  /**
+   * 이미 존재하는 Task 엔티티를 복원한다(Reconstitution).
+   * @param props TaskProps
+   */
+  static reconstitute(props: TaskProps): Task {
+    // 복원 시에도 유효성 검증을 해주면 좋다.
+    Task.validateDates(props.startDate, props.endDate);
+
+    return new Task({
+      categoryId: props.categoryId,
+      check: props.check,
+      createdAt: props.createdAt,
+      endDate: props.endDate,
+      id: props.id,
+      startDate: props.startDate,
+      taskStatus: props.taskStatus,
+      title: props.title,
+      updatedAt: props.updatedAt,
+      actualEndDate: props.actualEndDate,
+      actualStartDate: props.actualEndDate,
     });
   }
 

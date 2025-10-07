@@ -1,9 +1,9 @@
+import { DomainException, ErrorCode } from '@libs/exception';
+
 import { Category } from '@project/domain/entity/category.entity';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
 import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
-
-import { DomainException, ErrorCode } from '@libs/exception';
 
 import {
   BaseEntity,
@@ -118,21 +118,17 @@ export class Project extends BaseEntity<ProjectProps> {
 
   isMember(userId: string): boolean {
     return this._projectMemberships.some(
-      membership => membership.userId === userId
+      membership => membership.userId === userId,
     );
   }
 
   isOwner(userId: string): boolean {
-    const membership = this._projectMemberships.find(
-      m => m.userId === userId
-    );
+    const membership = this._projectMemberships.find(m => m.userId === userId);
     return membership?.role === MembershipRole.OWNER;
   }
 
   getMembershipRole(userId: string): MembershipRole | null {
-    const membership = this._projectMemberships.find(
-      m => m.userId === userId
-    );
+    const membership = this._projectMemberships.find(m => m.userId === userId);
     return membership?.role || null;
   }
 

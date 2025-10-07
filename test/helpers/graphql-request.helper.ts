@@ -1,6 +1,7 @@
+import * as http from 'http';
+
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import * as http from 'http';
 
 export interface GraphQLResponse<T = any> {
   data?: T;

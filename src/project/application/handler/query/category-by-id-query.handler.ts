@@ -1,13 +1,15 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { CategoryByIdQuery } from '../../port/in/query/category/category-by-id.query';
 import { Injectable } from '@nestjs/common';
-import { CategoryService } from '@project/application/service/category.service';
-import { ProjectService } from '@project/application/service/project.service';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+
+import { Cache } from '@libs/decorators';
 import { ErrorHandlingStrategy } from '@libs/exception';
+import { RedisService } from '@libs/redis';
+
 import { CategoryReadModel } from '@project/application/dto/category-read.model';
 import { CategoryApplicationMapper } from '@project/application/mapper/category.application.mapper';
-import { Cache } from '@libs/decorators';
-import { RedisService } from '@libs/redis';
+import { CategoryByIdQuery } from '@project/application/port/in/query/category/category-by-id.query';
+import { CategoryService } from '@project/application/service/category.service';
+import { ProjectService } from '@project/application/service/project.service';
 import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
 
 @QueryHandler(CategoryByIdQuery)
@@ -35,7 +37,10 @@ export class CategoryByIdHandler implements IQueryHandler<CategoryByIdQuery> {
     }
   }
 
-  private async authorize(categoryId: string, reqUserId: string) {
+  private async authorize(
+    categoryId: string,
+    reqUserId: string,
+  ): Promise<void> {
     const project = await this.projectService.queryProjectByCategoryId({
       categoryId,
     });

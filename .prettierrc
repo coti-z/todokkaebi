@@ -1,7 +1,4 @@
 {
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 80,
@@ -10,22 +7,13 @@
   "bracketSpacing": true,
   "arrowParens": "avoid",
   "endOfLine": "lf",
-  "quoteProps": "as-needed",
-  "proseWrap": "always",
-  "htmlWhitespaceSensitivity": "css",
-  "embeddedLanguageFormatting": "auto",
-
   "useTabs": false,
   "bracketSameLine": false,
   "jsxSingleQuote": true,
-  "parser": "typescript",
-  "requirePragma": false,
-  "insertPragma": false,
   "overrides": [
     {
       "files": "*.spec.ts",
       "options": {
-
         "printWidth": 100
       }
     }

@@ -1,9 +1,11 @@
+import { DomainException, ErrorCode } from '@libs/exception';
+
+import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
+
 import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
-import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
-import { DomainException, ErrorCode } from '@libs/exception';
 
 type ProjectInvitationImmutableProps = {
   readonly projectId: string;

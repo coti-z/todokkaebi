@@ -1,9 +1,10 @@
-import { MembershipRole } from '../value-objects/membership-role.vo';
+import { DomainException, ErrorCode } from '@libs/exception';
+
 import {
   BaseEntity,
   BaseEntityProps,
-} from './abstract/base-entity.abstract.entity';
-import { DomainException, ErrorCode } from '@libs/exception';
+} from '@project/domain/entity/abstract/base-entity.abstract.entity';
+import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 
 type ProjectMembershipImmutableProps = {
   projectId: string;
@@ -41,15 +42,15 @@ export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
     return this._projectId;
   }
 
-  get userId() {
+  get userId(): string {
     return this._userId;
   }
 
-  get role() {
+  get role(): MembershipRole {
     return this._role;
   }
 
-  changeRole(membershipRole: MembershipRole) {
+  changeRole(membershipRole: MembershipRole): void {
     if (!membershipRole) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }

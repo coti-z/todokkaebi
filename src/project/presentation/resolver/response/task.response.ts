@@ -1,12 +1,14 @@
 import { ObjectType } from '@nestjs/graphql';
+
+import { ApiResponseOf } from '@libs/response';
+
 import {
   CreateTaskOutput,
   DeleteTaskOutput,
   QueryTaskByCategoryIdOutput,
   QueryTaskByIdOutput,
   UpdateTaskOutput,
-} from '../output/task.output';
-import { ApiResponseOf } from '@libs/response';
+} from '@project/presentation/resolver/output/task.output';
 
 @ObjectType()
 export class CreateTaskResponse extends ApiResponseOf(CreateTaskOutput) {}

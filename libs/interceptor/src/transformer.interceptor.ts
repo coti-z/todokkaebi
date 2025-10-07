@@ -11,11 +11,11 @@ import { map } from 'rxjs/operators';
 export class ResultInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => ({
+      map(data => ({
         success: true,
         data,
       })),
-      catchError((err) =>
+      catchError(err =>
         of({
           success: false,
           error: { message: err.message, code: err.code },

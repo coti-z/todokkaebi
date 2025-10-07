@@ -1,4 +1,3 @@
-import { RedisService } from '@libs/redis';
 import {
   CanActivate,
   ExecutionContext,
@@ -7,7 +6,12 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RATE_LIMIT_METADATA_KEY, RateLimitOptions } from './rate-limit.decorator';
+
+import {
+  RATE_LIMIT_METADATA_KEY,
+  RateLimitOptions,
+} from '@libs/decorators/rate-limit/rate-limit.options';
+import { RedisService } from '@libs/redis';
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
@@ -24,7 +28,7 @@ export class RateLimitGuard implements CanActivate {
       RATE_LIMIT_METADATA_KEY,
       context.getHandler(),
     );
-    
+
     if (!options) {
       return true; // No rate limit configured
     }
@@ -35,12 +39,13 @@ export class RateLimitGuard implements CanActivate {
     const blockDuration = options.blockDuration || window;
 
     const result = await this.checkRateLimit(key, limit, window, blockDuration);
-    
+
     if (!result.allowed) {
       throw new HttpException(
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
-          message: options.errorMessage || 
+          message:
+            options.errorMessage ||
             `Rate limit exceeded. Try again in ${result.retryAfter} seconds`,
           retryAfter: result.retryAfter,
         },
@@ -60,7 +65,7 @@ export class RateLimitGuard implements CanActivate {
     const client = this.redisService.getClient();
     const rateLimitKey = `rate_limit:${key}`;
     const blockKey = `rate_limit:block:${key}`;
-    
+
     // Check if blocked
     const blocked = await client.get(blockKey);
     if (blocked) {
@@ -70,13 +75,13 @@ export class RateLimitGuard implements CanActivate {
         retryAfter: ttl > 0 ? ttl : blockDuration,
       };
     }
-    
+
     const current = await client.incr(rateLimitKey);
-    
+
     if (current === 1) {
       await client.expire(rateLimitKey, window);
     }
-    
+
     if (current > limit) {
       // Block the user for blockDuration
       await client.setex(blockKey, blockDuration, '1');
@@ -94,25 +99,25 @@ export class RateLimitGuard implements CanActivate {
     context: ExecutionContext,
   ): string {
     const args = context.getArgs();
-    
+
     // Custom key function
     if (typeof options.key === 'function') {
       return options.key(args);
     }
-    
+
     // Fixed key
     if (typeof options.key === 'string') {
       return options.key;
     }
-    
+
     // Default: extract identifier from command/query
     const className = context.getClass().name;
     const methodName = context.getHandler().name;
     const command = args[0];
-    
+
     // Try to extract identifier (userId, email, etc.)
     const identifier = command?.userId || command?.email || 'unknown';
-    
+
     return `${className}.${methodName}:${identifier}`;
   }
 }

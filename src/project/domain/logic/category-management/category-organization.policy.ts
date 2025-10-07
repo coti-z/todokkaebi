@@ -1,5 +1,6 @@
-import { Project } from '@project/domain/entity/project.entity';
 import { DomainException, ErrorCode } from '@libs/exception';
+
+import { Project } from '@project/domain/entity/project.entity';
 import { AuthorizationPolicy } from '@project/domain/logic/access-control/authorization.policy';
 // 생성, 수정, 삭제
 export class CategoryOrganizationPolicy {

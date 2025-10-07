@@ -1,3 +1,6 @@
+import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
+
 import {
   DatabaseModule,
   PrismaTransactionManager,
@@ -6,8 +9,7 @@ import {
 import { DecoratorsModule } from '@libs/decorators/decorators.module';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisModule } from '@libs/redis';
-import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
+
 import { ChangeCategoryNameHandler } from '@project/application/handler/command/category/change-category-name.handler';
 import { CreateCategoryHandler } from '@project/application/handler/command/category/create-category.handler';
 import { DeleteCategoryHandler } from '@project/application/handler/command/category/delete-category.handler';
@@ -22,8 +24,8 @@ import { UpdateProjectHandler } from '@project/application/handler/command/unit-
 import { CategoryByIdHandler } from '@project/application/handler/query/category-by-id-query.handler';
 import { ProjectByIdQueryHandler } from '@project/application/handler/query/project-by-id-query.handler';
 import { ProjectsByUserIdQueryHandler } from '@project/application/handler/query/projects-by-userid-query.handler';
-import { TasksByCategoryIdQueryHandler } from '@project/application/handler/query/tasks-by-category-id-query.handler';
 import { TaskByIdQueryHandler } from '@project/application/handler/query/task-by-id-query.handler';
+import { TasksByCategoryIdQueryHandler } from '@project/application/handler/query/tasks-by-category-id-query.handler';
 import { CategoryService } from '@project/application/service/category.service';
 import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';

@@ -1,13 +1,15 @@
-import { ValidateAccessTokenQuery } from '@auth/application/port/in/query/validate-access-token.query';
-import { TokenService } from '@auth/application/service/token.service';
+import { Inject } from '@nestjs/common';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
-import { Inject } from '@nestjs/common';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+
+import { ValidateAccessTokenQuery } from '@auth/application/port/in/query/validate-access-token.query';
+import { TokenService } from '@auth/application/service/token.service';
 
 @QueryHandler(ValidateAccessTokenQuery)
 export class ValidateAccessTokenHandler implements IQueryHandler {

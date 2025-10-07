@@ -1,5 +1,6 @@
-import { ApiResponseOf } from '@libs/response';
 import { Field, ObjectType } from '@nestjs/graphql';
+
+import { ApiResponseOf } from '@libs/response';
 
 @ObjectType()
 export class LoginOutput {

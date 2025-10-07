@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+
 import { DomainException, ErrorCode } from '@libs/exception';
 
 export interface CreateUserProps {
@@ -36,27 +37,27 @@ export class User {
     this.validateNickname(_nickname);
   }
 
-  get nickname() {
+  get nickname(): string {
     return this._nickname;
   }
 
-  get birthday() {
+  get birthday(): Date | undefined {
     return this._birthday;
   }
 
-  get createdAt() {
+  get createdAt(): Date {
     return this._createAt;
   }
 
-  get updatedAt() {
+  get updatedAt(): Date {
     return this._updateAt;
   }
 
-  get email() {
+  get email(): string {
     return this._email;
   }
 
-  get hashedPassword() {
+  get hashedPassword(): string {
     return this._hashedPassword;
   }
 
@@ -103,7 +104,7 @@ export class User {
     );
   }
 
-  changeProfile(args: ChangeProfileArgs) {
+  changeProfile(args: ChangeProfileArgs): void {
     if (args.birthday) this._birthday = args.birthday;
     if (args.nickname) this._nickname = args.nickname;
     if (args.email) this._email = args.email;

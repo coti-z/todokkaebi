@@ -1,13 +1,15 @@
-import { ValidateAccessTokenQuery } from '@auth/application/port/in/query/validate-access-token.query';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import { GqlExecutionContext } from '@nestjs/graphql';
+
 import {
   ApplicationException,
   ErrorCode,
   RequestContextExtractor,
 } from '@libs/exception';
 import { JwtPayloadWithToken, JwtTokenService } from '@libs/jwt';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { GqlExecutionContext } from '@nestjs/graphql';
+
+import { ValidateAccessTokenQuery } from '@auth/application/port/in/query/validate-access-token.query';
 
 @Injectable()
 export class JwtAuthWithAccessTokenGuard implements CanActivate {

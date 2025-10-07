@@ -1,5 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { ProjectInvitationType } from '../type/project-invitation.type';
+
+import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 
 @ObjectType()
 export class CreateProjectInvitationOutput extends ProjectInvitationType {}

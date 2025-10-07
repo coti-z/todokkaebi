@@ -1,6 +1,6 @@
-import { DomainException } from '@libs/exception';
-import { ErrorCode } from '@libs/exception';
 import { v4 as uuid } from 'uuid';
+
+import { DomainException, ErrorCode } from '@libs/exception';
 export interface TokenProps {
   userId: string;
   accessToken: string;

@@ -1,21 +1,25 @@
-import { AuthModule } from '@auth/auth.module';
-import { GraphQLExceptionFilter } from '@libs/filter';
-import { LoggerModule } from '@libs/logger';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserModule } from '@user/user.module';
-import { AUTH_MUTATIONS } from './graphql/auth.graphql';
-import { USER_MUTATIONS } from './graphql/user.graphql';
-import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
+import { v4 as uuid } from 'uuid';
+
+import { GraphQLExceptionFilter } from '@libs/filter';
+import { LoggerModule } from '@libs/logger';
+
+import { AUTH_MUTATIONS } from '@test-e2e/graphql/auth.graphql';
+import { USER_MUTATIONS } from '@test-e2e/graphql/user.graphql';
+import { GraphqlRequestHelper } from '@test-e2e/helpers/graphql-request.helper';
 import {
   LoginResponse,
   LogoutResponse,
   ReissueTokenResponse,
-} from './types/auth-response.types';
-import { v4 as uuid } from 'uuid';
+} from '@test-e2e/types/auth-response.types';
+
+import { AuthModule } from '@auth/auth.module';
+
+import { UserModule } from '@user/user.module';
 
 describe('Auth Resolver (e2e)', () => {
   let app: INestApplication;

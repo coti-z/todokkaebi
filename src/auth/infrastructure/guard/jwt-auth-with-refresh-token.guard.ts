@@ -1,13 +1,15 @@
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import { GqlExecutionContext } from '@nestjs/graphql';
+
 import {
   ApplicationException,
   ErrorCode,
   RequestContextExtractor,
 } from '@libs/exception';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { ValidateRefreshTokenQuery } from '@auth/application/port/in/query/validate-refresh-token.query';
 import { JwtPayloadWithToken, JwtTokenService } from '@libs/jwt';
+
+import { ValidateRefreshTokenQuery } from '@auth/application/port/in/query/validate-refresh-token.query';
 
 @Injectable()
 export class JwtAuthWithRefreshTokenGuard implements CanActivate {

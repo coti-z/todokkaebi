@@ -1,9 +1,10 @@
-import { Task } from './task.entity';
+import { DomainException, ErrorCode } from '@libs/exception';
+
 import {
   BaseEntity,
   BaseEntityProps,
 } from './abstract/base-entity.abstract.entity';
-import { DomainException, ErrorCode } from '@libs/exception';
+import { Task } from './task.entity';
 
 export type CategoryMutableProps = {
   name: string;

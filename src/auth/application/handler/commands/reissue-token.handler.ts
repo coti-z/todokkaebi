@@ -1,17 +1,19 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-token.command';
-import { ErrorHandlingStrategy } from '@libs/exception';
-import { Token } from '@auth/domain/entity/token.entity';
-import { TokenService } from '@auth/application/service/token.service';
-import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
-import { Inject, Injectable } from '@nestjs/common';
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Lock } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { ReissueTokenCommand } from '@auth/application/port/in/commands/reissue-token.command';
+import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import { TokenService } from '@auth/application/service/token.service';
+import { Token } from '@auth/domain/entity/token.entity';
+
 @Injectable()
 @CommandHandler(ReissueTokenCommand)
 export class ReissueTokenHandler implements ICommandHandler {

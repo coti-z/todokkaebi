@@ -1,5 +1,6 @@
 import { Field, ObjectType, PickType } from '@nestjs/graphql';
-import { TaskType } from '../type/task.type';
+
+import { TaskType } from '@project/presentation/resolver/type/task.type';
 
 @ObjectType()
 export class CreateTaskOutput extends TaskType {}

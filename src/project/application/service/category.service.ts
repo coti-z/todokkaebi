@@ -1,4 +1,7 @@
 import { Inject } from '@nestjs/common';
+
+import { ApplicationException, ErrorCode } from '@libs/exception';
+
 import {
   ChangeCategoryNameParams,
   CreateCategoryParams,
@@ -10,7 +13,6 @@ import {
   ICategoryRepository,
 } from '@project/application/port/out/category-repository.port';
 import { Category } from '@project/domain/entity/category.entity';
-import { ApplicationException, ErrorCode } from '@libs/exception';
 
 export class CategoryService {
   constructor(

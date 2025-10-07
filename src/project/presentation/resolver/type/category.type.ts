@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+
 import { TaskType } from '@project/presentation/resolver/type/task.type';
 
 @ObjectType()

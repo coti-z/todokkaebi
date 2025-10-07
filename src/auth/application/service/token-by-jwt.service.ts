@@ -1,4 +1,7 @@
-import { CreateJwtParam } from '@auth/application/dto/params/create-jwt-token.param';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+
 import {
   JwtPayload,
   JwtDecodedToken,
@@ -7,9 +10,8 @@ import {
   TokenEnum,
   TokenTimeEnum,
 } from '@libs/jwt';
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+
+import { CreateJwtParam } from '@auth/application/dto/params/create-jwt-token.param';
 
 @Injectable()
 export class TokenByJWTService {

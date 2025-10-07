@@ -1,5 +1,7 @@
-import { RequestContext } from '@libs/exception';
 import { ICommand, IQuery } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
+
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
 
 export class UpdateTaskCommand implements ICommand {

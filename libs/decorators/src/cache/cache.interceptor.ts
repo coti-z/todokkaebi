@@ -1,9 +1,4 @@
 import {
-  CACHE_METADATA_KEY,
-  CacheOptions,
-} from '@libs/decorators/cache/cache.decorator';
-import { RedisService } from '@libs/redis';
-import {
   CallHandler,
   ExecutionContext,
   Injectable,
@@ -11,6 +6,12 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
+
+import {
+  CACHE_METADATA_KEY,
+  CacheOptions,
+} from '@libs/decorators/cache/cache.decorator';
+import { RedisService } from '@libs/redis';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {

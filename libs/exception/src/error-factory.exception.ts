@@ -1,10 +1,12 @@
+import { HttpStatusCode } from 'axios';
 import { GraphQLError } from 'graphql';
-import { ERROR_MAP, ErrorResponse } from './error-map.interface';
-import { ErrorCode } from './error-code.enum';
-import { DomainException } from 'libs/exception/src/domain.exception';
+
 import { ApplicationException } from 'libs/exception/src/application.exception';
 import { BaseBusinessException } from 'libs/exception/src/base-business.exception';
-import { HttpStatusCode } from 'axios';
+import { DomainException } from 'libs/exception/src/domain.exception';
+
+import { ErrorCode } from './error-code.enum';
+import { ERROR_MAP, ErrorResponse } from './error-map.interface';
 
 interface ErrorContext {
   path?: string;

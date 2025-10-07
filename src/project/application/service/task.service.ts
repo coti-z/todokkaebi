@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { isUndefined, omitBy } from 'lodash';
+
+import { ApplicationException, ErrorCode } from '@libs/exception';
 
 import {
   DeleteTaskParams,
@@ -7,14 +8,12 @@ import {
   QueryTasksByCategoryIdParams,
   StoreTaskParams,
   UpdateTaskParams,
-} from '../param/task.params';
+} from '@project/application/param/task.params';
 import {
   ITaskRepository,
   TaskRepositorySymbol,
-} from '../port/out/task-repository.port';
+} from '@project/application/port/out/task-repository.port';
 import { Task } from '@project/domain/entity/task.entity';
-
-import { ApplicationException, ErrorCode } from '@libs/exception';
 import { TaskState } from '@project/domain/value-objects/task-states.vo';
 
 @Injectable()

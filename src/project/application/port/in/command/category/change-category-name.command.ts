@@ -1,5 +1,6 @@
-import { RequestContext } from '@libs/exception';
 import { ICommand } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
 
 export class ChangeCategoryNameCommand implements ICommand {
   constructor(

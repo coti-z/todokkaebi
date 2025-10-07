@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ValidateUserParams } from '@auth/application/dto/params/validate-user.param';
+
+import { ApplicationException, ErrorCode } from '@libs/exception';
+
+import { CreateUserCredentialParam } from '@auth/application/dto/params/create-user-credential.param';
+import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
+import { FindCredentialByUserIdParam } from '@auth/application/dto/params/find-token-by-userid.param';
 import { UpdateCredentialParam } from '@auth/application/dto/params/update-credential.param';
 import {
-  FindUserCredentialByEmailArgs,
   IUserCredentialRepository,
   UserCredentialRepositorySymbol,
 } from '@auth/application/port/out/user-credential-repository.port';
-import { CreateUserCredentialParam } from '@auth/application/dto/params/create-user-credential.param';
 import { UserCredential } from '@auth/domain/entity/user-credential.entity';
-import { DeleteUserCredentialParam } from '@auth/application/dto/params/delete-user-credential.param';
-import { ApplicationException, ErrorCode } from '@libs/exception';
-import { FindCredentialByUserIdParam } from '@auth/application/dto/params/find-token-by-userid.param';
 
 /**
  * 사용자 인증 관련 서비스를 제공하는 클래스입니다.

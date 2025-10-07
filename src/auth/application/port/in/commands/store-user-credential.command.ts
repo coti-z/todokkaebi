@@ -2,8 +2,9 @@
  * TODO
  * @task implement command for sending to handler
  */
-import { RequestContext } from '@libs/exception';
 import { ICommand } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
 
 export class StoreUserCredentialCommand implements ICommand {
   constructor(

@@ -1,24 +1,25 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
+import { JwtModule } from '@nestjs/jwt';
 
-import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
-import { BasicLoginHandler } from '@auth/application/handler/commands/basic-login.handler';
-import { ReissueTokenHandler } from '@auth/application/handler/commands/reissue-token.handler';
-import { BasicLogoutHandler } from '@auth/application/handler/commands/basic-logout.handler';
 import {
   DatabaseModule,
   PrismaTransactionManager,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { TokenService } from '@auth/application/service/token.service';
-import { ValidateAccessTokenHandler } from '@auth/application/handler/query/validate-access-token.handler';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
-import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisModule } from '@libs/redis';
+
+import { BasicLoginHandler } from '@auth/application/handler/commands/basic-login.handler';
+import { BasicLogoutHandler } from '@auth/application/handler/commands/basic-logout.handler';
+import { ReissueTokenHandler } from '@auth/application/handler/commands/reissue-token.handler';
+import { ValidateAccessTokenHandler } from '@auth/application/handler/query/validate-access-token.handler';
+import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
+import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
+import { TokenService } from '@auth/application/service/token.service';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
+import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
 
 @Module({
   imports: [

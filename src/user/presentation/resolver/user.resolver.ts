@@ -1,25 +1,27 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+
+import { RateLimit, TokenInfo } from '@libs/decorators';
+import { RequestContextExtractor } from '@libs/exception';
+import { JwtPayload } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 
 import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
-import { UseGuards } from '@nestjs/common';
+import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/output/create-user.output';
-import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
-import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
-import { ResponseManager } from '@libs/response';
-import { RateLimit, TokenInfo } from '@libs/decorators';
-import { JwtPayload } from '@libs/jwt';
-import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { RequestContextExtractor } from '@libs/exception';
+import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
+import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 
 @Resolver()
 export class UserResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Query(() => String)
-  async healthCheck() {
+  async healthCheck(): Promise<string> {
     return 'OK';
   }
 

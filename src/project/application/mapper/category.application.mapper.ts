@@ -3,7 +3,7 @@ import { TaskApplicationMapper } from '@project/application/mapper/task.applicat
 import { Category } from '@project/domain/entity/category.entity';
 
 export class CategoryApplicationMapper {
-  static entityToCategoryReadModels(entities: Category[]) {
+  static entityToCategoryReadModels(entities: Category[]): CategoryReadModel[] {
     return entities.map(category => this.entityToCategoryReadModel(category));
   }
 

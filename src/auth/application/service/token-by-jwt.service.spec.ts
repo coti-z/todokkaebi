@@ -1,9 +1,11 @@
-import { CreateJwtParam } from '@auth/application/dto/params/create-jwt-token.param';
-import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
-import { JwtDecodedToken, TokenEnum, TokenPair } from '@libs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { JwtDecodedToken, TokenEnum, TokenPair } from '@libs/jwt';
+
+import { CreateJwtParam } from '@auth/application/dto/params/create-jwt-token.param';
+import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
 
 describe('TokenByJWTService', () => {
   let service: TokenByJWTService;

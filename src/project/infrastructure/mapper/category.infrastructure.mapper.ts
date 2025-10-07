@@ -1,8 +1,8 @@
+import { Category } from '@project/domain/entity/category.entity';
 import {
   TaskInfraMapper,
   TaskRecord,
 } from '@project/infrastructure/mapper/task.infrastructure.mapper';
-import { Category } from '@project/domain/entity/category.entity';
 
 export interface CategoryRecord {
   id: string;

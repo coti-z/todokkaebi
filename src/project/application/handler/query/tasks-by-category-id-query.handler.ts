@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { ProjectService } from '@project/application/service/project.service';
-import { TaskService } from '@project/application/service/task.service';
-import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
+
 import { TaskReadModel } from '@project/application/dto/task-read.model';
 import { TaskApplicationMapper } from '@project/application/mapper/task.application.mapper';
+import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
+import { ProjectService } from '@project/application/service/project.service';
+import { TaskService } from '@project/application/service/task.service';
 import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
 @Injectable()

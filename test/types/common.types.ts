@@ -21,5 +21,3 @@ export interface ErrorResponse {
   }>;
   data: null;
 }
-
-

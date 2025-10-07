@@ -8,7 +8,7 @@ export class userProducer {
     private readonly kafkaClient: ClientKafka,
   ) {}
 
-  async sendMessage(topic: string, message: string) {
+  async sendMessage(topic: string, message: string): Promise<void> {
     await this.kafkaClient.emit(topic, message);
   }
 }

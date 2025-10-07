@@ -1,3 +1,7 @@
+import { Injectable } from '@nestjs/common';
+
+import { BaseRepository } from '@libs/database';
+
 import {
   FindTokenByAccessTokenArgs,
   FindTokenByRefreshTokenArgs,
@@ -5,8 +9,6 @@ import {
 } from '@auth/application/port/out/token-repository.port';
 import { Token } from '@auth/domain/entity/token.entity';
 import { TokenMapper } from '@auth/infrastructure/persistence/mapper/token.mapper';
-import { BaseRepository } from '@libs/database';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TokenRepositoryImpl

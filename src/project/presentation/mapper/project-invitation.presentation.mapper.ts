@@ -1,21 +1,19 @@
-import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
+import { RequestContext } from '@libs/exception';
+
+import { ProjectInvitationReadModel } from '@project/application/dto/project-invitation-read.model';
+import { CreateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/create-project-invitation.command';
+import { UpdateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/update-project-invitation.command';
 import {
   CreateProjectInvitationInput,
   UpdateProjectInvitationStatusInput,
-} from '../resolver/input/project-invitation.input';
+} from '@project/presentation/resolver/input/project-invitation.input';
 import {
   AcceptProjectInvitationOutput,
   CreateProjectInvitationOutput,
   RejectProjectInvitationOutput,
-  type UpdateProjectInvitationOutput,
-} from '../resolver/output/project-invitation.output';
-import { CreateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/create-project-invitation.command';
-import { UpdateProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/update-project-invitation.command';
-import { AcceptProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/accept-project-invitation.command';
-import { RejectProjectInvitationCommand } from '@project/application/port/in/command/project-invitation/reject-project-invitation.command';
-import { RequestContext } from '@libs/exception';
-import { ProjectInvitationReadModel } from '@project/application/dto/project-invitation-read.model';
-
+  UpdateProjectInvitationOutput,
+} from '@project/presentation/resolver/output/project-invitation.output';
+import { ProjectInvitationType } from '@project/presentation/resolver/type/project-invitation.type';
 export class ProjectInvitationPresentationMapper {
   static readModelToObjectType(
     readModel: ProjectInvitationReadModel,
@@ -69,7 +67,7 @@ export class ProjectInvitationPresentationMapper {
   }
 
   /* -------------------------------------------------------------------------- */
-  /*                               readModel To Ouput                              */
+  /*                               readModel To Output                              */
   /* -------------------------------------------------------------------------- */
 
   static readModelToCreateProjectInvitationOutput(

@@ -1,6 +1,10 @@
-import { ITransactionManager, TransactionContext } from '@libs/database';
-import { PrismaService } from '@libs/database';
 import { Injectable } from '@nestjs/common';
+
+import {
+  ITransactionManager,
+  TransactionContext,
+  PrismaService,
+} from '@libs/database';
 
 @Injectable()
 export class PrismaTransactionManager implements ITransactionManager {

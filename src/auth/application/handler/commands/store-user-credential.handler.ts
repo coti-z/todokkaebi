@@ -1,14 +1,16 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
-import { StoreUserCredentialCommand } from '@auth/application/port/in/commands/store-user-credential.command';
-import { ErrorHandlingStrategy } from '@libs/exception';
 import { Inject, Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Lock, RateLimit } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
+
+import { StoreUserCredentialCommand } from '@auth/application/port/in/commands/store-user-credential.command';
+import { UserCredentialService } from '@auth/application/service/user-credential.service';
 
 @Injectable()
 @CommandHandler(StoreUserCredentialCommand)

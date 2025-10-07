@@ -1,18 +1,20 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Task } from '@project/domain/entity/task.entity';
-import { ProjectService } from '@project/application/service/project.service';
-import { TaskService } from '@project/application/service/task.service';
-import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
 import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { ErrorHandlingStrategy } from '@libs/exception';
-import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { CacheEvict } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisService } from '@libs/redis';
+
+import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
+import { ProjectMembershipService } from '@project/application/service/project-membership.service';
+import { ProjectService } from '@project/application/service/project.service';
+import { TaskService } from '@project/application/service/task.service';
+import { Task } from '@project/domain/entity/task.entity';
 import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 @CommandHandler(DeleteTaskCommand)
 export class DeleteTaskCommandHandler

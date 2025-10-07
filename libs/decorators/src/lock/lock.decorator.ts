@@ -1,4 +1,5 @@
 import { SetMetadata, UseInterceptors } from '@nestjs/common';
+
 import { LockInterceptor } from './lock.interceptor';
 
 export interface LockOptions {

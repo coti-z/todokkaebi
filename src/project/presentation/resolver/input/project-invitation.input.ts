@@ -1,5 +1,6 @@
 import { Field, InputType, PickType } from '@nestjs/graphql';
-import type { InvitationStatus } from '../type/project-invitation.type';
+
+import { InvitationStatus } from '@project/presentation/resolver/type/project-invitation.type';
 
 @InputType()
 export class ProjectInvitationBaseInput {

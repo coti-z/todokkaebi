@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+
 import { LoggerService } from '@libs/logger';
+
 import { ApplicationException } from './application.exception';
 import { ErrorClassifier } from './error-classifier';
 import { ErrorCode } from './error-code.enum';

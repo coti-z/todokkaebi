@@ -1,5 +1,6 @@
-import { Token } from '@auth/domain/entity/token.entity';
 import { TransactionContext } from '@libs/database';
+
+import { Token } from '@auth/domain/entity/token.entity';
 
 export const TokenRepositorySymbol = Symbol.for('TokenRepository');
 

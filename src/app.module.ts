@@ -1,12 +1,16 @@
-import { AuthModule } from '@auth/auth.module';
-import { GraphQLExceptionFilter } from '@libs/filter';
-import { LoggerModule } from '@libs/logger';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ProjectModule } from '@project/project.module';
+
+import { GraphQLExceptionFilter } from '@libs/filter';
+import { LoggerModule } from '@libs/logger';
+
+import { AuthModule } from '@auth/auth.module';
+
 import { UserModule } from '@user/user.module';
+
+import { ProjectModule } from '@project/project.module';
 
 @Module({
   imports: [

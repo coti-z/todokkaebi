@@ -1,16 +1,18 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Injectable } from '@nestjs/common';
-import { ProjectService } from '@project/application/service/project.service';
-import { TaskService } from '@project/application/service/task.service';
-import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import {
   ITransactionManager,
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { ErrorHandlingStrategy } from '@libs/exception';
 import { CacheEvict } from '@libs/decorators';
+import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisService } from '@libs/redis';
+
+import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
+import { ProjectService } from '@project/application/service/project.service';
+import { TaskService } from '@project/application/service/task.service';
 import { Task } from '@project/domain/entity/task.entity';
 import { TaskWorkflowPolicy } from '@project/domain/logic/task-management/task-workflow.policy';
 
@@ -52,17 +54,13 @@ export class UpdateTaskCommandHandler
 
   private async process(command: UpdateTaskCommand): Promise<Task> {
     return await this.taskService.updateTask({
-      updateDataParams: {
-        id: command.id,
-        categoryId: command.categoryId,
-        check: command.check,
-        title: command.title,
-        taskStatus: command.status,
-        actualStartDate: command.actualStartDate,
-        actualEndDate: command.actualEndDate,
-        startDate: command.startDate,
-        endDate: command.endDate,
-      },
+      id: command.id,
+      categoryId: command.categoryId,
+      check: command.check,
+      title: command.title,
+      taskStatus: command.status,
+      startDate: command.startDate,
+      endDate: command.endDate,
     });
   }
 }

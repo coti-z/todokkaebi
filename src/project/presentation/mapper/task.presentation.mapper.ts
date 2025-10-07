@@ -1,25 +1,26 @@
+import { RequestContext } from '@libs/exception';
+
+import { TaskReadModel } from '@project/application/dto/task-read.model';
+import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
+import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
+import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
+import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
 import { TaskByIdQuery } from '@project/application/port/in/query/task/task-by-id.query';
-import { TaskType } from '@project/presentation/resolver/type/task.type';
 import {
   CreateTaskInput,
   DeleteTaskInput,
   QueryTaskByIdInput,
   QueryTasksByCategoryIdInput,
   UpdateTaskInput,
-} from '../resolver/input/task.input';
+} from '@project/presentation/resolver/input/task.input';
 import {
   CreateTaskOutput,
   DeleteTaskOutput,
   QueryTaskByCategoryIdOutput,
   QueryTaskByIdOutput,
   UpdateTaskOutput,
-} from '../resolver/output/task.output';
-import { TasksByCategoryIdQuery } from '@project/application/port/in/query/task/task-by-categoryid.query';
-import { CreateTaskCommand } from '@project/application/port/in/command/task/create-task.command';
-import { UpdateTaskCommand } from '@project/application/port/in/command/task/update-task.command';
-import { DeleteTaskCommand } from '@project/application/port/in/command/task/delete-task.command';
-import { RequestContext } from '@libs/exception';
-import { TaskReadModel } from '@project/application/dto/task-read.model';
+} from '@project/presentation/resolver/output/task.output';
+import { TaskType } from '@project/presentation/resolver/type/task.type';
 
 export class TaskPresentationMapper {
   static readModelToObjectType(readModel: TaskReadModel): TaskType {

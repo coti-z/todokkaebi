@@ -1,12 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
-import { EnrollProjectMembershipParams } from '../param/project-membership.params';
+
+import { EnrollProjectMembershipParams } from '@project/application/param/project-membership.params';
 import {
   IProjectMembershipRepository,
   ProjectMembershipRepositorySymbol,
-} from '../port/out/project-membership-repository.port';
-import { IsProjectMembershipParams } from '@project/application/param/is-project-membership.params';
-import { DomainException, ErrorCode } from '@libs/exception';
+} from '@project/application/port/out/project-membership-repository.port';
+import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 
 @Injectable()
 export class ProjectMembershipService {

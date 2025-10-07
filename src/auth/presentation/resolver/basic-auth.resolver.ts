@@ -1,21 +1,23 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+
+import { TokenInfo } from '@libs/decorators';
+import { RequestContextExtractor } from '@libs/exception';
+import { JwtPayloadWithToken } from '@libs/jwt';
+import { ResponseManager } from '@libs/response';
+
+import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
+import { BasicAuthPresentationMapper } from '@auth/presentation/mapper/basic-auth-presentation.mapper';
 import { LoginInput } from '@auth/presentation/resolver/dto/input/login.input';
 import { ApiResponseOfLoginOutput } from '@auth/presentation/resolver/dto/output/login.output';
 import { ApiResponseOfLogoutOutput } from '@auth/presentation/resolver/dto/output/logout.output';
-import { BasicAuthPresentationMapper } from '@auth/presentation/mapper/basic-auth-presentation.mapper';
-import { ResponseManager } from '@libs/response';
-import { UseGuards } from '@nestjs/common';
-import { JwtPayloadWithToken } from '@libs/jwt';
-import { RateLimit, TokenInfo } from '@libs/decorators';
-import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
-import { RequestContextExtractor } from '@libs/exception';
 
 @Resolver()
 export class BasicAuthResolver {
   constructor(private readonly commandBus: CommandBus) {}
   @Query(() => String)
-  healthCheck() {
+  healthCheck(): string {
     return 'OK';
   }
   @Mutation(() => ApiResponseOfLoginOutput)

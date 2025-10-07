@@ -1,5 +1,6 @@
-import { RequestContext } from '@libs/exception';
 import { IQuery } from '@nestjs/cqrs';
+
+import { RequestContext } from '@libs/exception';
 
 export class ValidateAccessTokenQuery implements IQuery {
   constructor(

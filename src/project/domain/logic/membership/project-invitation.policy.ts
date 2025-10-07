@@ -1,10 +1,12 @@
-import { Project } from '../../entity/project.entity';
-import type { ProjectInvitation } from '../../entity/project-invitation.entity';
 import { DomainException, ErrorCode } from '@libs/exception';
-import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
+
+import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
+import { Project } from '@project/domain/entity/project.entity';
 import { AuthorizationPolicy } from '@project/domain/logic/access-control/authorization.policy';
+import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
+
 export class ProjectInvitationPolicy {
-  static canCreateProjectInvitation(project: Project, reqUserId: string) {
+  static canCreateProjectInvitation(project: Project, reqUserId: string): void {
     if (!project || !reqUserId) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }
@@ -15,7 +17,7 @@ export class ProjectInvitationPolicy {
     projectInvitation: ProjectInvitation,
     status: InvitationStatus,
     reqUserId: string,
-  ) {
+  ): void {
     if (!projectInvitation) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }

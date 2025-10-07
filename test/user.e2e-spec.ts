@@ -1,23 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { UserModule } from '@user/user.module';
-import { GraphqlRequestHelper } from './helpers/graphql-request.helper';
-
-import { USER_MUTATIONS, USER_QUERIES } from './graphql/user.graphql';
-import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { v4 as uuid } from 'uuid';
-import { LoggerModule } from '@libs/logger';
+import { INestApplication } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { Test, TestingModule } from '@nestjs/testing';
+import { v4 as uuid } from 'uuid';
+
 import { GraphQLExceptionFilter } from '@libs/filter';
-import { AUTH_MUTATIONS } from './graphql/auth.graphql';
-import { HealthCheckResponse } from './types/common.types';
+import { LoggerModule } from '@libs/logger';
+
+import { AUTH_MUTATIONS } from '@test-e2e/graphql/auth.graphql';
+import { USER_MUTATIONS, USER_QUERIES } from '@test-e2e/graphql/user.graphql';
+import { GraphqlRequestHelper } from '@test-e2e/helpers/graphql-request.helper';
+import { LoginResponse } from '@test-e2e/types/auth-response.types';
+import { HealthCheckResponse } from '@test-e2e/types/common.types';
 import {
   CreateUserResponse,
   DeleteUserResponse,
   UpdateUserResponse,
-} from './types/user-response.types';
-import { LoginResponse } from './types/auth-response.types';
+} from '@test-e2e/types/user-response.types';
+
+import { UserModule } from '@user/user.module';
 
 describe('User Resolver (e2e)', () => {
   let app: INestApplication;
@@ -67,8 +69,8 @@ describe('User Resolver (e2e)', () => {
   });
 
   describe('User CRUD Operations', () => {
-    let createdUserId: string;
-    let accessToken: string;
+    let _createdUserId: string;
+    let _accessToken: string;
 
     describe('Create User', () => {
       const randomEmail = `test-${uuid()}@email.com`;
@@ -93,7 +95,7 @@ describe('User Resolver (e2e)', () => {
         expect(response.data?.createUser.data.email).toBe(input.email);
         expect(response.data?.createUser.data.id).toBeDefined();
 
-        createdUserId = response.data!.createUser.data.id;
+        _createdUserId = response.data!.createUser.data.id;
       });
 
       it('should fail when email already exists', async () => {
@@ -223,7 +225,7 @@ describe('User Resolver (e2e)', () => {
         expect(response.data?.basicLogin.data.accessToken).toBeDefined();
         expect(response.data?.basicLogin.data.refreshToken).toBeDefined();
 
-        accessToken = response.data!.basicLogin.data.accessToken;
+        _accessToken = response.data!.basicLogin.data.accessToken;
       });
 
       it('should fail login with invalid email', async () => {

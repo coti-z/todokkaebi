@@ -13,7 +13,7 @@ export class SlackNotificationService {
 
   async sendErrorNotification(context: Record<string, any>) {
     try {
-      this.slackClient.chat.postMessage({
+      await this.slackClient.chat.postMessage({
         channel: this.configService.get<string>('SLACK_CHANNEL') ?? 'null',
         text: JSON.stringify(context),
       });
