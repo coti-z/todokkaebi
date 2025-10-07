@@ -1,9 +1,10 @@
 ---
 name: ✨ Feature Request
 about: Suggest a new feature
-title: '[FEATURE] '
-labels: enhancement
+title: '[FEATURE]'
+labels: ['enhancement']
 assignees: ''
+type: feature
 body:
   - type: textarea
     validations:
