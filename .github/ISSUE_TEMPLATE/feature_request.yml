@@ -1,10 +1,14 @@
----
 name: ✨ Feature Request
-about: Suggest a new feature
-title: '[FEATURE] '
-labels: enhancement
-assignees: ''
+description: Suggest a new feature
+labels: ['enhancement']
 body:
+  - type: checkboxes
+    attributes:
+      label: 'Is there an existing issue that is already proposing this?'
+      description: 'Please search [here](../issues?q=is%3Aissue) to see if an issue already exists for this'
+      options:
+        - label: 'I have searched the existing issues'
+          required: true
   - type: textarea
     validations:
       required: true
@@ -17,4 +21,3 @@ body:
     attributes:
       label: 'use case for changing the behavior?'
       description: 'Describe the motivation or the concrete use case'
----

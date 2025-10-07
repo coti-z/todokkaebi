@@ -1,11 +1,14 @@
----
 name: 🐛 Bug Report
-about: Report a bug
-title: '[BUG] '
-labels: bug
-assignees: ''
-type: task
+description: Report a bug
+labels: ['bug']
 body:
+  - type: checkboxes
+    attributes:
+      label: 'Is there an existing issue that is already proposing this?'
+      description: 'Please search [here](../issues?q=is%3Aissue) to see if an issue already exists for this'
+      options:
+        - label: 'I have searched the existing issues'
+          required: true
   - type: textarea
     attributes:
       label: 'Steps to reproduce'
@@ -39,4 +42,3 @@ body:
         - label: macOS
         - label: Windows
         - label: Linux
----

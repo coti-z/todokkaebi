@@ -1,10 +1,6 @@
----
-name: ✨ Feature Request
-about: Suggest a new feature
-title: '[FEATURE] '
-labels: enhancement
-assignees: ''
-type: task
+name: 🚀 Performance Improvement
+description: Suggest a performance enhancement
+labels: ['enhancement', 'performance']
 body:
   - type: checkboxes
     attributes:
@@ -20,4 +16,3 @@ body:
       label: 'Describe the performance enhancement you are proposing and how we can try it out'
       placeholder: |
         Cache `array.length` on the following lines ..
----
