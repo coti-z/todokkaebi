@@ -1,41 +1,46 @@
 # 인증 및 TODO 서비스 GraphQL API 문서
 
 ## 목차
-- [1. Mutation (상태 변경)](#1-mutation-상태-변경)
-    - [1.1. 유저 생성](#1-유저-생성)
-    - [1.2. 유저 삭제](#2-유저-삭제)
-    - [1.3. 유저 정보 업데이트](#3-유저-정보-업데이트)
-    - [1.4. refreshToken을 이용한 accessToken 재발급](#4-refreshtoken을-이용한-accesstoken-재발급)
-    - [1.5. 카카오 인증](#5-카카오-인증)
-- [2. Query (조회)](#2-query-조회)
-    - [2.1. 유저 정보 조회](#1-유저-정보-조회)
-    - [2.2. 카카오 로그인 URL 조회](#2-카카오-로그인-URL-조회)
-- [3. Project (대분류)](#3-project-대분류)
-    - [3.1. Mutation](#1-mutation)
-        - [3.1.1. 프로젝트 생성](#11-프로젝트-생성)
-        - [3.1.2. 프로젝트 삭제](#12-프로젝트-삭제)
-        - [3.1.3. 프로젝트 업데이트](#13-프로젝트-업데이트)
-    - [3.2. Query](#2-query)
-        - [3.2.1. 단일 프로젝트 조회](#21-단일-프로젝트-조회)
-        - [3.2.2. 모든 프로젝트 조회](#22-모든-프로젝트-조회)
-- [4. Category (중분류)](#4-category-중분류)
-    - [4.1. Mutation](#1-mutation-1)
-        - [4.1.1. 카테고리 생성](#41-카테고리-생성)
-        - [4.1.2. 카테고리 삭제](#42-카테고리-삭제)
-        - [4.1.3. 카테고리 업데이트](#43-카테고리-업데이트)
-    - [4.2. Query](#2-query-1)
-        - [4.2.1. 카테고리 조회](#44-카테고리-조회)
-- [5. Task (소분류)](#5-task-소분류)
-    - [5.1. Mutation](#1-mutation-2)
-        - [5.1.1. Task 생성](#11-task-생성)
-        - [5.1.2. Task 삭제](#12-task-삭제)
-        - [5.1.3. Task 업데이트](#13-task-업데이트)
-    - [5.2. Query](#2-query-2)
-        - [5.2.1. Task 조회](#21-task-조회)
-        - [5.2.2. 카테고리별 Task 목록 조회](#22-카테고리별-task-목록-조회)
+
+- [인증 및 TODO 서비스 GraphQL API 문서](#인증-및-todo-서비스-graphql-api-문서)
+  - [목차](#목차)
+- [인증 서비스 GraphQL API 문서](#인증-서비스-graphql-api-문서)
+  - [1. Mutation (상태 변경)](#1-mutation-상태-변경)
+    - [\[1\] 유저 생성](#1-유저-생성)
+    - [\[2\] 유저 삭제](#2-유저-삭제)
+    - [\[3\] 유저 정보 업데이트](#3-유저-정보-업데이트)
+    - [\[4\] refreshToken을 이용한 accessToken 재발급](#4-refreshtoken을-이용한-accesstoken-재발급)
+    - [\[5\] 카카오 인증](#5-카카오-인증)
+  - [2. Query (조회)](#2-query-조회)
+    - [\[1\] 유저 정보 조회](#1-유저-정보-조회)
+    - [\[2\] 카카오 로그인 URL 조회](#2-카카오-로그인-url-조회)
+- [TODO 서비스 GraphQL API 문서](#todo-서비스-graphql-api-문서)
+  - [서비스 개요](#서비스-개요)
+  - [3. Project (대분류)](#3-project-대분류)
+    - [\[1\] Mutation](#1-mutation)
+      - [1.1 프로젝트 생성](#11-프로젝트-생성)
+      - [1.2 프로젝트 삭제](#12-프로젝트-삭제)
+      - [1.3 프로젝트 업데이트](#13-프로젝트-업데이트)
+    - [\[2\] Query](#2-query)
+      - [2.1 단일 프로젝트 조회](#21-단일-프로젝트-조회)
+      - [2.2 모든 프로젝트 조회](#22-모든-프로젝트-조회)
+  - [4. Category (중분류)](#4-category-중분류)
+    - [\[1\] Mutation](#1-mutation-1)
+      - [4.1 카테고리 생성](#41-카테고리-생성)
+      - [4.2 카테고리 삭제](#42-카테고리-삭제)
+      - [4.3 카테고리 업데이트](#43-카테고리-업데이트)
+    - [\[2\] Query](#2-query-1)
+      - [4.4 카테고리 조회](#44-카테고리-조회)
+  - [5. Task (소분류)](#5-task-소분류)
+    - [\[1\] Mutation](#1-mutation-2)
+      - [1.1 Task 생성](#11-task-생성)
+      - [1.2 Task 삭제](#12-task-삭제)
+      - [1.3 Task 업데이트](#13-task-업데이트)
+    - [\[2\] Query](#2-query-2)
+      - [2.1 Task 조회](#21-task-조회)
+      - [2.2 카테고리별 Task 목록 조회](#22-카테고리별-task-목록-조회)
 
 ---
-
 
 # 인증 서비스 GraphQL API 문서
 
@@ -46,6 +51,7 @@
 **목적:** 새로운 유저를 생성합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -56,6 +62,7 @@ mutation CreateUser($input: CreateUserInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type CreateUserInput = {
   email: string;    # 유저 이메일
@@ -65,6 +72,7 @@ type CreateUserInput = {
 ```
 
 > **참고:**
+>
 > - 응답에서 `accessToken`과 `refreshToken`을 반환합니다.
 
 ---
@@ -74,6 +82,7 @@ type CreateUserInput = {
 **목적:** 유저 계정을 삭제합니다.
 
 **요청 형식:**
+
 ```graphql
 header: Authentication - "Bearer {{TOKEN}}"
 
@@ -85,6 +94,7 @@ mutation DeleteUser {
 ```
 
 > **참고:**
+>
 > - 요청 헤더에 **Bearer 토큰**이 필요합니다.
 > - 토큰 내에 포함된 `userId` 정보를 사용하므로 별도의 인자가 필요하지 않습니다.
 
@@ -95,6 +105,7 @@ mutation DeleteUser {
 **목적:** 유저의 계정 정보를 업데이트합니다.
 
 **요청 형식:**
+
 ```graphql
 header: Authentication - "Bearer {{TOKEN}}"
 
@@ -109,6 +120,7 @@ mutation UpdateUserInfo($input: UpdateUserInfoInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type UpdateUserInfoInput = {
   nickname?: string;  # 업데이트할 유저 닉네임 (선택)
@@ -118,6 +130,7 @@ type UpdateUserInfoInput = {
 ```
 
 > **참고:**
+>
 > - 각 필드는 선택사항으로, 원하는 정보만 업데이트할 수 있습니다.
 
 ---
@@ -127,6 +140,7 @@ type UpdateUserInfoInput = {
 **목적:** 기존 `refreshToken`을 사용해 새로운 `accessToken`을 재발급 받습니다.
 
 **요청 형식:**
+
 ```graphql
 mutation ReissueAccessToken($input: ReissueAccessTokenInput!) {
   reissueAccessToken(input: $input) {
@@ -136,6 +150,7 @@ mutation ReissueAccessToken($input: ReissueAccessTokenInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type ReissueAccessTokenInput = {
   refreshToken: string;  # 재발급할 때 사용할 refreshToken
@@ -149,6 +164,7 @@ type ReissueAccessTokenInput = {
 **목적:** 카카오 로그인 후 발급받은 인증 코드를 사용해 서버에서 토큰을 발급받습니다.
 
 **요청 형식:**
+
 ```graphql
 mutation KakaoAuth($input: KakaoAuthCodeInput!) {
   kakaoAuth(input: $input) {
@@ -159,6 +175,7 @@ mutation KakaoAuth($input: KakaoAuthCodeInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type KakaoAuthCodeInput {
   code: string;  # 카카오 로그인 후 발급받은 인증 코드
@@ -205,6 +222,7 @@ sequenceDiagram
 **목적:** 유저의 계정 정보를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetUserInfo {
   getUserInfo {
@@ -217,11 +235,13 @@ query GetUserInfo {
 ```
 
 > **참고:**
+>
 > - 응답에는 `id`, `email`, `nickname`, `birthday` 정보가 포함될 수 있습니다.
 > - 카카오 인증 시 선택적으로 제공되는 정보이기 때문에, 일부 항목이 누락될 수 있습니다.
 > - 그러나 `id`(userId)는 반드시 응답에서 제공됩니다.
 
 ### [2] 카카오 로그인 URL 조회
+
 목적: 카카오 로그인에 필요한 URL을 가져온다.
 
 ```graphql
@@ -231,7 +251,9 @@ query GetKakaoLoginUrl {
     }
 }
 ```
+
 **Input:**
+
 ```graphql
 type GetKakaoLoginUrlInput {
     test: boolean;
@@ -239,6 +261,7 @@ type GetKakaoLoginUrlInput {
 ```
 
 ---
+
 # TODO 서비스 GraphQL API 문서
 
 ## 서비스 개요
@@ -256,6 +279,7 @@ type GetKakaoLoginUrlInput {
 **목적:** 새로운 프로젝트를 생성합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation CreateProject($input: CreateProjectInput!) {
   createProject(input: $input) {
@@ -276,6 +300,7 @@ mutation CreateProject($input: CreateProjectInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type CreateProjectInput {
   name: string;  # 프로젝트 이름
@@ -289,6 +314,7 @@ type CreateProjectInput {
 **목적:** 특정 프로젝트를 삭제합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation DeleteProject($input: DeleteProjectInput!) {
   deleteProject(input: $input) {
@@ -307,6 +333,7 @@ mutation DeleteProject($input: DeleteProjectInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type DeleteProjectInput {
   projectId: string;  # 삭제할 프로젝트의 ID
@@ -320,6 +347,7 @@ type DeleteProjectInput {
 **목적:** 특정 프로젝트의 이름을 수정합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation UpdateProject($input: UpdateProjectInput!) {
   updateProject(input: $input) {
@@ -338,6 +366,7 @@ mutation UpdateProject($input: UpdateProjectInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type UpdateProjectInput {
   projectId: string;  # 업데이트할 프로젝트의 ID
@@ -354,6 +383,7 @@ type UpdateProjectInput {
 **목적:** 특정 프로젝트를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetProject($input: GetProjectInput!) {
   getProject(input: $input) {
@@ -394,6 +424,7 @@ query GetProject($input: GetProjectInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type GetProjectInput {
   id: string;        # 조회할 프로젝트 ID
@@ -408,6 +439,7 @@ enum TaskState {
 ```
 
 > **참고:**
+>
 > - `categories`: 배열로 여러 카테고리를 포함
 > - `tasks`: 배열로 여러 작업을 포함
 > - `totalTask`: 프로젝트 전체 작업 수
@@ -420,6 +452,7 @@ enum TaskState {
 **목적:** 사용자의 모든 프로젝트를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetAllProjects {
   getAllProjects {
@@ -449,6 +482,7 @@ query GetAllProjects {
 **목적:** 특정 프로젝트에 카테고리를 생성합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation CreateCategory($input: CreateCategoryInput!) {
   createCategory(input: $input) {
@@ -467,6 +501,7 @@ mutation CreateCategory($input: CreateCategoryInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type CreateCategoryInput {
   projectId: string;  # 카테고리가 속할 프로젝트 ID
@@ -481,6 +516,7 @@ type CreateCategoryInput {
 **목적:** 특정 카테고리를 삭제합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation DeleteCategory($input: DeleteCategoryInput!) {
   deleteCategory(input: $input) {
@@ -499,6 +535,7 @@ mutation DeleteCategory($input: DeleteCategoryInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type DeleteCategoryInput {
   categoryId: string;  # 삭제할 카테고리의 ID
@@ -512,6 +549,7 @@ type DeleteCategoryInput {
 **목적:** 특정 카테고리의 이름을 수정합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation UpdateCategory($input: UpdateCategoryInput!) {
   updateCategory(input: $input) {
@@ -532,6 +570,7 @@ mutation UpdateCategory($input: UpdateCategoryInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type UpdateCategoryInput {
   categoryId: string;    # 업데이트할 카테고리의 ID
@@ -548,6 +587,7 @@ type UpdateCategoryInput {
 **목적:** 특정 카테고리를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetCategory($input: GetCategoryInput!) {
   getCategory(input: $input) {
@@ -579,6 +619,7 @@ query GetCategory($input: GetCategoryInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type GetCategoryInput {
   categoryId: string;  # 조회할 카테고리의 ID
@@ -594,6 +635,7 @@ type GetCategoryInput {
 **목적:** 새로운 Task를 생성합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation CreateTask($input: CreateTaskInput!) {
   createTask(input: $input) {
@@ -616,6 +658,7 @@ mutation CreateTask($input: CreateTaskInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type CreateTaskInput {
   title: string;         # Task 제목
@@ -637,6 +680,7 @@ type CreateTaskInput {
 **목적:** 특정 Task를 삭제합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation DeleteTask($input: DeleteTaskInput!) {
   deleteTask(input: $input) {
@@ -659,6 +703,7 @@ mutation DeleteTask($input: DeleteTaskInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type DeleteTaskInput {
   taskId: string;        # 삭제할 Task의 ID
@@ -674,6 +719,7 @@ type DeleteTaskInput {
 **목적:** 특정 Task를 업데이트합니다.
 
 **요청 형식:**
+
 ```graphql
 mutation UpdateTask($input: UpdateTaskInput!) {
   updateTask(input: $input) {
@@ -696,6 +742,7 @@ mutation UpdateTask($input: UpdateTaskInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type UpdateTaskInput {
   taskId: string;        # 업데이트할 Task의 ID
@@ -727,6 +774,7 @@ type UpdateTaskInput {
 **목적:** 특정 Task를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetTask($input: GetTaskInput!) {
   getTask(input: $input) {
@@ -749,6 +797,7 @@ query GetTask($input: GetTaskInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type GetTaskInput {
   taskId: string;        # 조회할 Task의 ID
@@ -764,6 +813,7 @@ type GetTaskInput {
 **목적:** 특정 카테고리에 속한 모든 Task를 조회합니다.
 
 **요청 형식:**
+
 ```graphql
 query GetTasksWithCategoryId($input: GetAllTaskWithCategoryIdInput!) {
   getTasksWithCategoryId(input: $input) {
@@ -784,11 +834,10 @@ query GetTasksWithCategoryId($input: GetAllTaskWithCategoryIdInput!) {
 ```
 
 **Input:**
+
 ```graphql
 type GetAllTaskWithCategoryIdInput {
   categoryId: string;    # 조회할 Task가 속한 카테고리 ID
 }
 
 ```
-
-
