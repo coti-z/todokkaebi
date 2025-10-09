@@ -17,7 +17,7 @@ import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/upd
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 
 /**
- * 유저 관리 Graphql Resolver
+ * user manager Graphql Resolver
  *
  * @description
  * API endpoints responsible for creating, updating, and deleting users

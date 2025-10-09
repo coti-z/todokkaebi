@@ -23,6 +23,18 @@ import {
   QueryCategoryByIdResponse,
 } from '@project/presentation/resolver/response/category.response';
 
+/**
+ * category manager graphql resolver
+ *
+ * @description
+ * API endpoints responsible for creating, updating, and delete category
+ *
+ * @remarks
+ * categories are directly under projects
+ *
+ * **security:**
+ * - Both mutation and query require JWT authentication
+ */
 @Resolver('category')
 export class CategoryResolver {
   constructor(
@@ -30,6 +42,15 @@ export class CategoryResolver {
     private readonly commandBus: CommandBus,
   ) {}
 
+  /**
+   *
+   *
+   * @param {CreateCategoryInput} input
+   * @param {JwtPayload} payload
+   * @param {*} gqlContext
+   * @return {*}  {Promise<CreateCategoryResponse>}
+   * @memberof CategoryResolver
+   */
   @Mutation(() => CreateCategoryResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async createCategory(
