@@ -19,6 +19,15 @@ export type CreateCategoryProps = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'tasks'
 >;
 
+/**
+ * category domain entity
+ *
+ * @remarks
+ * Represents a task grouping within a project.
+ * Manage task collection and category naming
+ *
+ * @extends {BaseEntity<CategoryProps>}
+ */
 export class Category extends BaseEntity<CategoryProps> {
   private _name: string;
   private _tasks: Task[];
@@ -30,16 +39,10 @@ export class Category extends BaseEntity<CategoryProps> {
     this._projectId = props.projectId;
     this._tasks = props.tasks;
   }
-  get name(): string {
-    return this._name;
-  }
-  get projectId(): string {
-    return this._projectId;
-  }
-  get tasks(): Task[] {
-    return this._tasks || [];
-  }
 
+  // ─────────────────────────────────────
+  // Factory Method
+  // ─────────────────────────────────────
   static create(props: CreateCategoryProps): Category {
     const id = this.generateUuid();
     const now = this.generateTimestamp();
@@ -64,7 +67,25 @@ export class Category extends BaseEntity<CategoryProps> {
       name: props.name,
     });
   }
+  get name(): string {
+    return this._name;
+  }
+  get projectId(): string {
+    return this._projectId;
+  }
+  get tasks(): Task[] {
+    return this._tasks || [];
+  }
+  // ─────────────────────────────────────
+  // method
+  // ─────────────────────────────────────
 
+  /**
+   * Change category name
+   *
+   * @param {string} name
+   * @memberof Category
+   */
   changeName(name: string): void {
     if (!name) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
@@ -73,6 +94,12 @@ export class Category extends BaseEntity<CategoryProps> {
     this.updateTimestamp();
   }
 
+  /**
+   * add task
+   *
+   * @param {Task} task - task entity
+   * @memberof Category
+   */
   addTask(task: Task): void {
     if (!task) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
@@ -81,6 +108,12 @@ export class Category extends BaseEntity<CategoryProps> {
     this.updateTimestamp();
   }
 
+  /**
+   * remove task
+   *
+   * @param {string} taskId - id  of task entity
+   * @memberof Category
+   */
   removeTask(taskId: string): void {
     if (!taskId) {
       throw new DomainException(ErrorCode.BAD_REQUEST);

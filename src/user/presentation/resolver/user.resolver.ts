@@ -16,15 +16,50 @@ import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/del
 import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 
+/**
+ * 유저 관리 Graphql Resolver
+ *
+ * @description
+ * API endpoints responsible for creating, updating, and deleting users
+ *
+ * @remarks
+ * **security:**
+ * - createUser: no authentication, Rate Limiting apply
+ * - updateUser/deleteUser: JWT authentication required
+ *
+ */
 @Resolver()
 export class UserResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
+  // ─────────────────────────────────────
+  // Query
+  // ─────────────────────────────────────
+
+  /**
+   * Health Check
+   *
+   * @remarks
+   * For Development/testing purposes only
+   * @returns "OK" string
+   * @internal For development/test environment only
+   */
   @Query(() => String)
   async healthCheck(): Promise<string> {
     return 'OK';
   }
 
+  // ─────────────────────────────────────
+  // Mutation
+  // ─────────────────────────────────────
+
+  /**
+   *  Create new user (Sign up)
+   * @remarks
+   * - Public endpoint (no authentication required)
+   * - Rate limiting: 5 attempts per hour per email
+   * - Block duration: 2 hours after limit exceeded
+   */
   @RateLimit({
     limit: 5,
     window: 3600,
@@ -49,6 +84,14 @@ export class UserResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Update user profile
+   *
+   * @remark
+   * - JWT authentication required
+   * - User can only update their own profile
+   * - UserId extracted from JWT token
+   */
   @Mutation(() => ApiResponseOfUpdateUserOutput)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async updateUser(
@@ -68,6 +111,15 @@ export class UserResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Delete user account
+   *
+   * @remarks
+   * - JWT authentication required
+   * - User can only delete their own account
+   * - UserID extracted from JWT token
+   * - Permanent deletion (cannot be undone)
+   */
   @Mutation(() => ApiResponseOfDeleteUserOutput)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(

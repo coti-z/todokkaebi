@@ -36,6 +36,17 @@ export type CreateTaskProps = Omit<
   | 'actualEndDate'
 >;
 
+/**
+ * task domain entity
+ *
+ * @remarks
+ * Encapsulates the core properties and authorization logic of a task
+ *
+ * main responsibility:
+ * - Verify domain rules when changing title, categoryId, check, taskStatus, endDate, actualStartDate, actualEndDate
+ * - check validate start, end date
+ *
+ */
 export class Task extends BaseEntity<TaskProps> {
   private _title: string;
   private _categoryId: string;
@@ -57,7 +68,9 @@ export class Task extends BaseEntity<TaskProps> {
     this._endDate = props.endDate;
   }
 
-  // ----- GETTERS -----
+  // ─────────────────────────────────────
+  // getter
+  // ─────────────────────────────────────
 
   get title(): string {
     return this._title;
@@ -91,10 +104,17 @@ export class Task extends BaseEntity<TaskProps> {
     return this._actualEndDate;
   }
 
-  // ----- FACTORY METHODS -----
+  // ─────────────────────────────────────
+  // Factory Method
+  // ─────────────────────────────────────
+
   /**
-   * 새로운 Task 엔티티를 생성한다.
-   * @param props CreateTaskProps
+   * create task entity
+   *
+   * @static
+   * @param {CreateTaskProps} props
+   * @return {*}  {Task} - return task entity
+   * @memberof Task
    */
   static create(props: CreateTaskProps): Task {
     const now = this.generateTimestamp();
@@ -121,8 +141,10 @@ export class Task extends BaseEntity<TaskProps> {
   }
 
   /**
-   * 이미 존재하는 Task 엔티티를 복원한다(Reconstitution).
-   * @param props TaskProps
+   * Reconstitute task entity from database date
+   * @param props {TaskProps} props - Complete properties including id and timestamp
+   * @return {*} {Task} - Reconstituted task entity
+   * @memberof Task
    */
   static reconstitute(props: TaskProps): Task {
     // 복원 시에도 유효성 검증을 해주면 좋다.
@@ -143,7 +165,10 @@ export class Task extends BaseEntity<TaskProps> {
     });
   }
 
-  // ----- DOMAIN METHODS -----
+  // ─────────────────────────────────────
+  // method
+  // ─────────────────────────────────────
+
   markAsPending(): void {
     this._taskStatus = TaskState.PENDING;
     this.updateTimestamp();
@@ -179,12 +204,15 @@ export class Task extends BaseEntity<TaskProps> {
     this.updateTimestamp();
   }
 
-  // ----- PRIVATE METHODS -----
   /**
-   * 간단한 예시 검증 로직
-   * - 실제로 필요한 도메인 규칙과 예외 처리를 자유롭게 확장 가능
+   * validate start date, end date of task
+   *
+   * @static
+   * @param {Date} start - task start date
+   * @param {Date} end - task end date
+   * @memberof Task
    */
-  static validateDates(start: Date, end: Date) {
+  static validateDates(start: Date, end: Date): void {
     if (start > end) {
       throw new Error('시작일은 종료일보다 늦을 수 없습니다.');
     }
