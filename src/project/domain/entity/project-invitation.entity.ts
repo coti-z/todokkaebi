@@ -26,6 +26,13 @@ export type CreateProjectInvitationProps = Omit<
   'createdAt' | 'updatedAt' | 'id' | 'status'
 >;
 
+/**
+ * ProjectInvitation domain entity
+ * @remarks
+ * Represents an invitation for a user to join a project
+ * Manages the invitation lifecycle from creation to acceptance/rejection
+ *
+ */
 export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
   private readonly _projectId: string;
   private readonly _inviterUserId: string;
@@ -40,29 +47,10 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
     this._inviteeUserId = props.inviteeUserId;
     this._invitationStatus = props.status;
   }
-  get projectId(): string {
-    return this._projectId;
-  }
 
-  get inviterUserId() {
-    return this._inviterUserId;
-  }
-
-  get inviteeUserId() {
-    return this._inviteeUserId;
-  }
-
-  get status() {
-    return this._invitationStatus;
-  }
-
-  changeInvitationStatus(invitationStatus: InvitationStatus) {
-    if (!invitationStatus) {
-      throw new DomainException(ErrorCode.BAD_REQUEST);
-    }
-    this._invitationStatus = invitationStatus;
-  }
-
+  // ─────────────────────────────────────
+  // Factory Method
+  // ─────────────────────────────────────
   static create(props: CreateProjectInvitationProps): ProjectInvitation {
     if (!props) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
@@ -98,5 +86,38 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
       inviteeUserId: props.inviteeUserId,
       inviterUserId: props.inviterUserId,
     });
+  }
+
+  // ─────────────────────────────────────
+  // getter
+  // ─────────────────────────────────────
+
+  get projectId(): string {
+    return this._projectId;
+  }
+
+  get inviterUserId(): string {
+    return this._inviterUserId;
+  }
+
+  get inviteeUserId(): string {
+    return this._inviteeUserId;
+  }
+
+  get status(): string {
+    return this._invitationStatus;
+  }
+
+  /**
+   * change invitation status
+   *
+   * @param {InvitationStatus} invitationStatus
+   * @memberof ProjectInvitation
+   */
+  changeInvitationStatus(invitationStatus: InvitationStatus): void {
+    if (!invitationStatus) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._invitationStatus = invitationStatus;
   }
 }

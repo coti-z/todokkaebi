@@ -24,6 +24,18 @@ export type CreateProjectMembershipProps = Omit<
   'id' | 'updatedAt' | 'createdAt'
 >;
 
+/**
+ * ProjectMembership domain entity
+ *
+ * @remarks
+ * Represents a user'membership in a project with a specific role
+ *
+ * Main responsibility:
+ * - Manage the relationship between User and Project
+ * - Define user's role-based permissions (OWNER, MEMBER, etc.)
+ * - Enforce role change business rules
+ *
+ */
 export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
   private readonly _projectId: string;
 
@@ -38,6 +50,9 @@ export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
     this._role = props.role;
   }
 
+  // ─────────────────────────────────────
+  // getter
+  // ─────────────────────────────────────
   get projectId(): string {
     return this._projectId;
   }
@@ -50,12 +65,9 @@ export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
     return this._role;
   }
 
-  changeRole(membershipRole: MembershipRole): void {
-    if (!membershipRole) {
-      throw new DomainException(ErrorCode.BAD_REQUEST);
-    }
-    this._role = membershipRole;
-  }
+  // ─────────────────────────────────────
+  // Factory Method
+  // ─────────────────────────────────────
 
   static create(props: CreateProjectMembershipProps): ProjectMembership {
     const id = this.generateUuid();
@@ -80,5 +92,22 @@ export class ProjectMembership extends BaseEntity<ProjectMembershipProps> {
       updatedAt: props.updatedAt,
       projectId: props.projectId,
     });
+  }
+
+  /**
+   * Change membership role
+   *
+   * @param {MembershipRole} membershipRole - New role to assign
+   * @memberof ProjectMembership
+   *
+   * @remarks
+   * - Validate role before assignment
+   * - Updates entity timestamp automatically via updateTimestamp()
+   */
+  changeRole(membershipRole: MembershipRole): void {
+    if (!membershipRole) {
+      throw new DomainException(ErrorCode.BAD_REQUEST);
+    }
+    this._role = membershipRole;
   }
 }

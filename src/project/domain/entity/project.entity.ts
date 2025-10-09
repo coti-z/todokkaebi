@@ -24,6 +24,17 @@ export type CreateProjectProps = Omit<
   'id' | 'createdAt' | 'updatedAt'
 >;
 
+/**
+ * project domain entity
+ *
+ * @remarks
+ * Encapsulates the core properties and authorization logic of a project
+ *
+ * main responsibility:
+ * - Verify domain rules when changing project name or admin
+ * - check user authorization (Admin/Member/Owner)
+ * - Managing associated entities (Category, Membership, Invitation)
+ */
 export class Project extends BaseEntity<ProjectProps> {
   private _adminId: string;
   private _name: string;
@@ -42,6 +53,18 @@ export class Project extends BaseEntity<ProjectProps> {
     this._projectMemberships = props.memberships || [];
   }
 
+  /**
+   * create project entity
+   *
+   * @static
+   * @param {CreateProjectProps} props
+   * @return {*}  {Project} - return project entity
+   * @memberof Project
+   *
+   * @remarks
+   * - Factory Method pattern: Encapsulating entity creation logic
+   * - used when creating a new business object
+   */
   static create(props: CreateProjectProps): Project {
     const now = this.generateTimestamp();
     const id = this.generateUuid();
@@ -58,6 +81,13 @@ export class Project extends BaseEntity<ProjectProps> {
     });
   }
 
+  /**
+   * Reconstitute Project entity from database data
+   *
+   * @param {ProjectProps} props - Complete properties including id and timestamps
+   * @return {*}  {Project} - Reconstituted project entity
+   * @memberof Project
+   */
   static reconstitute(props: ProjectProps): Project {
     return new Project({
       name: props.name,
@@ -70,6 +100,10 @@ export class Project extends BaseEntity<ProjectProps> {
       adminId: props.adminId,
     });
   }
+
+  // ─────────────────────────────────────
+  // getter
+  // ─────────────────────────────────────
 
   get adminId(): string {
     return this._adminId;
@@ -91,11 +125,26 @@ export class Project extends BaseEntity<ProjectProps> {
     return this._projectInvitations;
   }
 
-  addCategory(category: Category) {
+  // ─────────────────────────────────────
+  // method
+  // ─────────────────────────────────────
+  /**
+   * add category
+   *
+   * @param {Category} category - category entity
+   * @memberof Project
+   */
+  addCategory(category: Category): void {
     this._categories.push(category);
     this.updateTimestamp();
   }
-  changeName(name: string) {
+  /**
+   * change name
+   *
+   * @param {string} name - change project name
+   * @memberof Project
+   */
+  changeName(name: string): void {
     if (!name) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }
@@ -103,15 +152,19 @@ export class Project extends BaseEntity<ProjectProps> {
     this.updateTimestamp();
   }
 
-  changeAdminId(id: string) {
+  /**
+   * change admin
+   *
+   * @param {string} id - User ID
+   * @memberof Project
+   */
+  changeAdminId(id: string): void {
     if (!id) {
       throw new DomainException(ErrorCode.BAD_REQUEST);
     }
     this._adminId = id;
     this.updateTimestamp();
   }
-
-  // Authorization helper methods
   isAdmin(userId: string): boolean {
     return this._adminId === userId;
   }
@@ -132,6 +185,13 @@ export class Project extends BaseEntity<ProjectProps> {
     return membership?.role || null;
   }
 
+  /**
+   * check project access
+   *
+   * @param {string} userId - User ID
+   * @return {*}  {boolean} - Admin
+   * @memberof Project
+   */
   hasAccessPermission(userId: string): boolean {
     return this.isAdmin(userId) || this.isMember(userId);
   }
