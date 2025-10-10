@@ -26,13 +26,33 @@ import {
 } from '@project/presentation/resolver/response/task.response';
 import { TaskType } from '@project/presentation/resolver/type/task.type';
 
+/**
+ * Task Graph Resolver
+ *
+ * @remarks
+ * Handles task management operation within categories
+ *
+ * security:
+ * - All operations require JWT authentication
+ * - User must have project access permission
+ *
+ */
 @Resolver(() => TaskType)
 export class TaskResolver {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
+  // ─────────────────────────────────────
+  // Mutation
+  // ─────────────────────────────────────
 
+  /**
+   * Create new task in category
+   *
+   * @remarks
+   * - JWT authentication required
+   */
   @Mutation(() => CreateTaskResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async createTask(
@@ -52,6 +72,14 @@ export class TaskResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Update task information
+   *
+   * @remarks
+   * - JWT authentication required
+   * - Can update time, status, dates, check state, category id
+   * - Validates date constraints if dates are updated
+   */
   @Mutation(() => UpdateTaskResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async updateTask(
@@ -71,6 +99,14 @@ export class TaskResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Delete task
+   *
+   * @remarks
+   * - JWT authentication required
+   * - Removes task from category
+   * - Permanent deletion (cannot be undone)
+   */
   @Mutation(() => DeleteTaskResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteTask(
@@ -90,6 +126,13 @@ export class TaskResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Query single task by ID
+   *
+   * @remarks
+   * - JWT authentication required
+   * - User must have access to the project containing this task
+   */
   @Query(() => QueryTaskByIdResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryTaskById(
@@ -110,6 +153,13 @@ export class TaskResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Query all tasks in a category
+   *
+   * @remarks
+   * - JWT authentication required
+   * - User must have access to the project
+   */
   @Query(() => QueryTaskByCategoryIdResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryTasksByCategoryId(

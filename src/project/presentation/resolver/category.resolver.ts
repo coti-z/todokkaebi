@@ -23,6 +23,18 @@ import {
   QueryCategoryByIdResponse,
 } from '@project/presentation/resolver/response/category.response';
 
+/**
+ * Category manager graphql resolver
+ *
+ * @description
+ * API endpoints responsible for query, create, updating, and delete category
+ *
+ * @remarks
+ * categories are directly under projects
+ *
+ * **security:**
+ * - Both mutation and query require JWT authentication
+ */
 @Resolver('category')
 export class CategoryResolver {
   constructor(
@@ -30,6 +42,9 @@ export class CategoryResolver {
     private readonly commandBus: CommandBus,
   ) {}
 
+  /**
+   *  Create new category in project
+   */
   @Mutation(() => CreateCategoryResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async createCategory(
@@ -51,6 +66,12 @@ export class CategoryResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Delete category from project
+   *
+   * @remarks
+   * - All tasks in category will be affected (check business rule)
+   */
   @Mutation(() => DeleteCategoryResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteCategory(
@@ -72,7 +93,12 @@ export class CategoryResolver {
       CategoryPresentationMapper.readModelToDeleteCategoryOutput(result);
     return ResponseManager.success(output);
   }
-
+  /**
+   * Change category name
+   *
+   * @remarks
+   * - User must have MEMBERSHIP permission in the project
+   */
   @Mutation(() => ChangeCategoryNameResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async changeCategoryName(
@@ -95,6 +121,16 @@ export class CategoryResolver {
     return ResponseManager.success(output);
   }
 
+  // ─────────────────────────────────────
+  // Query
+  // ─────────────────────────────────────
+
+  /**
+   * Query category by ID
+   *
+   * @remarks
+   * - User must have access permission to the project
+   */
   @Query(() => QueryCategoryByIdResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryCategoryById(
