@@ -25,6 +25,16 @@ import {
 } from '@project/presentation/resolver/response/project.response';
 import { ProjectType } from '@project/presentation/resolver/type/project.type';
 
+/**
+ * Project Resolver graphql resolver
+ *
+ * @description
+ * API endpoints responsible for query, creating, updating, and delete project
+ *
+ * @remarks
+ * **security:**
+ * - mutation and query require JWT authentication
+ */
 @Resolver(() => ProjectType)
 export class ProjectResolver {
   constructor(
@@ -32,11 +42,32 @@ export class ProjectResolver {
     private readonly commandBus: CommandBus,
   ) {}
 
+  // ─────────────────────────────────────
+  // Health Check
+  // ─────────────────────────────────────
+
+  /**
+   * @remarks
+   * For Development/testing purposes only
+   * @internal For development/test environment only
+   */
   @Query(() => String)
-  async healthCheck() {
+  async healthCheck(): Promise<string> {
     return 'OK';
   }
 
+  // ─────────────────────────────────────
+  // Mutation
+  // ─────────────────────────────────────
+
+  /**
+   * Create new project
+   *
+   * @remarks
+   * - JWT authentication required
+   * - Creator becomes project Admin automatically
+   * - Initializes empty categories and memberships
+   */
   @Mutation(() => CreateProjectResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async createProject(
@@ -57,6 +88,13 @@ export class ProjectResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Delete project
+   *
+   * @remarks
+   * - JWT authentication required
+   * - Only Admin can update project
+   */
   @Mutation(() => DeleteProjectResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteProject(
@@ -75,6 +113,15 @@ export class ProjectResolver {
     const output = ProjectPresentationMapper.deleteProjectToOutput(result);
     return ResponseManager.success(output);
   }
+
+  /**
+   * Delete project
+   * @remarks
+   * - JWT authentication required
+   * - Only Admin or OWNER can update project
+   * - Can update project name and other metadata
+   *
+   */
 
   @Mutation(() => UpdateProjectResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
@@ -96,6 +143,14 @@ export class ProjectResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Query single project by ID
+   *
+   * @remarks
+   * - JWT authentication required
+   * - User must have access permission (Admin/Member)
+   * - Returns project with categories and memberships
+   */
   @Query(() => QueryProjectResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProject(
@@ -115,6 +170,14 @@ export class ProjectResolver {
     return ResponseManager.success(output);
   }
 
+  /**
+   * Query all projects accessible by current user
+   *
+   * @remarks
+   * - JWT authentication required
+   * - Returns projects when user is Admin or Member
+   * - Includes project summary information
+   */
   @Query(() => QueryProjectsResponse)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProjects(
