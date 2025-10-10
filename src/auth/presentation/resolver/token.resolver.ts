@@ -14,10 +14,32 @@ import {
   ReissueTokenOutput,
 } from '@auth/presentation/resolver/dto/output/reissue-token.output';
 
+/**
+ * Token GraphQL Resolver
+ *
+ * @description
+ * API endpoints responsible for JWT token lifecycle management
+ *
+ * @remarks
+ * **Security:**
+ * - reissueToken: Requires valid refresh token authentication
+ */
 @Resolver()
 export class TokenResolver {
   constructor(private readonly commandBus: CommandBus) {}
 
+  // ─────────────────────────────────────
+  // Mutation
+  // ─────────────────────────────────────
+
+  /**
+   * Reissue new access token using refresh token
+   *
+   * @remarks
+   * - Refresh token authentication required
+   * - Returns new access token and refresh token pair
+   * - Old refresh token is invalidated after successful reissue
+   */
   @Mutation(() => ApiResponseOfReissueTokenOutput)
   @UseGuards(JwtAuthWithRefreshTokenGuard)
   async reissueToken(
