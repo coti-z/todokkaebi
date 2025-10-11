@@ -30,6 +30,7 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
     }
 
     const query = new ValidateAccessTokenQuery(accessToken, requestContext);
+
     try {
       const payload = this.jwtTokenService.verifyAccessToken(accessToken);
       await this.queryBus.execute(query);
@@ -40,7 +41,7 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
       };
       req['user'] = payloadWithToken;
       return true;
-    } catch (error) {
+    } catch {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }

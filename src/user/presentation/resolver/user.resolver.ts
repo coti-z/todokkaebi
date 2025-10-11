@@ -41,7 +41,6 @@ export class UserResolver {
    *
    * @remarks
    * For Development/testing purposes only
-   * @returns "OK" string
    * @internal For development/test environment only
    */
   @Query(() => String)

@@ -56,13 +56,13 @@
   "jest.virtualFolders": [
     {
       "name": "unit",
-      "rootPath": ".",
+      "rootPath": "src",
       "jestCommandLine": "npm run test:unit",
       "testPathPattern": ".*\\.spec\\.ts$"
     },
     {
       "name": "e2e",
-      "rootPath": ".",
+      "rootPath": "test",
       "jestCommandLine": "npm run test:e2e",
       "testPathPattern": ".*\\.e2e-spec\\.ts$"
     }

@@ -35,7 +35,10 @@ export class CreateTaskHandler implements ICommandHandler<CreateTaskCommand> {
     }
   }
 
-  private async authorize(categoryId: string, reqUserId: string) {
+  private async authorize(
+    categoryId: string,
+    reqUserId: string,
+  ): Promise<void> {
     const project = await this.projectService.queryProjectByCategoryId({
       categoryId,
     });

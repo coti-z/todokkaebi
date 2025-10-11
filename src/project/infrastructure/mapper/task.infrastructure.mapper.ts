@@ -11,7 +11,7 @@ export interface TaskRecord {
   categoryId: string;
   startDate: Date;
   endDate: Date;
-  actualStartDate: Date;
+  actualStartDate: Date | null;
   actualEndDate: Date | null;
   updatedAt: Date;
   createdAt: Date;
@@ -46,7 +46,7 @@ export class TaskInfraMapper {
       categoryId: entity.categoryId,
       startDate: entity.startDate,
       endDate: entity.endDate,
-      actualStartDate: entity.actualStartDate,
+      actualStartDate: entity.actualStartDate || null,
       actualEndDate: entity.actualEndDate || null,
       updatedAt: entity.updatedAt,
       createdAt: entity.createdAt,
@@ -71,7 +71,7 @@ export class TaskInfraMapper {
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
       actualEndDate: record.actualEndDate || undefined,
-      actualStartDate: record.actualStartDate,
+      actualStartDate: record.actualStartDate || undefined,
       categoryId: record.categoryId,
       startDate: record.startDate,
       endDate: record.endDate,
