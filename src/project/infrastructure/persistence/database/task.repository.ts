@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  BaseRepository,
-  PrismaService,
-  TransactionContext,
-} from '@libs/database';
+import { BaseRepository } from '@libs/database';
 
 import { ITaskRepository } from '@project/application/port/out/task-repository.port';
 import { Task } from '@project/domain/entity/task.entity';

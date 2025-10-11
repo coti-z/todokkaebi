@@ -19,7 +19,7 @@ export class TaskReadModel {
 
   endDate: Date;
 
-  actualStartDate: Date;
+  actualStartDate: Date | undefined;
 
   actualEndDate: Date | undefined;
 

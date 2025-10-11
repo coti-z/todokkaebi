@@ -1,14 +1,21 @@
 import { Field, InputType, PickType } from '@nestjs/graphql';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 @InputType()
 export class CategoryInput {
   @Field()
+  @IsNotEmpty()
+  @IsUUID()
   categoryId: string;
 
   @Field()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
   @Field()
+  @IsNotEmpty()
+  @IsUUID()
   projectId: string;
 }
 

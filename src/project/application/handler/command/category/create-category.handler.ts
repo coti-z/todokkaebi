@@ -10,7 +10,6 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { CreateCategoryCommand } from '@project/application/port/in/command/category/create-category.command';
 import { CategoryService } from '@project/application/service/category.service';
-import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { Category } from '@project/domain/entity/category.entity';
 import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
@@ -40,14 +39,14 @@ export class CreateCategoryHandler
     }
   }
 
-  private async authorize(projectId: string, reqUserId: string) {
+  private async authorize(projectId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectById({
       id: projectId,
     });
     CategoryOrganizationPolicy.canCreateCategory(project, reqUserId);
   }
 
-  private async process(command: CreateCategoryCommand) {
+  private async process(command: CreateCategoryCommand): Promise<Category> {
     return await this.categoryService.createCategory({
       name: command.name,
       projectId: command.projectId,

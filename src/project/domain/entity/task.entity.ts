@@ -54,7 +54,7 @@ export class Task extends BaseEntity<TaskProps> {
   private _taskStatus: TaskState;
   private _startDate: Date;
   private _endDate: Date;
-  private _actualStartDate: Date;
+  private _actualStartDate: Date | undefined;
   private _actualEndDate: Date | undefined;
 
   private constructor(props: TaskProps) {
@@ -96,7 +96,7 @@ export class Task extends BaseEntity<TaskProps> {
     return this._endDate;
   }
 
-  get actualStartDate(): Date {
+  get actualStartDate(): Date | undefined {
     return this._actualStartDate;
   }
 

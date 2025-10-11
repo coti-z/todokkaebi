@@ -33,8 +33,8 @@ export class TaskType {
   @Field()
   endDate: Date;
 
-  @Field()
-  actualStartDate: Date;
+  @Field({ nullable: true })
+  actualStartDate?: Date;
 
   @Field({ nullable: true })
   actualEndDate?: Date;

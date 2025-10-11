@@ -104,7 +104,7 @@ export class ProjectInvitation extends BaseEntity<ProjectInvitationProps> {
     return this._inviteeUserId;
   }
 
-  get status(): string {
+  get status(): InvitationStatus {
     return this._invitationStatus;
   }
 
