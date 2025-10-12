@@ -17,7 +17,7 @@
 - [테스트](#-테스트)
 - [라이선스](#-라이선스)
 
-## 🎯 프로젝트 개요
+## 프로젝트 개요
 
 **Todokkaebi**는 팀 협업에 최적화된 Task Management System으로, 다음과 같은 계층 구조를 제공합니다:
 
@@ -29,22 +29,21 @@
 
 🔗 **프로젝트 정보**: https://bside.best/projects/detail/P240926112258
 
-## ✨ 주요 특징
+## 주요 특징
 
-### 🏗️ 아키텍처
+### 아키텍처
 
 - **DDD (Domain-Driven Design)** - 도메인 중심 설계로 비즈니스 로직 명확화
 - **CQRS (Command Query Responsibility Segregation)** - 읽기/쓰기 책임 분리
 - **Hexagonal Architecture** - 포트와 어댑터 패턴으로 의존성 역전
 - **Layered Architecture** - Presentation → Application → Domain ← Infrastructure
 
-### 🔐 인증 & 보안
+### 인증 & 보안
 
 - **JWT 기반 인증** (Access Token + Refresh Token)
-- **카카오 OAuth 2.0** 소셜 로그인 지원
 - **권한 기반 접근 제어** (RBAC)
 
-### 🚀 성능 & 확장성
+### 성능 & 확장성
 
 - **Redis 캐싱** - 빠른 응답 속도 보장
 - **분산 락** - 동시성 제어
@@ -57,7 +56,7 @@
 - **실시간 진행률 추적** - 완료율 자동 계산
 - **날짜 기반 일정 관리** - 시작일/종료일/실제 완료일 추적
 
-## 🛠️ 기술 스택
+## 기술 스택
 
 ### Backend Core
 
@@ -117,7 +116,8 @@ Presentation  ──────►  Application  ──────►  Domain
 Infrastructure  ──────────────────────────────┘
 ```
 
-> 💡 **핵심 원칙**: Domain 레이어는 다른 레이어에 의존하지 않습니다 (순수 비즈니스 로직)
+> **핵심 원칙**: Domain 레이어는 다른 레이어에 의존하지 않습니다 (순수 비즈니스 로직)
+> 현재 Domain Layer는 라이브러리 사용 최소화, 추후 의존성 없앨 예정
 
 ### 주요 디자인 패턴
 
@@ -204,7 +204,7 @@ npm run start:prod
 
 - GraphQL Playground: http://localhost:3000/graphql
 
-## 📚 API 문서
+## API 문서
 
 ### GraphQL API
 
@@ -270,7 +270,7 @@ query {
 }
 ```
 
-## 📂 프로젝트 구조
+## 프로젝트 구조
 
 ```
 src/
@@ -390,13 +390,13 @@ npm run test:debug
 npm run test:unit:cov
 ```
 
-## 📖 추가 문서
+## 추가 문서
 
 - [아키텍처 가이드](./CLAUDE.md) - 상세한 아키텍처 설명 및 개발 가이드
 - [API 문서](./docs/api.md) - GraphQL API 명세
 - [에러 처리 가이드](./docs/error-context-implementation-guide.md) - ErrorContext 구현 가이드
 - [캐싱 전략](./docs/cache.md) - Redis 캐싱 및 성능 최적화
 
-## 📝 라이선스
+## 라이선스
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참고하세요.
