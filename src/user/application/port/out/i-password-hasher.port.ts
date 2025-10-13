@@ -2,7 +2,7 @@ export const PASSWORD_HASHER_OUTBOUND_PORT = Symbol(
   'PASSWORD_HASHER_OUTBOUND_PORT',
 );
 
-export interface PasswordHasherOutboundPort {
+export interface IPasswordHasherOutboundPort {
   /**
    * 평문 비밀번호를 해싱합니다.
    * @param password 평문 비밀번호

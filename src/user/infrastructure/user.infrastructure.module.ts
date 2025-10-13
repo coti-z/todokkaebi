@@ -1,53 +1,37 @@
 import { Module } from '@nestjs/common';
-import { ClientGrpc, ClientsModule, Transport } from '@nestjs/microservices';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { DatabaseModule } from '@libs/database';
-import { AuthMicroservice } from '@libs/grpc';
 
+import { AuthApplicationModule } from '@auth/application/auth.application.module';
 import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
 
-import { UserRepositorySymbol } from '@user/application/port/out/user-repository.port';
-import {
-  USER_GRPC_CLIENT_SYMBOL,
-  USER_GRPC_SERVICE_SYMBOL,
-} from '@user/infrastructure/adapter/grpc/options/user-grpc-client.options';
+import { AUTH_CLIENT_OUTBOUND_PORT } from '@user/application/port/out/i-auth-client.port';
+import { UserRepositorySymbol } from '@user/application/port/out/i-user-repository.port';
+import { AuthClientAdapter } from '@user/infrastructure/adapter/cqrs/auth.client';
 import { BcryptPasswordHasherAdapter } from '@user/infrastructure/adapter/password-hasher.adapter';
 import { UserRepositoryImpl } from '@user/infrastructure/persistence/database/user.repository';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    ClientsModule.register([
-      {
-        name: USER_GRPC_CLIENT_SYMBOL,
-        transport: Transport.GRPC,
-        options: {
-          package: 'auth',
-          protoPath: './proto/auth.proto',
-          url: 'auth:50051',
-        },
-      },
-    ]),
-  ],
+  imports: [DatabaseModule, AuthApplicationModule, CqrsModule],
   providers: [
     {
       provide: PASSWORD_HASHER_OUTBOUND_PORT,
       useClass: BcryptPasswordHasherAdapter,
     },
     {
+      provide: AUTH_CLIENT_OUTBOUND_PORT,
+      useClass: AuthClientAdapter,
+    },
+    {
       provide: UserRepositorySymbol,
       useClass: UserRepositoryImpl,
     },
-    {
-      provide: USER_GRPC_SERVICE_SYMBOL,
-      useFactory: (client: ClientGrpc) => {
-        return client.getService<AuthMicroservice.AuthServiceClient>(
-          AuthMicroservice.AUTH_SERVICE_NAME,
-        );
-      },
-      inject: [USER_GRPC_CLIENT_SYMBOL],
-    },
   ],
-  exports: [UserRepositorySymbol, USER_GRPC_SERVICE_SYMBOL],
+  exports: [
+    AUTH_CLIENT_OUTBOUND_PORT,
+    PASSWORD_HASHER_OUTBOUND_PORT,
+    UserRepositorySymbol,
+  ],
 })
 export class UserInfrastructureModule {}

@@ -1,10 +1,10 @@
-# 🗂️ Todokkaebi
+# Todokkaebi
 
 협업 기반 Task Management System - DDD와 CQRS 패턴을 적용한 TODO 관리 플랫폼
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![NestJS](https://img.shields.io/badge/NestJS-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com/) [![GraphQL](https://img.shields.io/badge/GraphQL-E10098?logo=graphql&logoColor=white)](https://graphql.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-## 📋 목차
+## 목차
 
 - [프로젝트 개요](#-프로젝트-개요)
 - [주요 특징](#-주요-특징)
@@ -50,7 +50,7 @@
 - **트랜잭션 관리** - 데이터 일관성 보장
 - **속도 제한 (Rate Limiting)** - API 남용 방지
 
-### 📊 데이터 구조
+### 데이터 구조
 
 - **계층적 Task 관리** - Project > Category > Task 3단계 구조
 - **실시간 진행률 추적** - 완료율 자동 계산
@@ -157,24 +157,7 @@ cp .env.example .env
 
 ### 환경변수 설정
 
-`.env` 파일에 다음 항목들을 설정해야 합니다:
-
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/todokkaebi"
-
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-# JWT
-JWT_ACCESS_SECRET=your-access-secret
-JWT_REFRESH_SECRET=your-refresh-secret
-
-# Kakao OAuth
-KAKAO_CLIENT_ID=your-kakao-client-id
-KAKAO_REDIRECT_URI=http://localhost:3000/auth/kakao/callback
-```
+`.env` 파일에 다음 항목들을 설정
 
 ### 데이터베이스 마이그레이션
 
@@ -236,40 +219,6 @@ npm run start:prod
 - `updateTask` - 태스크 수정 (상태, 체크박스 등)
 - `getTasksWithCategoryId` - 카테고리별 태스크 목록
 
-### GraphQL Playground 예시
-
-```graphql
-# 프로젝트 생성
-mutation {
-  createProject(input: { name: "새 프로젝트" }) {
-    success
-    project {
-      id
-      name
-      totalTask
-      completeTask
-    }
-  }
-}
-
-# 카테고리와 태스크 조회
-query {
-  getProject(input: { id: "project-id" }) {
-    project {
-      name
-      categories {
-        name
-        tasks {
-          title
-          status
-          check
-        }
-      }
-    }
-  }
-}
-```
-
 ## 프로젝트 구조
 
 ```
@@ -303,7 +252,7 @@ src/
     └── interceptor/             # 인터셉터
 ```
 
-## 🧑‍💻 개발 가이드
+## 개발 가이드
 
 ### 새 기능 추가 워크플로우
 
@@ -392,7 +341,6 @@ npm run test:unit:cov
 
 ## 추가 문서
 
-- [아키텍처 가이드](./CLAUDE.md) - 상세한 아키텍처 설명 및 개발 가이드
 - [API 문서](./docs/api.md) - GraphQL API 명세
 - [에러 처리 가이드](./docs/error-context-implementation-guide.md) - ErrorContext 구현 가이드
 - [캐싱 전략](./docs/cache.md) - Redis 캐싱 및 성능 최적화

@@ -8,10 +8,12 @@ import {
 } from '@libs/database';
 import { ErrorHandlingStrategy } from '@libs/exception';
 
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
-
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
 import { CreateUserCommand } from '@user/application/port/in/create-user.command';
+import {
+  AUTH_CLIENT_OUTBOUND_PORT,
+  IAuthClientPort,
+} from '@user/application/port/out/i-auth-client.port';
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 
@@ -20,8 +22,11 @@ import { User } from '@user/domain/entity/user.entity';
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     private readonly userService: UserService,
-    private readonly userCredentialService: UserCredentialService,
     private readonly errorHandlingStrategy: ErrorHandlingStrategy,
+
+    @Inject(AUTH_CLIENT_OUTBOUND_PORT)
+    private readonly authClient: IAuthClientPort,
+
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
   ) {}
@@ -37,10 +42,12 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
           command.birthday,
         ),
       );
-      await this.userCredentialService.createCredential({
+
+      await this.authClient.storeUserCredential({
         email: user.email,
-        passwordHash: user.hashedPassword,
         userId: user.id,
+        context: command.context,
+        passwordHash: user.hashedPassword,
       });
       return user;
     } catch (error) {

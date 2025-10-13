@@ -49,7 +49,7 @@ model Project {
   updatedAt          DateTime            @updatedAt
 
   // 관계 설정 - 이것도 relation 이름 명시해야 함
-  admin Users @relation("ProjectAdmin", fields: [adminId], references: [id])
+  admin Users @relation("ProjectAdmin", fields: [adminId], references: [id], onDelete: Cascade)
 
   // 관리자 조회를 위한 인덱스
   @@index([adminId])

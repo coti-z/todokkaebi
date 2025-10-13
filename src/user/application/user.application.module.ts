@@ -10,10 +10,6 @@ import { DecoratorsModule } from '@libs/decorators/decorators.module';
 import { ErrorHandlingStrategy } from '@libs/exception';
 import { RedisModule } from '@libs/redis';
 
-import { UserCredentialService } from '@auth/application/service/user-credential.service';
-import { AuthModule } from '@auth/auth.module';
-import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructure.module';
-
 import { CreateUserHandler } from '@user/application/handler/create-user.handler';
 import { DeleteUserHandler } from '@user/application/handler/delete-user.handler';
 import { UpdateUserHandler } from '@user/application/handler/update-user.handler';
@@ -22,11 +18,9 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
 
 @Module({
   imports: [
-    CqrsModule,
     UserInfrastructureModule,
-    AuthInfrastructureModule,
+    CqrsModule,
     DatabaseModule,
-    AuthModule,
     RedisModule,
     DecoratorsModule,
   ],
@@ -39,15 +33,8 @@ import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructu
     CreateUserHandler,
     UpdateUserHandler,
     DeleteUserHandler,
-
-    UserService,
-    UserCredentialService,
-  ],
-  exports: [
-    CreateUserHandler,
-    UpdateUserHandler,
-    DeleteUserHandler,
     UserService,
   ],
+  exports: [CreateUserHandler, UpdateUserHandler, DeleteUserHandler],
 })
 export class UserApplicationModule {}

@@ -41,7 +41,6 @@
     "^@libs/response$": "<rootDir>/libs/response/src",
     "^@libs/common$": "<rootDir>/libs/common/src",
     "^@libs/test$": "<rootDir>/libs/test/src",
-    "^@libs/grpc$": "<rootDir>/libs/grpc/src",
     "^@libs/token$": "<rootDir>/libs/token/src",
     "^@libs/token/(.*)$": "<rootDir>/libs/token/src/$1",
     "^@libs/redis$": "<rootDir>/libs/redis/src",

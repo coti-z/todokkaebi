@@ -7,7 +7,7 @@ import {
   FindUserByEmailArgs,
   FindUserByIdArgs,
   IUserRepository,
-} from '@user/application/port/out/user-repository.port';
+} from '@user/application/port/out/i-user-repository.port';
 import { User } from '@user/domain/entity/user.entity';
 import { UserMapper } from '@user/infrastructure/mapper/user.mapper';
 

@@ -1,8 +1,6 @@
-import { ICommand } from '@nestjs/cqrs';
-
 import { RequestContext } from '@libs/exception';
 
-export class StoreUserCredentialCommand implements ICommand {
+export class StoreUserCredentialParams {
   constructor(
     public readonly userId: string,
     public readonly email: string,
