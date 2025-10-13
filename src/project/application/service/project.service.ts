@@ -10,7 +10,6 @@ import {
   QueryProjectParams,
   QueryProjectsByUserIdParams,
   UpdateProjectParams,
-  ValidateOwnerByCategoryIdParams,
 } from '@project/application/param/project.params';
 import {
   IProjectRepository,
