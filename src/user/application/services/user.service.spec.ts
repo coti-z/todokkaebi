@@ -2,16 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ApplicationException, ErrorCode } from '@libs/exception';
 
-import { PASSWORD_HASHER_OUTBOUND_PORT } from '@auth/application/port/out/password-hasher.port';
+import {
+  PASSWORD_HASHER_OUTBOUND_PORT,
+  PasswordHasherOutboundPort,
+} from '@auth/application/port/out/password-hasher.port';
 
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
 import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
-import { PasswordHasherOutboundPort } from '@user/application/port/out/password-hasher.port';
 import {
   IUserRepository,
   UserRepositorySymbol,
-} from '@user/application/port/out/user-repository.port';
+} from '@user/application/port/out/i-user-repository.port';
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 

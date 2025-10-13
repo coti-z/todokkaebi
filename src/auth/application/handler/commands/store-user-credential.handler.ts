@@ -6,7 +6,7 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { Lock, RateLimit } from '@libs/decorators';
+import { Lock } from '@libs/decorators';
 import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { StoreUserCredentialCommand } from '@auth/application/port/in/commands/store-user-credential.command';

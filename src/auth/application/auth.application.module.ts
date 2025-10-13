@@ -13,7 +13,10 @@ import { RedisModule } from '@libs/redis';
 
 import { BasicLoginHandler } from '@auth/application/handler/commands/basic-login.handler';
 import { BasicLogoutHandler } from '@auth/application/handler/commands/basic-logout.handler';
+import { DeleteUserCredentialHandler } from '@auth/application/handler/commands/delete-user-credential.handler';
 import { ReissueTokenHandler } from '@auth/application/handler/commands/reissue-token.handler';
+import { StoreUserCredentialHandler } from '@auth/application/handler/commands/store-user-credential.handler';
+import { UpdateUserCredentialHandler } from '@auth/application/handler/commands/update-user-credential.handler';
 import { ValidateAccessTokenHandler } from '@auth/application/handler/query/validate-access-token.handler';
 import { ValidateRefreshTokenHandler } from '@auth/application/handler/query/validate-refresh-token.handler';
 import { TokenByJWTService } from '@auth/application/service/token-by-jwt.service';
@@ -44,6 +47,9 @@ import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructu
     ReissueTokenHandler,
     ValidateAccessTokenHandler,
     ValidateRefreshTokenHandler,
+    StoreUserCredentialHandler,
+    UpdateUserCredentialHandler,
+    DeleteUserCredentialHandler,
     UserCredentialService,
     TokenService,
     TokenByJWTService,
@@ -58,6 +64,10 @@ import { AuthInfrastructureModule } from '@auth/infrastructure/auth.infrastructu
     ReissueTokenHandler,
     ValidateAccessTokenHandler,
     ValidateRefreshTokenHandler,
+    StoreUserCredentialHandler,
+    UpdateUserCredentialHandler,
+    DeleteUserCredentialHandler,
+
     UserCredentialService,
   ],
 })

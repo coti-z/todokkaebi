@@ -13,7 +13,7 @@ import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
 import {
   IUserRepository,
   UserRepositorySymbol,
-} from '@user/application/port/out/user-repository.port';
+} from '@user/application/port/out/i-user-repository.port';
 import { User } from '@user/domain/entity/user.entity';
 
 @Injectable()

@@ -1,8 +1,0 @@
-schema: 'http://localhost:3003/graphql'
-generates:
-  apps/project/generated.ts:
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-graphql-request'
-      # or apollo, etc. 원하는 클라이언트 방식에 따라

@@ -31,7 +31,6 @@
       "@libs/response": ["libs/response/src"],
       "@libs/common": ["libs/common/src"],
       "@libs/test": ["libs/test/src"],
-      "@libs/grpc": ["libs/grpc/src"],
       "@libs/token": ["libs/token/src"],
       "@libs/token/*": ["libs/token/src/*"],
       "@libs/redis": ["libs/redis/src"],

@@ -28,7 +28,10 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   @Transactional()
   async execute(command: DeleteUserCommand): Promise<User> {
     try {
-      return await this.userService.deleteUser(new DeleteUserParam(command.id));
+      const user = await this.userService.deleteUser(
+        new DeleteUserParam(command.id),
+      );
+      return user;
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }
