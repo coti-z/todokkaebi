@@ -15,7 +15,6 @@ import { CategoryService } from '@project/application/service/category.service';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { Category } from '@project/domain/entity/category.entity';
-import { Project } from '@project/domain/entity/project.entity';
 import { CategoryOrganizationPolicy } from '@project/domain/logic/category-management/category-organization.policy';
 
 /**
@@ -52,7 +51,10 @@ export class DeleteCategoryHandler
     }
   }
 
-  private async authorize(categoryId: string, reqUserId: string) {
+  private async authorize(
+    categoryId: string,
+    reqUserId: string,
+  ): Promise<void> {
     const project = await this.projectService.queryProjectByCategoryId({
       categoryId,
     });

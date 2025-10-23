@@ -24,7 +24,7 @@ export class UpdateUserCredentialHandler
   ) {}
 
   @Transactional()
-  async execute(command: UpdateUserCredentialCommand): Promise<any> {
+  async execute(command: UpdateUserCredentialCommand): Promise<void> {
     try {
       await this.userCredentialService.deleteCredential({
         userId: command.userId,

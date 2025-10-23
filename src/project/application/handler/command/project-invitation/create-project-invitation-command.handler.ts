@@ -40,7 +40,7 @@ export class CreateProjectInvitationCommandHandler
     }
   }
 
-  private async authorize(projectId: string, reqUserId: string) {
+  private async authorize(projectId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectById({
       id: projectId,
     });
