@@ -3,7 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -58,7 +58,7 @@ export class TaskResolver {
   async createTask(
     @Args('input') input: CreateTaskInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<CreateTaskResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -85,7 +85,7 @@ export class TaskResolver {
   async updateTask(
     @Args('input') input: UpdateTaskInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<UpdateTaskResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -112,7 +112,7 @@ export class TaskResolver {
   async deleteTask(
     @Args('input') input: DeleteTaskInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<DeleteTaskResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -138,7 +138,7 @@ export class TaskResolver {
   async queryTaskById(
     @Args('input') input: QueryTaskByIdInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<QueryTaskByIdResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -165,7 +165,7 @@ export class TaskResolver {
   async queryTasksByCategoryId(
     @Args('input') input: QueryTasksByCategoryIdInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<QueryTaskByCategoryIdResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);

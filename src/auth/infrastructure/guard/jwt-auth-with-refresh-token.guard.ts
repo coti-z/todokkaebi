@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Request } from 'express';
 
 import {
   ApplicationException,
@@ -26,8 +27,9 @@ export class JwtAuthWithRefreshTokenGuard implements CanActivate {
     if (!refreshToken) {
       throw new ApplicationException(ErrorCode.INVALID_TOKEN);
     }
-    const requestContext =
-      RequestContextExtractor.fromGraphQLContext(gqlContext);
+    const requestContext = RequestContextExtractor.fromGraphQLContext(
+      gqlContext.getContext(),
+    );
     const query = new ValidateRefreshTokenQuery(refreshToken, requestContext);
 
     try {
@@ -40,12 +42,12 @@ export class JwtAuthWithRefreshTokenGuard implements CanActivate {
       };
       req['user'] = payloadWithToken;
       return true;
-    } catch (error) {
+    } catch {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }
   }
 
-  private extractRefreshTokenFromHeader(req: any): string | undefined {
+  private extractRefreshTokenFromHeader(req: Request): string | undefined {
     if (!req.headers.authorization) {
       throw new ApplicationException(ErrorCode.INVALID_TOKEN);
     }

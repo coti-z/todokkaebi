@@ -19,7 +19,7 @@ export class ErrorFactory {
   static fromBusinessException(
     exception: DomainException | ApplicationException,
     context?: ErrorContext,
-  ) {
+  ): GraphQLError {
     const errorMapping = ERROR_MAP[exception.errorCode];
     const timestamp = context?.timestamp || new Date().toISOString();
 
@@ -52,7 +52,7 @@ export class ErrorFactory {
     });
   }
 
-  static fromUnknownException(exception: any): GraphQLError {
+  static fromUnknownException(exception: Error): GraphQLError {
     const errorMapping = ERROR_MAP[ErrorCode.INTERNAL_SERVER_ERROR];
     const message =
       process.env.NODE_ENV === 'production'
@@ -69,12 +69,12 @@ export class ErrorFactory {
 
   private static getErrorMessage(
     exception: BaseBusinessException,
-    errorMapping?: any,
-  ) {
+    errorMapping?: ErrorResponse,
+  ): string {
     if (exception.message && exception.message !== exception.errorCode) {
       return exception.message;
     }
 
-    return errorMapping?.message;
+    return errorMapping?.message || 'An error occurred';
   }
 }

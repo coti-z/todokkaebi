@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { RateLimit, TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -69,7 +69,7 @@ export class UserResolver {
   @Mutation(() => ApiResponseOfCreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfCreateUserOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -95,7 +95,7 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfUpdateUserOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -122,7 +122,7 @@ export class UserResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<void> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);

@@ -15,7 +15,7 @@ import { LoggerService } from './logger.service';
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.timestamp(),
-            nestWinstonModuleUtilities.format.nestLike('TODOGEBI', {
+            nestWinstonModuleUtilities.format.nestLike('TODOKKABI', {
               colors: true,
               prettyPrint: true,
               processId: true,

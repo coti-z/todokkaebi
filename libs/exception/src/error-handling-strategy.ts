@@ -11,7 +11,7 @@ import { RequestContext } from './request-context.interface';
 export class ErrorHandlingStrategy {
   constructor(private readonly logger: LoggerService) {}
 
-  handleError(error: any, context: RequestContext): never {
+  handleError(error: Error, context: RequestContext): never {
     if (ErrorClassifier.isBusinessError(error)) {
       // 비즈니스 에러는 warn 레벨로 로깅
       this.logger.warn(

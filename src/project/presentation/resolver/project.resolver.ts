@@ -3,7 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -73,7 +73,7 @@ export class ProjectResolver {
   async createProject(
     @Args('input') input: CreateProjectInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<CreateProjectResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -100,7 +100,7 @@ export class ProjectResolver {
   async deleteProject(
     @Args('input') input: DeleteProjectInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<DeleteProjectResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -128,7 +128,7 @@ export class ProjectResolver {
   async updateProject(
     @Args('input') input: UpdateProjectInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<UpdateProjectResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -156,7 +156,7 @@ export class ProjectResolver {
   async queryProject(
     @Args('input') input: QueryProjectInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<QueryProjectResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -182,7 +182,7 @@ export class ProjectResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async queryProjects(
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<QueryProjectsResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);

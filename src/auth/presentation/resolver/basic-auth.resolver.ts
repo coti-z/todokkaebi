@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayloadWithToken } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -51,7 +51,7 @@ export class BasicAuthResolver {
   @Mutation(() => ApiResponseOfLoginOutput)
   async basicLogin(
     @Args('input') input: LoginInput,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfLoginOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -75,7 +75,7 @@ export class BasicAuthResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async basicLogout(
     @TokenInfo() payload: JwtPayloadWithToken,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfLogoutOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
