@@ -49,8 +49,8 @@ export class UserPresentationMapper {
     return {
       id: result.id,
       createdAt: result.createdAt,
-      email: result.email,
-      nickname: result.nickname,
+      email: result.email.getValue(),
+      nickname: result.nickname.getValue(),
       updatedAt: result.updatedAt,
       birthday: result.birthday,
     };

@@ -11,7 +11,6 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
 import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';
 import { UserService } from '@user/application/services/user.service';
-import { User } from '@user/domain/entity/user.entity';
 
 @Injectable()
 @CommandHandler(DeleteUserCommand)
@@ -26,12 +25,9 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   ) {}
 
   @Transactional()
-  async execute(command: DeleteUserCommand): Promise<User> {
+  async execute(command: DeleteUserCommand): Promise<void> {
     try {
-      const user = await this.userService.deleteUser(
-        new DeleteUserParam(command.id),
-      );
-      return user;
+      await this.userService.deleteUser(new DeleteUserParam(command.id));
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }

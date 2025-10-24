@@ -14,7 +14,6 @@ import { UpdateProjectInvitationCommand } from '@project/application/port/in/com
 import { ProjectInvitationService } from '@project/application/service/project-invitation.service';
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectInvitation } from '@project/domain/entity/project-invitation.entity';
-import { ProjectMembership } from '@project/domain/entity/project-membership.entity';
 import { ProjectInvitationPolicy } from '@project/domain/logic/membership/project-invitation.policy';
 import { InvitationStatus } from '@project/domain/value-objects/invation-status.vo';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
@@ -55,7 +54,7 @@ export class UpdateProjectInvitationCommandHandler
     projectInvitationId: string,
     status: InvitationStatus,
     requestUserId: string,
-  ) {
+  ): Promise<void> {
     const projectInvitation =
       await this.projectInvitationService.findProjectInvitationById({
         id: projectInvitationId,
@@ -79,7 +78,7 @@ export class UpdateProjectInvitationCommandHandler
 
     if (command.status === InvitationStatus.ACCEPTED) {
       await this.projectMembershipService.enrollProjectMembership({
-        projectId: command.id,
+        projectId: projectInvitation.projectId,
         role: MembershipRole.MEMBER,
         userId: command.reqUserId,
       });

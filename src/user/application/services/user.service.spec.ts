@@ -16,6 +16,8 @@ import {
 } from '@user/application/port/out/i-user-repository.port';
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
+import { Email } from '@user/domain/value-object/email.vo';
+import { Nickname } from '@user/domain/value-object/nickname.vol';
 
 describe('UserService', () => {
   let service: UserService;
@@ -103,11 +105,13 @@ describe('UserService', () => {
     });
 
     it('should throw USER_ALREADY_EXISTS exception when user with email already exists', async () => {
+      const email = Email.create({ email: 'existing@example.com' });
+      const nickname = Nickname.create({ nickname: 'existingUser' });
       // Arrange
       const existingUser = User.create({
-        email: 'existing@example.com',
         hashedPassword: 'hashed',
-        nickname: 'existingUser',
+        email,
+        nickname,
       });
 
       const param = new CreateUserParam('existing@example.com', 'newUser', 'password');
@@ -125,18 +129,23 @@ describe('UserService', () => {
 
   describe('updateUser', () => {
     it('should update user successfully', async () => {
+      const email = Email.create({ email: 'old@example.com' });
+      const nickname = Nickname.create({ nickname: 'old' });
       // Arrange
       const existingUser = User.create({
-        email: 'old@example.com',
+        email,
+        nickname,
         hashedPassword: 'hash',
-        nickname: 'oldNick',
         birthday: new Date('1991-01-01'),
       });
+      const newEmail = Email.create({ email: 'new@example.com' });
+      const newNickname = Nickname.create({ nickname: 'new' });
 
       const param = new UpdateUserParam(
         existingUser.id,
-        'new@example.com',
-        'newnick',
+        'hash',
+        newEmail.getValue(),
+        newNickname.getValue(),
         new Date('1995-05-05'),
       );
 
@@ -154,10 +163,12 @@ describe('UserService', () => {
     });
 
     it('should update user with partial data', async () => {
+      const email = Email.create({ email: 'old@example.com' });
+      const nickname = Nickname.create({ nickname: 'old' });
       const existingUser = User.create({
-        email: 'test@example.ocm',
+        email,
+        nickname,
         hashedPassword: 'hashed',
-        nickname: 'oldNick',
       });
 
       const originalEmail = existingUser.email;
@@ -190,11 +201,13 @@ describe('UserService', () => {
     });
 
     it('should update the updateAt timestamp', async () => {
+      const email = Email.create({ email: 'old@example.com' });
+      const nickname = Nickname.create({ nickname: 'old' });
       // Arrange
       const existingUser = User.create({
-        email: 'test@example.com',
         hashedPassword: 'hashed',
-        nickname: 'old-nick',
+        email,
+        nickname,
       });
       const originalUpdatedAt = existingUser.updatedAt;
 
@@ -215,10 +228,12 @@ describe('UserService', () => {
 
   describe('deleteUser', () => {
     it('should delete user successfully', async () => {
+      const email = Email.create({ email: 'old@example.com' });
+      const nickname = Nickname.create({ nickname: 'old' });
       // Arrange
       const existingUser = User.create({
-        email: 'test@example.com',
-        nickname: 'test-user',
+        email,
+        nickname,
         hashedPassword: 'hashed',
       });
 

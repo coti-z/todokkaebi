@@ -12,7 +12,6 @@ import { CreateProjectCommand } from '@project/application/port/in/command/unti-
 import { ProjectMembershipService } from '@project/application/service/project-membership.service';
 import { ProjectService } from '@project/application/service/project.service';
 import { Project } from '@project/domain/entity/project.entity';
-import { ProjectLifeCyclePolicy } from '@project/domain/logic/project-management/project-lifecycle.policy';
 import { MembershipRole } from '@project/domain/value-objects/membership-role.vo';
 
 @Injectable()

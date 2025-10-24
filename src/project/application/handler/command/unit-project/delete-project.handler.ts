@@ -43,14 +43,14 @@ export class DeleteProjectHandler
     }
   }
 
-  private async authorize(projectId: string, reqUserId: string) {
+  private async authorize(projectId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectById({
       id: projectId,
     });
     ProjectLifeCyclePolicy.canDeleteProject(project, reqUserId);
   }
 
-  private async process(command: DeleteProjectCommand) {
+  private async process(command: DeleteProjectCommand): Promise<Project> {
     return await this.projectService.deleteProject({
       id: command.projectId,
     });

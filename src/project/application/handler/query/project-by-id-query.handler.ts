@@ -35,7 +35,7 @@ export class ProjectByIdQueryHandler
       this.errorHandlingStrategy.handleError(error, query.context);
     }
   }
-  private async authorize(projectId: string, reqUserId: string) {
+  private async authorize(projectId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectById({
       id: projectId,
     });

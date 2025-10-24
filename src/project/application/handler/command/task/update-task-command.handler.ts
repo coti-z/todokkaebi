@@ -45,7 +45,7 @@ export class UpdateTaskCommandHandler
       this.errorHandlingStrategy.handleError(error, command.context);
     }
   }
-  private async authorize(taskId: string, reqUserId: string) {
+  private async authorize(taskId: string, reqUserId: string): Promise<void> {
     const project = await this.projectService.queryProjectByTaskId({
       taskId,
     });

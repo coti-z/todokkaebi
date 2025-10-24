@@ -9,6 +9,7 @@ export abstract class BaseEntity<TProps extends BaseEntityProps> {
   private readonly _id: string;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
+  private _deletedAt: Date;
 
   protected constructor(props: TProps) {
     this._id = props.id;
@@ -26,6 +27,10 @@ export abstract class BaseEntity<TProps extends BaseEntityProps> {
 
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  get deletedAt(): Date {
+    return this._deletedAt;
   }
 
   protected updateTimestamp(): void {

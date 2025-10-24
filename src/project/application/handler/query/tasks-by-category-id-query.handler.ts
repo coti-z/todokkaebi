@@ -22,14 +22,19 @@ export class TasksByCategoryIdQueryHandler
     await this.authorize(query.categoryId, query.userId);
     return await this.process(query);
   }
-  private async authorize(categoryId: string, reqUserId: string) {
+  private async authorize(
+    categoryId: string,
+    reqUserId: string,
+  ): Promise<void> {
     const project = await this.projectService.queryProjectByCategoryId({
       categoryId,
     });
     TaskWorkflowPolicy.canQuery(project, reqUserId);
   }
 
-  private async process(query: TasksByCategoryIdQuery) {
+  private async process(
+    query: TasksByCategoryIdQuery,
+  ): Promise<TaskReadModel[]> {
     const tasks = await this.taskService.queryTasksByCategoryId({
       categoryId: query.categoryId,
     });

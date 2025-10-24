@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { ErrorHandlingStrategy } from '@libs/exception';
-import { RedisService } from '@libs/redis';
 
 import { ProjectReadModel } from '@project/application/dto/project-read.model';
 import { ProjectApplicationMapper } from '@project/application/mapper/project.application.mapper';
@@ -26,7 +25,9 @@ export class ProjectsByUserIdQueryHandler
       this.errorHandlingStrategy.handleError(error, query.context);
     }
   }
-  private async process(query: ProjectsByUserIdQuery) {
+  private async process(
+    query: ProjectsByUserIdQuery,
+  ): Promise<ProjectReadModel[]> {
     const projects = await this.projectService.queryProjects({
       userId: query.userId,
     });

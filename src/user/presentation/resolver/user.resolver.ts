@@ -12,7 +12,6 @@ import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth
 import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
 import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
 import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/output/create-user.output';
-import { ApiResponseOfDeleteUserOutput } from '@user/presentation/dto/output/delete-user.output';
 import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 
@@ -119,20 +118,18 @@ export class UserResolver {
    * - UserID extracted from JWT token
    * - Permanent deletion (cannot be undone)
    */
-  @Mutation(() => ApiResponseOfDeleteUserOutput)
+  @Mutation(() => Boolean)
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
     @Context() gqlContext: any,
-  ): Promise<ApiResponseOfDeleteUserOutput> {
+  ): Promise<void> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = UserPresentationMapper.toDeleteUserCommand(
       payload.userId,
       requestContext,
     );
-    const result = await this.commandBus.execute(command);
-    const output = UserPresentationMapper.resultToDeleteUserOutput(result);
-    return ResponseManager.success(output);
+    await this.commandBus.execute(command);
   }
 }
