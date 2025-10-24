@@ -9,9 +9,11 @@ import { Reflector } from '@nestjs/core';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import {
+  LOCK_METADATA_KEY,
+  LockOptions,
+} from '@libs/decorators/lock/lock.interface';
 import { RedisService } from '@libs/redis';
-
-import { LOCK_METADATA_KEY, LockOptions } from './lock.decorator';
 
 @Injectable()
 export class LockInterceptor implements NestInterceptor {
@@ -123,7 +125,7 @@ export class LockInterceptor implements NestInterceptor {
     try {
       const client = this.redisService.getClient();
       await client.lrem(queueKey, 1, identifier);
-    } catch (error) {
+    } catch {
       console.warn(`Queue cleanup failed: ${queueKey}:${identifier}`);
     }
   }
