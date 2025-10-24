@@ -14,15 +14,17 @@ import { CreateUserHandler } from '@user/application/handler/create-user.handler
 import { DeleteUserHandler } from '@user/application/handler/delete-user.handler';
 import { UpdateUserHandler } from '@user/application/handler/update-user.handler';
 import { UserService } from '@user/application/services/user.service';
+import { UserDomainModule } from '@user/domain/user.domain.module';
 import { UserInfrastructureModule } from '@user/infrastructure/user.infrastructure.module';
 
 @Module({
   imports: [
-    UserInfrastructureModule,
     CqrsModule,
     DatabaseModule,
     RedisModule,
     DecoratorsModule,
+    UserDomainModule,
+    UserInfrastructureModule,
   ],
   providers: [
     {

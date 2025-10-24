@@ -17,8 +17,8 @@ export class UserMapper {
       birthday: user.birthday,
       createdAt: user.createdAt,
       password: user.hashedPassword,
-      email: user.email,
-      nickname: user.nickname,
+      email: user.email.getValue(),
+      nickname: user.nickname.getValue(),
       updatedAt: user.updatedAt,
     };
   }
@@ -27,7 +27,7 @@ export class UserMapper {
     return User.fromPersistence({
       id: record.id,
       email: record.email,
-      password: record.password,
+      hashedPassword: record.password,
       nickname: record.nickname,
       updatedAt: record.updatedAt,
       createdAt: record.createdAt,

@@ -43,6 +43,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       const user = await this.userService.updateUser(
         new UpdateUserParam(
           command.id,
+          command.password,
           command.email,
           command.nickname,
           command.birthday,
@@ -62,5 +63,3 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     }
   }
 }
-
-핝

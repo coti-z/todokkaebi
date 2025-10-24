@@ -2,27 +2,29 @@ import { v4 as uuid } from 'uuid';
 
 import { DomainException, ErrorCode } from '@libs/exception';
 
-export interface CreateUserProps {
-  email: string;
-  nickname: string;
+import { Email } from '@user/domain/value-object/email.vo';
+import { Nickname } from '@user/domain/value-object/nickname.vol';
+
+import {
+  BaseEntity,
+  BaseEntityProps,
+} from '@project/domain/entity/abstract/base-entity.abstract.entity';
+
+export type CreateUserProps = {
+  email: Email;
+  nickname: Nickname;
   hashedPassword: string;
   birthday?: Date;
-}
-interface ChangeProfileArgs {
-  email?: string;
-  nickname?: string;
-  birthday?: Date;
-}
+};
 
-interface UserPersistenceProps {
-  id: string;
+export type UserProps = CreateUserProps & BaseEntityProps;
+export type PersistenceUserProps = Pick<
+  UserProps,
+  'id' | 'birthday' | 'createdAt' | 'hashedPassword' | 'updatedAt'
+> & {
   email: string;
   nickname: string;
-  password: string;
-  birthday?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+};
 
 /**
  * User domain entity
@@ -34,24 +36,22 @@ interface UserPersistenceProps {
  * - Verify domain rules when creating or updating user profile
  * - Manage user credential and profile information
  */
-export class User {
-  private constructor(
-    public readonly id: string,
-    private _email: string,
-    private _nickname: string,
-    private _hashedPassword: string,
-    private _createAt: Date,
-    private _updateAt: Date,
-    private _birthday?: Date,
-  ) {
-    this.validateEmail(_email);
-    this.validateNickname(_nickname);
+export class User extends BaseEntity<UserProps> {
+  private _email: Email;
+  private _nickname: Nickname;
+  private _hashedPassword: string;
+  private _birthday?: Date;
+  private constructor(props: UserProps) {
+    super(props);
+    this._email = props.email;
+    this._nickname = props.nickname;
+    this._hashedPassword = props.hashedPassword;
   }
 
   // ─────────────────────────────────────
   // Getter
   // ─────────────────────────────────────
-  get nickname(): string {
+  get nickname(): Nickname {
     return this._nickname;
   }
 
@@ -59,15 +59,7 @@ export class User {
     return this._birthday;
   }
 
-  get createdAt(): Date {
-    return this._createAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updateAt;
-  }
-
-  get email(): string {
+  get email(): Email {
     return this._email;
   }
 
@@ -81,27 +73,32 @@ export class User {
 
   static create(props: CreateUserProps): User {
     const now = new Date();
-
-    return new User(
-      uuid(),
-      props.email,
-      props.nickname,
-      props.hashedPassword,
-      now,
-      now,
-      props.birthday,
-    );
+    const id = uuid();
+    return new User({
+      id: id,
+      createdAt: now,
+      email: props.email,
+      hashedPassword: props.hashedPassword,
+      nickname: props.nickname,
+      updatedAt: now,
+    });
   }
-  static fromPersistence(props: UserPersistenceProps): User {
-    return new User(
-      props.id,
-      props.email,
-      props.nickname,
-      props.password,
-      props.createdAt,
-      props.updatedAt,
-      props.birthday,
-    );
+  static fromPersistence(props: PersistenceUserProps): User {
+    const emailVo = Email.create({
+      email: props.email,
+    });
+    const nicknameVo = Nickname.create({
+      nickname: props.nickname,
+    });
+    return new User({
+      id: props.id,
+      email: emailVo,
+      nickname: nicknameVo,
+      hashedPassword: props.hashedPassword,
+      birthday: props.birthday,
+      updatedAt: props.updatedAt,
+      createdAt: props.createdAt,
+    });
   }
   // ─────────────────────────────────────
   // Method
@@ -146,21 +143,18 @@ export class User {
   // Method
   // ─────────────────────────────────────
 
-  /**
-   * Change user profile information
-   *
-   * @param {ChangeProfileArgs} args - Profile fields to update
-   * @memberof User
-   *
-   * @remarks
-   * - Update only provided fields (partial update)
-   * - Automatically updates timestamp
-   * - Validates email/nickname if provided
-   */
-  changeProfile(args: ChangeProfileArgs): void {
-    if (args.birthday) this._birthday = args.birthday;
-    if (args.nickname) this._nickname = args.nickname;
-    if (args.email) this._email = args.email;
-    this._updateAt = new Date();
+  changeEmail(email: Email): void {
+    this._email = email;
+  }
+
+  changeNickname(nickname: Nickname): void {
+    this._nickname = nickname;
+  }
+
+  changeBirthday(birthday: Date): void {
+    this._birthday = birthday;
+  }
+  changePassword(hashedPassword: string): void {
+    this._hashedPassword = hashedPassword;
   }
 }

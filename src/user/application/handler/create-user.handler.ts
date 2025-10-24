@@ -44,7 +44,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
       );
 
       await this.authClient.storeUserCredential({
-        email: user.email,
+        email: user.email.getValue(),
         userId: user.id,
         context: command.context,
         passwordHash: user.hashedPassword,
