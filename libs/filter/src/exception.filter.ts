@@ -13,6 +13,7 @@ export class GraphQLExceptionFilter implements GqlExceptionFilter {
   catch(exception: Error, _host: ArgumentsHost): GraphQLError {
     //const gqlContext = GqlExecutionContext.create(host as ExecutionContext);
     //this.logError(exception);
+    console.log(exception);
     return this.createGraphQLError(exception);
   }
 

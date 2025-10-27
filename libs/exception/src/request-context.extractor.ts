@@ -153,4 +153,51 @@ export class RequestContextExtractor {
   static generateCorrelationId(): string {
     return `corr-${randomUUID()}`;
   }
+
+  /**
+   * Event 수신 시 새로운 RequestContext를 생성합니다.
+   * Kafka/Redis Event 리스너에서 사용되며, 원래 HTTP 요청 정보가 없을 때 활용합니다.
+   *
+   * @param eventContext - Kafka/Redis 또는 기타 메시징 시스템의 Context
+   * @param correlationId - 원래 요청의 Correlation ID (트레이싱용)
+   * @returns 새로운 RequestContext
+   *
+   * @example
+   * ```typescript
+   * const context = RequestContextExtractor.fromEventContext(
+   *   natsContext,
+   *   event.correlationId
+   * );
+   * ```
+   */
+  static fromEventContext(correlationId?: string): RequestContext {
+    return {
+      requestId: this.generateRequestId(),
+      correlationId: correlationId || this.generateCorrelationId(),
+      timestamp: new Date(),
+      operationName: 'EventHandling',
+    };
+  }
+
+  /**
+   * Event Context에서 operation 이름 추출
+   * Kafka: topic, Redis: key, 등 메시징 시스템별로 다름
+   */
+  private static extractEventOperationName(eventContext?: any): string {
+    if (!eventContext) {
+      return 'EventHandling';
+    }
+
+    // Kafka/NestJS Microservices Context
+    if (eventContext.getTopic?.()) {
+      return `event:${eventContext.getTopic()}`;
+    }
+
+    // Redis Pub/Sub Context
+    if (eventContext.getChannel?.()) {
+      return `event:${eventContext.getChannel()}`;
+    }
+
+    return 'EventHandling';
+  }
 }

@@ -123,7 +123,7 @@ export class UserResolver {
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
     @Context() gqlContext: GraphQLContext,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = UserPresentationMapper.toDeleteUserCommand(
@@ -131,5 +131,6 @@ export class UserResolver {
       requestContext,
     );
     await this.commandBus.execute(command);
+    return true;
   }
 }

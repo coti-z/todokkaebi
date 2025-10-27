@@ -20,7 +20,7 @@ export type UpdateUserParam = Partial<
   user: User;
 };
 export type DeleteUserParam = {
-  id: string;
+  user: User;
 };
 
 @Injectable()
@@ -69,5 +69,9 @@ export class UserDomainService {
     }
 
     return param.user;
+  }
+
+  async deleteUser(param: DeleteUserParam): Promise<void> {
+    param.user.delete();
   }
 }

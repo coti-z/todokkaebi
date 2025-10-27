@@ -37,9 +37,10 @@ export class UserService {
       birthday: param.birthday,
     });
     await this.userRepository.createUser(user);
+
     return user;
   }
-  async deleteUser(param: DeleteUserParam): Promise<void> {
+  async deleteUser(param: DeleteUserParam): Promise<User> {
     const existingUser = await this.userRepository.findUserById({
       id: param.id,
     });
@@ -47,10 +48,12 @@ export class UserService {
     if (!existingUser) {
       throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
     }
-
-    return await this.userRepository.deleteUser({
+    await this.userDomainService.deleteUser({ user: existingUser });
+    await this.userRepository.deleteUser({
       id: param.id,
     });
+
+    return existingUser;
   }
   async updateUser(param: UpdateUserParam): Promise<User> {
     const existingUser = await this.userRepository.findUserById({

@@ -23,6 +23,7 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const { req } = gqlContext.getContext();
     const accessToken = this.extractAccessTokenFromHeader(req);
+
     const requestContext = RequestContextExtractor.fromGraphQLContext(
       gqlContext.getContext(),
     );

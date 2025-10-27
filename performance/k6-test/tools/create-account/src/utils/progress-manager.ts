@@ -1,5 +1,5 @@
-import cliProgress from 'cli-progress';
 import chalk from 'chalk';
+import cliProgress from 'cli-progress';
 
 export class ProgressManager {
   private progressBar: cliProgress.SingleBar;

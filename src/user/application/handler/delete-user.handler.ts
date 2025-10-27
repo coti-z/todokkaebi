@@ -10,6 +10,10 @@ import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { DeleteUserParam } from '@user/application/dto/param/delete-user.param';
 import { DeleteUserCommand } from '@user/application/port/in/delete-user.command';
+import {
+  EVENT_PUBLISHER_OUTBOUND_PORT,
+  IEventPublisher,
+} from '@user/application/port/out/i-redis-event.port';
 import { UserService } from '@user/application/services/user.service';
 
 @Injectable()
@@ -22,12 +26,26 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
 
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
+
+    @Inject(EVENT_PUBLISHER_OUTBOUND_PORT)
+    private readonly eventPublisher: IEventPublisher,
   ) {}
 
   @Transactional()
   async execute(command: DeleteUserCommand): Promise<void> {
     try {
-      await this.userService.deleteUser(new DeleteUserParam(command.id));
+      const user = await this.userService.deleteUser(
+        new DeleteUserParam(command.id),
+      );
+
+      const events = user.getDomainEvents();
+      events.forEach(event => {
+        event.correlationId = command.context.correlationId;
+      });
+
+      if (events.length > 0) {
+        this.eventPublisher.publicEvents(events);
+      }
     } catch (error) {
       this.errorHandlingStrategy.handleError(error, command.context);
     }

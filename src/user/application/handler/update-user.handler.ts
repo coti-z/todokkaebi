@@ -15,6 +15,10 @@ import {
   AUTH_CLIENT_OUTBOUND_PORT,
   IAuthClientPort,
 } from '@user/application/port/out/i-auth-client.port';
+import {
+  EVENT_PUBLISHER_OUTBOUND_PORT,
+  IEventPublisher,
+} from '@user/application/port/out/i-redis-event.port';
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 
@@ -30,6 +34,8 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
+    @Inject(EVENT_PUBLISHER_OUTBOUND_PORT)
+    private readonly eventPublisher: IEventPublisher,
   ) {}
 
   @Lock({
@@ -56,6 +62,14 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
         email: command.email,
         passwordHash: command.password,
       });
+
+      const events = user.getDomainEvents();
+      events.forEach(event => {
+        event.correlationId = command.context.correlationId;
+      });
+      if (events.length > 0) {
+        this.eventPublisher.publicEvents(events);
+      }
 
       return user;
     } catch (error) {

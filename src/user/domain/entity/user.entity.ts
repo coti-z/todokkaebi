@@ -1,7 +1,9 @@
 import { v4 as uuid } from 'uuid';
 
-import { DomainException, ErrorCode } from '@libs/exception';
+import { DomainEvent } from '@libs/event/domain-event.abstract';
 
+import { CreateUserEvent } from '@user/domain/event/create-user.event';
+import { DeleteUserEvent } from '@user/domain/event/delete-user.event';
 import { Email } from '@user/domain/value-object/email.vo';
 import { Nickname } from '@user/domain/value-object/nickname.vol';
 
@@ -41,6 +43,7 @@ export class User extends BaseEntity<UserProps> {
   private _nickname: Nickname;
   private _hashedPassword: string;
   private _birthday?: Date;
+  private domainEvents: DomainEvent[] = [];
   private constructor(props: UserProps) {
     super(props);
     this._email = props.email;
@@ -74,7 +77,7 @@ export class User extends BaseEntity<UserProps> {
   static create(props: CreateUserProps): User {
     const now = new Date();
     const id = uuid();
-    return new User({
+    const user = new User({
       id: id,
       createdAt: now,
       email: props.email,
@@ -82,6 +85,12 @@ export class User extends BaseEntity<UserProps> {
       nickname: props.nickname,
       updatedAt: now,
     });
+
+    user.addDomainEvent(
+      new CreateUserEvent(id, props.email.getValue(), props.hashedPassword),
+    );
+
+    return user;
   }
   static fromPersistence(props: PersistenceUserProps): User {
     const emailVo = Email.create({
@@ -100,43 +109,8 @@ export class User extends BaseEntity<UserProps> {
       createdAt: props.createdAt,
     });
   }
-  // ─────────────────────────────────────
-  // Method
-  // ─────────────────────────────────────
-
-  /**
-   * Validate email format
-   *
-   * @params {string} email - User email address
-   * @memberof User
-   */
-  private validateEmail(email: string): void {
-    // 단순 형식 검증이 아닌 비즈니스 규칙
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw new DomainException(ErrorCode.INVALID_EMAIL_FORMAT);
-    }
-  }
-
-  /**
-   * Validate nickname constraints
-   *
-   * @private
-   * @param {string} nickname - User nickname
-   * @memberof User
-   *
-   * @remarks
-   * Business rules:
-   * - Nickname must not be empty or whitespace only
-   * - Length must be between 2 and 50 characters
-   */
-  private validateNickname(nickname: string): void {
-    if (!nickname || nickname.trim().length === 0) {
-      throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
-    }
-    if (nickname.length < 2 || nickname.length > 50) {
-      throw new DomainException(ErrorCode.INVALID_NICKNAME_FORMAT);
-    }
+  delete(): void {
+    this.addDomainEvent(new DeleteUserEvent(this.id));
   }
 
   // ─────────────────────────────────────
@@ -156,5 +130,21 @@ export class User extends BaseEntity<UserProps> {
   }
   changePassword(hashedPassword: string): void {
     this._hashedPassword = hashedPassword;
+  }
+
+  // ─────────────────────────────────────
+  // Domain Event Methods
+  // ─────────────────────────────────────
+
+  private addDomainEvent(event: DomainEvent): void {
+    this.domainEvents.push(event);
+  }
+
+  getDomainEvents(): DomainEvent[] {
+    return this.domainEvents;
+  }
+
+  cleanDomainEvents(): void {
+    this.domainEvents = [];
   }
 }

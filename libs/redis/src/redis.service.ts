@@ -11,7 +11,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.client = new Redis(
       this.configService.get('REDIS_PORT', 6379),
-      this.configService.get('REDIS_HOST', 'localhost'),
+      this.configService.get<string>('REDIS_HOST', 'redis'),
       {
         maxRetriesPerRequest: 3,
         lazyConnect: true,
