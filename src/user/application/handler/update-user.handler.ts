@@ -7,7 +7,6 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Lock } from '@libs/decorators';
-import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
 import { UpdateUserCommand } from '@user/application/port/in/update-user.command';
@@ -29,8 +28,6 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     @Inject(AUTH_CLIENT_OUTBOUND_PORT)
     private readonly authClient: IAuthClientPort,
     private readonly userService: UserService,
-
-    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
 
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
@@ -73,7 +70,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
       return user;
     } catch (error) {
-      this.errorHandlingStrategy.handleError(error, command.context);
+      throw error;
     }
   }
 }

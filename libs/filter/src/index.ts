@@ -1,1 +1,1 @@
-export * from './exception.filter';
+export * from './graphql-business-exception.filter';

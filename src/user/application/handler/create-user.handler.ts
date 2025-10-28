@@ -6,7 +6,6 @@ import {
   Transactional,
   TransactionManagerSymbol,
 } from '@libs/database';
-import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { CreateUserParam } from '@user/application/dto/param/create-user.param';
 import { CreateUserCommand } from '@user/application/port/in/create-user.command';
@@ -26,7 +25,6 @@ import { User } from '@user/domain/entity/user.entity';
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     private readonly userService: UserService,
-    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
 
     @Inject(AUTH_CLIENT_OUTBOUND_PORT)
     private readonly authClient: IAuthClientPort,
@@ -62,7 +60,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
       return user;
     } catch (error) {
-      this.errorHandlingStrategy.handleError(error, command.context);
+      throw error;
     }
   }
 }

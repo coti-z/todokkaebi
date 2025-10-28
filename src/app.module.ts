@@ -3,8 +3,10 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
-import { GraphQLExceptionFilter } from '@libs/filter';
+import { GraphQLBusinessExceptionFilter } from '@libs/filter';
 import { LoggerModule } from '@libs/logger';
+
+import { GlobalExceptionFilter } from 'libs/exception/src/global-exception.filter';
 
 import { AuthModule } from '@auth/auth.module';
 
@@ -17,9 +19,6 @@ import { ProjectModule } from '@project/project.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      buildSchemaOptions: {
-        orphanedTypes: [],
-      },
     }),
     LoggerModule,
     AuthModule,
@@ -29,7 +28,11 @@ import { ProjectModule } from '@project/project.module';
   providers: [
     {
       provide: APP_FILTER,
-      useClass: GraphQLExceptionFilter,
+      useClass: GraphQLBusinessExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
     {
       provide: APP_PIPE,

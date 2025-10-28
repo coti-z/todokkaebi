@@ -58,14 +58,14 @@ export class UserResolver {
    * - Rate limiting: 5 attempts per hour per email
    * - Block duration: 2 hours after limit exceeded
    */
-  @RateLimit({
+  /* @RateLimit({
     limit: 5,
     window: 3600,
     blockDuration: 7200,
     key: args => args[1].input.email,
     errorMessage:
       '회원가입 시도 횟수를 초과했습니다. 2시간 후 다시 시도해주세요.',
-  })
+  }) */
   @Mutation(() => ApiResponseOfCreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,

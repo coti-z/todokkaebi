@@ -47,7 +47,7 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
         this.eventPublisher.publicEvents(events);
       }
     } catch (error) {
-      this.errorHandlingStrategy.handleError(error, command.context);
+      throw error;
     }
   }
 }

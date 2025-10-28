@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios';
 import { GraphQLError } from 'graphql';
 
 import { ApplicationException } from 'libs/exception/src/application.exception';
@@ -16,8 +15,8 @@ interface ErrorContext {
 }
 
 export class ErrorFactory {
-  static fromBusinessException(
-    exception: DomainException | ApplicationException,
+  static fromDomainException(
+    exception: DomainException,
     context?: ErrorContext,
   ): GraphQLError {
     const errorMapping = ERROR_MAP[exception.errorCode];
@@ -28,10 +27,29 @@ export class ErrorFactory {
       {
         extensions: {
           code: exception.errorCode,
-          statusCode: errorMapping.statusCode || HttpStatusCode.BadRequest,
-          timestamp,
-          path: context?.path,
+          statusCode: errorMapping.statusCode,
           operationName: context?.operationName,
+          timestamp,
+          success: false,
+        },
+      },
+    );
+  }
+  static fromApplicationException(
+    exception: ApplicationException,
+    context?: ErrorContext,
+  ): GraphQLError {
+    const errorMapping = ERROR_MAP[exception.errorCode];
+    const timestamp = context?.timestamp || new Date().toISOString();
+
+    return new GraphQLError(
+      ErrorFactory.getErrorMessage(exception, errorMapping),
+      {
+        extensions: {
+          operationName: context?.operationName,
+          code: exception.errorCode,
+          success: false,
+          timestamp,
         },
       },
     );
@@ -49,6 +67,7 @@ export class ErrorFactory {
         code: errorCode,
         statusCode: errorMapping.statusCode,
       },
+      originalError: undefined,
     });
   }
 

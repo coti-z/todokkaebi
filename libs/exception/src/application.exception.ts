@@ -3,7 +3,7 @@ import { ErrorCode } from './error-code.enum';
 
 export class ApplicationException extends BaseBusinessException {
   constructor(public readonly errorCode: ErrorCode) {
-    super(errorCode);
+    super(errorCode, false);
     this.name = 'ApplicationException';
   }
 }
