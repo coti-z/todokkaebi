@@ -6,5 +6,6 @@ export * from './domain.exception';
 export * from './base-business.exception';
 export * from './error-handling-strategy';
 export * from './error-classifier';
+export * from './graphql-context.interface';
 export * from './request-context.interface';
 export * from './request-context.extractor';

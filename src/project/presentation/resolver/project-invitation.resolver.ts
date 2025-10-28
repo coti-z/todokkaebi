@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
 import { TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayloadWithToken } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -55,7 +55,7 @@ export class ProjectInvitationResolver {
   async createProjectInvitation(
     @Args('input') input: CreateProjectInvitationInput,
     @TokenInfo() payload: JwtPayloadWithToken,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<CreateProjectInvitationResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -88,7 +88,7 @@ export class ProjectInvitationResolver {
   async updateProjectInvitationStatus(
     @Args('input') input: UpdateProjectInvitationStatusInput,
     @TokenInfo() payload: JwtPayloadWithToken,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<UpdateProjectInvitationResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);

@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { RateLimit, TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -58,18 +58,18 @@ export class UserResolver {
    * - Rate limiting: 5 attempts per hour per email
    * - Block duration: 2 hours after limit exceeded
    */
-  @RateLimit({
+  /* @RateLimit({
     limit: 5,
     window: 3600,
     blockDuration: 7200,
     key: args => args[1].input.email,
     errorMessage:
       '회원가입 시도 횟수를 초과했습니다. 2시간 후 다시 시도해주세요.',
-  })
+  }) */
   @Mutation(() => ApiResponseOfCreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfCreateUserOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -95,7 +95,7 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UpdateUserInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ApiResponseOfUpdateUserOutput> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -122,8 +122,8 @@ export class UserResolver {
   @UseGuards(JwtAuthWithAccessTokenGuard)
   async deleteUser(
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
-  ): Promise<void> {
+    @Context() gqlContext: GraphQLContext,
+  ): Promise<boolean> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
     const command = UserPresentationMapper.toDeleteUserCommand(
@@ -131,5 +131,6 @@ export class UserResolver {
       requestContext,
     );
     await this.commandBus.execute(command);
+    return true;
   }
 }

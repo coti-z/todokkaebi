@@ -7,7 +7,6 @@ import {
   TransactionManagerSymbol,
 } from '@libs/database';
 import { Lock } from '@libs/decorators';
-import { ErrorHandlingStrategy } from '@libs/exception';
 
 import { UpdateUserParam } from '@user/application/dto/param/update-user.param';
 import { UpdateUserCommand } from '@user/application/port/in/update-user.command';
@@ -15,6 +14,10 @@ import {
   AUTH_CLIENT_OUTBOUND_PORT,
   IAuthClientPort,
 } from '@user/application/port/out/i-auth-client.port';
+import {
+  EVENT_PUBLISHER_OUTBOUND_PORT,
+  IEventPublisher,
+} from '@user/application/port/out/i-redis-event.port';
 import { UserService } from '@user/application/services/user.service';
 import { User } from '@user/domain/entity/user.entity';
 
@@ -26,10 +29,10 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     private readonly authClient: IAuthClientPort,
     private readonly userService: UserService,
 
-    private readonly errorHandlingStrategy: ErrorHandlingStrategy,
-
     @Inject(TransactionManagerSymbol)
     private readonly transactionManager: ITransactionManager,
+    @Inject(EVENT_PUBLISHER_OUTBOUND_PORT)
+    private readonly eventPublisher: IEventPublisher,
   ) {}
 
   @Lock({
@@ -57,9 +60,17 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
         passwordHash: command.password,
       });
 
+      const events = user.getDomainEvents();
+      events.forEach(event => {
+        event.correlationId = command.context.correlationId;
+      });
+      if (events.length > 0) {
+        this.eventPublisher.publicEvents(events);
+      }
+
       return user;
     } catch (error) {
-      this.errorHandlingStrategy.handleError(error, command.context);
+      throw error;
     }
   }
 }

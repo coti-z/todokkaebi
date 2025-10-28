@@ -24,15 +24,15 @@ services:
     image: mysql:latest
     environment:
       MYSQL_DATABASE: projectdb
-      MYSQL_USER: 'project'
-      MYSQL_PASSWORD: '1234'
-      MYSQL_ROOT_PASSWORD: '1234'
+      MYSQL_USER: "project"
+      MYSQL_PASSWORD: "1234"
+      MYSQL_ROOT_PASSWORD: "1234"
     ports:
-      - '6003:3306'
+      - "6003:3306"
     volumes:
-      - 'mysql_nest_data:/var/lib/mysql'
+      - "mysql_nest_data:/var/lib/mysql"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -42,17 +42,15 @@ services:
     image: redis:7-alpine
     container_name: redis-todokkabi
     ports:
-      - '6379:6379'
+      - "6379:6379"
     volumes:
-      - 'redis_data:/data'
+      - "redis_data:/data"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
     command: redis-server --appendonly yes
-  
-      
 
 volumes:
   mysql_nest_data:

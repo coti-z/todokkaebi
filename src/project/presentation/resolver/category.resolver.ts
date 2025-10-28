@@ -3,7 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { TokenInfo } from '@libs/decorators';
-import { RequestContextExtractor } from '@libs/exception';
+import { GraphQLContext, RequestContextExtractor } from '@libs/exception';
 import { JwtPayload } from '@libs/jwt';
 import { ResponseManager } from '@libs/response';
 
@@ -50,7 +50,7 @@ export class CategoryResolver {
   async createCategory(
     @Args('input') input: CreateCategoryInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<CreateCategoryResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -77,7 +77,7 @@ export class CategoryResolver {
   async deleteCategory(
     @Args('input') input: DeleteCategoryInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<DeleteCategoryResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -104,7 +104,7 @@ export class CategoryResolver {
   async changeCategoryName(
     @Args('input') input: ChangeCategoryNameInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<ChangeCategoryNameResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);
@@ -136,7 +136,7 @@ export class CategoryResolver {
   async queryCategoryById(
     @Args('input') input: QueryCategoryByIdInput,
     @TokenInfo() payload: JwtPayload,
-    @Context() gqlContext: any,
+    @Context() gqlContext: GraphQLContext,
   ): Promise<QueryCategoryByIdResponse> {
     const requestContext =
       RequestContextExtractor.fromGraphQLContext(gqlContext);

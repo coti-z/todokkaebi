@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Request } from 'express';
 
 import {
   ApplicationException,
@@ -22,8 +23,10 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const { req } = gqlContext.getContext();
     const accessToken = this.extractAccessTokenFromHeader(req);
-    const requestContext =
-      RequestContextExtractor.fromGraphQLContext(gqlContext);
+
+    const requestContext = RequestContextExtractor.fromGraphQLContext(
+      gqlContext.getContext(),
+    );
 
     if (!accessToken) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
@@ -46,7 +49,7 @@ export class JwtAuthWithAccessTokenGuard implements CanActivate {
     }
   }
 
-  private extractAccessTokenFromHeader(req: any): string | undefined {
+  private extractAccessTokenFromHeader(req: Request): string | undefined {
     if (!req.headers.authorization) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED);
     }

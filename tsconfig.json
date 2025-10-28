@@ -37,7 +37,9 @@
       "@libs/redis/*": ["libs/redis/src/*"],
       "@libs/decorators": ["libs/decorators/src"],
       "@libs/decorators/*": ["libs/decorators/src/*"],
-      "@test-e2e/*": ["test/*"]
+      "@test-e2e/*": ["test/*"],
+      "@libs/event": ["libs/event/src"],
+      "@libs/event/*": ["libs/event/src/*"]
     }
   }
 }

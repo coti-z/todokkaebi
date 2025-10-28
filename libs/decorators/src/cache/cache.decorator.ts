@@ -29,7 +29,7 @@ export function Cache(options: CacheOptions) {
     descriptor: PropertyDescriptor,
   ) {
     const originalMethod = descriptor.value;
-    const className = target.constructor.name;
+    // const className = target.constructor.name;
 
     descriptor.value = async function (this: WithRedisService, ...args: any[]) {
       if (!this.redisService) {
@@ -45,7 +45,6 @@ export function Cache(options: CacheOptions) {
         const client = redisService.getClient();
         const cached = await client.get(cacheKey);
         if (cached) {
-          console.log('[cache] hit', cached);
           const parsed = JSON.parse(cached);
 
           return parsed;
@@ -60,7 +59,7 @@ export function Cache(options: CacheOptions) {
         // Redis에 원본 메서스 실행값 저장
         await client.setex(cacheKey, ttl, JSON.stringify(result));
         return result;
-      } catch (error) {
+      } catch {
         return originalMethod.apply(this, args);
       }
     };
