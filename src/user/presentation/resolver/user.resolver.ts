@@ -9,10 +9,10 @@ import { ResponseManager } from '@libs/response';
 
 import { JwtAuthWithAccessTokenGuard } from '@auth/infrastructure/guard/jwt-auth-with-access-token.guard';
 
-import { CreateUserInput } from '@user/presentation/dto/inputs/create-user.input';
-import { UpdateUserInput } from '@user/presentation/dto/inputs/update-user.input';
-import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/output/create-user.output';
-import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/output/update-user.output';
+import { CreateUserInput } from '@user/presentation/dto/graphql/inputs/graphql/create-user.input';
+import { UpdateUserInput } from '@user/presentation/dto/graphql/inputs/graphql/update-user.input';
+import { ApiResponseOfCreateUserOutput } from '@user/presentation/dto/graphql/output/graphql/create-user.output';
+import { ApiResponseOfUpdateUserOutput } from '@user/presentation/dto/graphql/output/graphql/update-user.output';
 import { UserPresentationMapper } from '@user/presentation/mapper/user-presentation.mapper';
 
 /**

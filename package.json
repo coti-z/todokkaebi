@@ -35,6 +35,7 @@
     "@nestjs/microservices": "^10.4.15",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^4.1.1",
+    "@nestjs/swagger": "^11.2.3",
     "@prisma/client": "^6.2.1",
     "@slack/socket-mode": "^2.0.1",
     "@slack/web-api": "^7.5.0",
