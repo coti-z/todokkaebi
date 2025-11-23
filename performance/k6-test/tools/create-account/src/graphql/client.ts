@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Logger } from '../utils/logger.ts';
+
 import { DEFAULT_CONFIG } from '../config/constants.ts';
 import { GraphQLResponse } from '../types/graphql.types.ts';
+import { Logger } from '../utils/logger.ts';
 
 export class GraphQLClient {
   private client: AxiosInstance;
