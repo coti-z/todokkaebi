@@ -6,3 +6,9 @@ export class ApiResponse<T> {
   message?: string;
   data?: T;
 }
+
+export class RestApiResponse<T> {
+  data: T | null;
+  success?: boolean;
+  message?: string;
+}
