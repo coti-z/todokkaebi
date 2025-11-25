@@ -1,5 +1,8 @@
+import { promises as fs } from 'fs';
+import { join } from 'path';
+
 import {
-  Body,
+  BadRequestException,
   Controller,
   Post,
   UploadedFile,
@@ -9,75 +12,75 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import sharp from 'sharp';
 
 /**
- * Image Upload Service
+ * Image Upload Controller
  *
  * @description
- * Application Layer - image upload
+ * Handles image upload, processing (Sharp), and local storage.
+ * Minimal implementation without Domain/Application layers.
  */
 
 @Controller('images')
 export class ImageUploadController {
-  // 방법 1: base64 업로드
-  @Post('upload/base64')
-  async uploadBase64(@Body('image') base64Image: string) {
-    // base64 → Buffer 변환
-    const buffer = Buffer.from(
-      base64Image.replace(/^data:image\/\w+;base64,/, ''),
-      'base64',
-    );
+  private readonly uploadDir = join(process.cwd(), 'uploads', 'images');
+  private readonly maxFileSizeMB = 10;
+  private readonly allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-    return this.processImage(buffer);
-  }
+  /**
+   * Multipart file upload endpoint
+   *
+   * @example
+   * curl -X POST http://localhost:3000/images/upload \
+   *   -F "image=@photo.jpg"
+   */
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    }),
+  )
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    // Validation
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
 
-  // 방법 2: Multipart 업로드
-  @Post('upload/file')
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.processImage(file.buffer);
-  }
+    if (!this.allowedMimeTypes.includes(file.mimetype)) {
+      throw new BadRequestException(
+        `Invalid file type. Allowed: ${this.allowedMimeTypes.join(', ')}`,
+      );
+    }
 
-  // 통합 이미지 처리 메서드
-  private async processImage(buffer: Buffer) {
-    const processed = await sharp(buffer)
-      .resize(800, 600, { fit: 'inside' })
-      .webp({ quality: 80 })
+    // Process with Sharp: resize + convert to WebP
+    const processedBuffer = await sharp(file.buffer)
+      .resize(1200, 1200, {
+        fit: 'inside',
+        withoutEnlargement: true, // Don't upscale small images
+      })
+      .webp({ quality: 85 })
       .toBuffer();
 
-    // S3/로컬 저장 로직
-    const filename = `${Date.now()}.webp`;
-    await this.saveToStorage(filename, processed);
+    // Generate unique filename
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}.webp`;
 
-    return { url: `/images/${filename}` };
+    // Save to local storage
+    await this.saveToLocal(filename, processedBuffer);
+
+    return {
+      success: true,
+      url: `/uploads/images/${filename}`,
+      size: processedBuffer.length,
+      originalSize: file.size,
+    };
   }
 
-  private async saveToLocalStorage(
-    filename: string,
-    buffer: Buffer,
-  ): Promise<string> {
-    const uploadDir = join(process.cwd(), 'uploads', 'images');
+  /**
+   * Save buffer to local filesystem
+   */
+  private async saveToLocal(filename: string, buffer: Buffer): Promise<void> {
+    // Ensure upload directory exists
+    await fs.mkdir(this.uploadDir, { recursive: true });
 
-    // 디렉토리 생성 (없으면)
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    const filePath = join(uploadDir, filename);
+    const filePath = join(this.uploadDir, filename);
     await fs.writeFile(filePath, buffer);
-
-    return `/uploads/images/${filename}`; // 접근 가능한 URL 반환
-  }
-
-  private async saveToS3(filename: string, buffer: Buffer): Promise<string> {
-    const s3Client = new S3Client({ region: 'ap-northeast-2' });
-
-    const command = new PutObjectCommand({
-      Bucket: 'your-bucket-name',
-      Key: `images/${filename}`,
-      Body: buffer,
-      ContentType: 'image/webp', // Sharp에서 변환한 포맷
-      ACL: 'public-read', // 또는 CloudFront 사용
-    });
-
-    await s3Client.send(command);
-
-    return `https://your-bucket.s3.amazonaws.com/images/${filename}`;
   }
 }
