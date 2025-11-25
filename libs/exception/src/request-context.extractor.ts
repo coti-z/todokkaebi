@@ -200,4 +200,18 @@ export class RequestContextExtractor {
 
     return 'EventHandling';
   }
+
+  /**
+   * Rest Api의 Request에서 Context 추출
+   */
+  static fromHttpRequest(request: Request): RequestContext {
+    return {
+      requestId: this.extractRequestId(request),
+      correlationId: this.extractCorrelationId(request),
+      userAgent: this.extractUserAgent(request),
+      ipAddress: this.extractIpAddress(request),
+      timestamp: new Date(),
+      operationName: `${request.method} ${request.path}`,
+    };
+  }
 }
